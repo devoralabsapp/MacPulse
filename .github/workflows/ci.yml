@@ -1,0 +1,50 @@
+name: macOS CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-package:
+    name: Core tests and Universal packaging
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Show toolchain
+        run: swift --version
+      - name: Validate shell scripts and app metadata
+        run: |
+          bash -n scripts/test.sh scripts/build-app.sh
+          plutil -lint Resources/Info.plist
+      - name: Run core tests
+        run: bash scripts/test.sh
+      - name: Build Universal app
+        run: bash scripts/build-app.sh --universal
+      - name: Verify packaged app
+        run: |
+          codesign --verify --deep --strict --verbose=2 dist/MacPulse.app
+          lipo -verify_arch arm64 x86_64 dist/MacPulse.app/Contents/MacOS/MacPulse
+          unzip -t dist/MacPulse.zip
+          shasum -a 256 dist/MacPulse.zip > dist/MacPulse.zip.sha256
+      - name: Upload development build
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: MacPulse-universal-development
+          path: |
+            dist/MacPulse.zip
+            dist/MacPulse.zip.sha256
+          retention-days: 14
+          if-no-files-found: error

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key><string>MacPulse</string>
+    <key>CFBundleDisplayName</key><string>MacPulse</string>
+    <key>CFBundleExecutable</key><string>MacPulse</string>
+    <key>CFBundleIdentifier</key><string>com.macpulse.desktop</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>CFBundleShortVersionString</key><string>1.0.0</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleIconFile</key><string>AppIcon</string>
+    <key>LSMinimumSystemVersion</key><string>14.0</string>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSPrincipalClass</key><string>NSApplication</string>
+    <key>LSApplicationCategoryType</key><string>public.app-category.utilities</string>
+    <key>NSDownloadsFolderUsageDescription</key><string>MacPulse đọc tên, dung lượng và ngày sửa của file trong Downloads để bạn chọn file cần dọn.</string>
+    <key>NSDocumentsFolderUsageDescription</key><string>MacPulse chỉ quét Documents khi bạn chọn thư mục này để tìm file có thể dọn.</string>
+    <key>NSDesktopFolderUsageDescription</key><string>MacPulse chỉ quét Desktop khi bạn chọn thư mục này để tìm file có thể dọn.</string>
+    <key>NSRemovableVolumesUsageDescription</key><string>MacPulse quét ổ đĩa ngoài khi bạn chọn thư mục trên ổ đĩa đó.</string>
+</dict>
+</plist>

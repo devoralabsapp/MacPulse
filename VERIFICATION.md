@@ -1,0 +1,26 @@
+# Verification notes
+
+Local verification on 25 October 2026:
+
+| Check | Result |
+| --- | --- |
+| Debug build | Passed |
+| Release Universal build | Passed; `x86_64` and `arm64` slices, macOS 14.0 deployment target |
+| `codesign --verify --deep --strict` | Passed with a local ad hoc signature |
+| Info.plist validation | Passed |
+| Shell syntax checks | Passed for the test and packaging scripts |
+| ICNS icon | Readable by `sips`, including 1024 × 1024 and smaller/Retina representations |
+| Core test suite | 11 tests passed, 0 failures |
+| Live sampling | CPU, memory, disk, battery percentage, and raw mAh were available on the test machine |
+| ZIP integrity | Archive contents and integrity verified |
+
+Tests cover battery percentage-vs-mAh parsing, raw/legacy/missing capacity data, basic metric bounds, scan size/age criteria, old-cache filtering, protected paths, symlinks, hidden files, app bundles, duplicate roots, cancellation, scan limits, changed files, and symlinked parents.
+
+## Limits of this verification
+
+- Automated UI inspection was unavailable because permission to control the app was not granted. Screens, folder selection, settings, menu bar behavior, and the complete Trash/restore workflow have not been visually verified.
+- Tests ran on the `x86_64` host. The `arm64` slice was cross-compiled, not run natively on Apple Silicon during this verification.
+- No user files were cleaned. The test suite uses isolated temporary fixtures and does not exercise a real Trash operation.
+- The app is ad hoc signed, not Apple-notarized. Build and unit test success do not establish production readiness.
+
+Reproduce the automated checks with `bash scripts/test.sh` and `bash scripts/build-app.sh --universal`. Use disposable files for manual cleanup checks. GitHub Actions results, when available, are separate evidence from these local checks.

@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible problem with MacPulse.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "For security-sensitive issues, follow SECURITY.md. Redact personal paths and identifiers. Use disposable files for cleanup reproductions."
+  - type: input
+    id: environment
+    attributes:
+      label: macOS version and Mac architecture
+      placeholder: "macOS 15.x, Apple Silicon or Intel"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit or app version
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: "Provide a minimal reproduction without using or exposing personal files."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted logs or screenshots
+      description: "Remove user names, home paths, serial numbers, and unrelated file names."
