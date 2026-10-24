@@ -43,6 +43,7 @@ public struct Localizer: Equatable, Sendable {
     public func number(_ value: Int?) -> String { DisplayFormat.number(value, locale: locale) }
     public func percent(_ value: Double?) -> String { DisplayFormat.percent(value, locale: locale) }
     public func rate(_ value: Double?) -> String { DisplayFormat.rate(value, locale: locale) }
+    public func networkRate(_ value: Double?, unit: NetworkRateUnit) -> String { unit.format(value, locale: locale) }
 }
 
 /// Keep messages structured so an existing scan result can change language without a rescan.

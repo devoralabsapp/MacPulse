@@ -6,7 +6,7 @@ import IOKit.ps
 /// Confine this reader to one serial queue: CPU and network samples use deltas.
 public final class SystemReader {
     private var previousCPU: (user: UInt64, system: UInt64, idle: UInt64)?
-    private var previousNetwork: (received: UInt64, sent: UInt64, date: TimeInterval)?
+    private let networkReader = NetworkReader()
     public init() {}
 
     public func read() -> SystemSnapshot {
@@ -15,7 +15,7 @@ public final class SystemReader {
         snapshot.memory = readMemory()
         snapshot.disk = readDisk()
         snapshot.battery = readBattery()
-        snapshot.network = readNetwork()
+        snapshot.network = networkReader.read()
         return snapshot
     }
 
@@ -128,34 +128,4 @@ public final class SystemReader {
         return result
     }
 
-    private func readNetwork() -> NetworkMetrics {
-        var result = NetworkMetrics()
-        var head: UnsafeMutablePointer<ifaddrs>?
-        guard getifaddrs(&head) == 0, let head else { return result }
-        defer { freeifaddrs(head) }
-        var received: UInt64 = 0
-        var sent: UInt64 = 0
-        var pointer: UnsafeMutablePointer<ifaddrs>? = head
-        while let entry = pointer {
-            defer { pointer = entry.pointee.ifa_next }
-            let interface = entry.pointee
-            guard interface.ifa_addr?.pointee.sa_family == UInt8(AF_LINK),
-                  interface.ifa_flags & UInt32(IFF_UP) != 0,
-                  interface.ifa_flags & UInt32(IFF_LOOPBACK) == 0,
-                  let data = interface.ifa_data?.assumingMemoryBound(to: if_data.self) else { continue }
-            let name = String(cString: interface.ifa_name)
-            // Count physical interfaces only; VPN/bridge counters otherwise double-count traffic.
-            guard name.hasPrefix("en") || name.hasPrefix("pdp_ip") else { continue }
-            received += UInt64(data.pointee.ifi_ibytes)
-            sent += UInt64(data.pointee.ifi_obytes)
-        }
-        let now = ProcessInfo.processInfo.systemUptime
-        defer { previousNetwork = (received, sent, now) }
-        guard let previousNetwork, now > previousNetwork.date,
-              received >= previousNetwork.received, sent >= previousNetwork.sent else { return result }
-        let interval = now - previousNetwork.date
-        result.download = Double(received - previousNetwork.received) / interval
-        result.upload = Double(sent - previousNetwork.sent) / interval
-        return result
-    }
 }

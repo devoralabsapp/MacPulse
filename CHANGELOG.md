@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 — 2026-10-25
+
+- Add a Network page with live upload/download rates, a 60-sample chart, per-interface activity/rates, chart peaks, and observed session totals.
+- Add a saved KB/s–MB/s vs. Kbps–Mbps preference, plus optional live speeds in the menu bar and rates in its popup panel.
+- Replace 32-bit `getifaddrs` byte counters with `NET_RT_IFLIST2` 64-bit counters. Calculate deltas per interface using monotonic elapsed time, excluding virtual interfaces.
+- Rebaseline on first samples, read failure, counter resets, interface changes, and reconnection; preserve chart gaps and distinguish unavailable readings from zero traffic.
+- Add regression tests for rate calculation, elapsed time, counters above 4 GiB, reconnect/reset behavior, virtual-interface exclusion, byte/bit formatting, malformed buffers, and live kernel reads without generating traffic.
+
 ## 1.2.0 — 2026-10-25
 
 - Withhold the battery-health estimate when full-charge and design references conflict. Preserve both raw readings and show the macOS-reported condition separately; do not invent design capacity or silently clamp to 100%.

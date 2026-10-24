@@ -4,12 +4,13 @@ import MacPulseCore
 import SwiftUI
 
 enum AppPage: String, CaseIterable, Identifiable {
-    case overview, performance, storage, battery, cleaner
+    case overview, performance, network, storage, battery, cleaner
     var id: String { rawValue }
     var title: String {
         switch self {
         case .overview: return "Tổng quan"
         case .performance: return "Hiệu năng"
+        case .network: return "Mạng"
         case .storage: return "Ổ đĩa"
         case .battery: return "Pin & nguồn điện"
         case .cleaner: return "Dọn dẹp"
@@ -19,6 +20,7 @@ enum AppPage: String, CaseIterable, Identifiable {
         switch self {
         case .overview: return "square.grid.2x2.fill"
         case .performance: return "waveform.path.ecg"
+        case .network: return "network"
         case .storage: return "internaldrive"
         case .battery: return "battery.75percent"
         case .cleaner: return "sparkles"
@@ -28,6 +30,7 @@ enum AppPage: String, CaseIterable, Identifiable {
         switch self {
         case .overview: return "Một góc nhìn rõ ràng về chiếc Mac của bạn."
         case .performance: return "Theo dõi tài nguyên và diễn biến trong phiên hiện tại."
+        case .network: return "Tốc độ upload/download và lưu lượng quan sát được trong phiên."
         case .storage: return "Nắm rõ dung lượng để dành chỗ cho điều quan trọng."
         case .battery: return "Dung lượng thực tế, sức khỏe pin và trạng thái sạc."
         case .cleaner: return "Tìm những file đáng xem lại. Bạn quyết định giữ hay xóa."
@@ -45,9 +48,12 @@ final class SystemMonitor: ObservableObject {
     @Published var snapshot = SystemSnapshot()
     @Published var cpuHistory: [Double] = []
     @Published var memoryHistory: [Double] = []
+    @Published var networkHistory: [NetworkHistorySample] = []
     @Published var hasSample = false
     private let sampler = MetricSampler()
     private var timer: AnyCancellable?
+    private var isSampling = false
+    private var lastSampleUptime: TimeInterval = -1
 
     init() { restart() }
     func restart() {
@@ -58,8 +64,12 @@ final class SystemMonitor: ObservableObject {
             .autoconnect().sink { [weak self] _ in self?.sample() }
     }
     func sample() {
+        let now = ProcessInfo.processInfo.systemUptime
+        guard !isSampling, now - lastSampleUptime >= 0.25 else { return }
+        isSampling = true; lastSampleUptime = now
         Task { [weak self] in
             guard let self else { return }
+            defer { self.isSampling = false }
             let snapshot = await self.sampler.read()
             self.snapshot = snapshot
             self.hasSample = true
@@ -67,6 +77,9 @@ final class SystemMonitor: ObservableObject {
             if snapshot.memory.total > 0 { self.memoryHistory.append(snapshot.memory.fraction * 100) }
             self.cpuHistory = Array(self.cpuHistory.suffix(60))
             self.memoryHistory = Array(self.memoryHistory.suffix(60))
+            self.networkHistory.append(NetworkHistorySample(uptime: snapshot.network.uptime ?? ProcessInfo.processInfo.systemUptime,
+                download: snapshot.network.download, upload: snapshot.network.upload))
+            self.networkHistory = Array(self.networkHistory.suffix(60))
         }
     }
 }

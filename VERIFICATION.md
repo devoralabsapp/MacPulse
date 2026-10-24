@@ -2,6 +2,13 @@
 
 Local verification on 25 October 2026:
 
+## Version 1.3.0 update
+
+- 48 tests pass with no failures or skips locally. Live `NET_RT_IFLIST2` sampling successfully read physical-interface counters and observed upload/download traffic without generating test requests.
+- Network tests cover actual elapsed time, initial baselines, per-interface aggregation, virtual-interface exclusion, counters crossing 4 GiB, counter reset, reconnect, read failure, non-increasing/invalid clocks, byte/bit conversions, localized formatting, and malformed/truncated kernel messages.
+- The new UI includes a Network page, chart, interface table, observed session totals, menu bar speeds, and saved unit/display preferences in both languages.
+- Direct visual verification of the new chart, status item, and controls remains outstanding. Network activity flags are not Internet-reachability checks; observed session totals exclude unsampled intervals.
+
 ## Version 1.2.0 update
 
 - 35 tests pass with no failures. The open-file integration test observed its own disposable open fixture through unprivileged `lsof`; no user files were moved or deleted.

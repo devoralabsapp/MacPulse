@@ -92,11 +92,6 @@ public struct BatteryMetrics: Sendable {
     }
 }
 
-public struct NetworkMetrics: Sendable {
-    public var download: Double?
-    public var upload: Double?
-}
-
 public struct SystemSnapshot: Sendable {
     public var cpu = CPUMetrics()
     public var memory = MemoryMetrics()
@@ -120,7 +115,7 @@ public enum DisplayFormat {
         value.map { String(format: "%.0f%%", locale: locale, $0) } ?? "—"
     }
     public static func rate(_ value: Double?, locale: Locale = .current) -> String {
-        value.map { bytes(Int64(max(0, $0)), locale: locale) + "/s" } ?? "—"
+        NetworkRateUnit.bytes.format(value, locale: locale)
     }
     public static func number(_ value: Int?, locale: Locale = .current) -> String {
         value.map { $0.formatted(.number.locale(locale)) } ?? "—"

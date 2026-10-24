@@ -18,6 +18,7 @@ struct ContentView: View {
                         switch page {
                         case .overview: OverviewView(page: $page)
                         case .performance: PerformanceView()
+                        case .network: NetworkView()
                         case .storage: StorageView(page: $page)
                         case .battery: BatteryView()
                         case .cleaner: CleanerView()
@@ -28,7 +29,7 @@ struct ContentView: View {
                     Image(systemName: "lock.shield").font(.system(size: 10))
                     Text(l.text("Dữ liệu ở trên máy của bạn"))
                     Spacer()
-                    Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.2.0")").foregroundStyle(Palette.secondary.opacity(0.8))
+                    Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.3.0")").foregroundStyle(Palette.secondary.opacity(0.8))
                 }.font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.horizontal, 30).padding(.vertical, 13)
             }.background(Palette.background)
         }
@@ -108,6 +109,8 @@ struct OverviewView: View {
     @Environment(\.localizer) private var l
     @EnvironmentObject var monitor: SystemMonitor
     @Binding var page: AppPage
+    @AppStorage("networkRateUnit") private var rateUnit = NetworkRateUnit.bytes.rawValue
+    private var unit: NetworkRateUnit { NetworkRateUnit(rawValue: rateUnit) ?? .bytes }
     var s: SystemSnapshot { monitor.snapshot }
     var body: some View {
         HStack(spacing: 15) {
@@ -135,10 +138,15 @@ struct OverviewView: View {
             }
             Panel {
                 VStack(alignment: .leading, spacing: 17) {
-                    SectionTitle(title: l.text("Kết nối mạng"), subtitle: l.text("Lưu lượng trên giao diện mạng vật lý"))
-                    networkRow(title: l.text("Tải xuống"), value: l.rate(s.network.download), icon: "arrow.down", color: Palette.blue)
+                    HStack {
+                        SectionTitle(title: l.text("Kết nối mạng"), subtitle: l.text("Lưu lượng trên giao diện mạng vật lý"))
+                        Spacer()
+                        Button { page = .network } label: { Image(systemName: "arrow.up.right").foregroundStyle(Palette.blue) }
+                            .buttonStyle(.plain).help(l.text("Mở theo dõi mạng")).accessibilityLabel(l.text("Mở theo dõi mạng"))
+                    }
+                    networkRow(title: l.text("Tải xuống"), value: l.networkRate(s.network.download, unit: unit), icon: "arrow.down", color: Palette.blue)
                     Divider()
-                    networkRow(title: l.text("Tải lên"), value: l.rate(s.network.upload), icon: "arrow.up", color: Palette.purple)
+                    networkRow(title: l.text("Tải lên"), value: l.networkRate(s.network.upload, unit: unit), icon: "arrow.up", color: Palette.purple)
                 }
             }.frame(width: 260)
         }

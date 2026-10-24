@@ -18,11 +18,19 @@ Sau khi build, mở `dist/MacPulse.app`. Có thể kéo app vào Applications n�
 - RAM: bộ nhớ đang dùng, wired, compressed, cache, swap và áp lực bộ nhớ nếu macOS cung cấp.
 - Storage: tổng dung lượng, đang dùng và còn trống trên volume chứa thư mục cá nhân.
 - Pin: phần trăm, điện lượng còn lại bằng mAh, dung lượng điện sạc đầy và dung lượng thiết kế do firmware báo được ghi riêng; số chu kỳ, điện áp, dòng điện và thời gian ước tính.
-- Mạng: tốc độ tải lên/xuống trên giao diện mạng vật lý (không cộng lặp giao diện VPN/bridge).
+- Mạng: trang riêng hiển thị tốc độ upload/download, biểu đồ 60 mẫu, đỉnh trong biểu đồ, tổng quan sát trong phiên và từng giao diện; đổi MB/s ↔ Mbps và xem tốc độ ngay trên thanh menu.
 - Dọn dẹp: thư mục tùy chọn, file từ 100 MB, file chưa chỉnh sửa từ 180 ngày; có thể quét thêm cache/log người dùng từ 30 ngày.
 - Tìm theo tên/đường dẫn, lọc loại, hiện trong Finder, chọn nhiều file và xem danh sách xác nhận trước khi chuyển vào Thùng rác.
 - Đánh giá từng file: **ít rủi ro / cần xem lại / không khuyến nghị**, ghi rõ lý do; có bộ lọc và nút chọn chỉ các mục ít rủi ro đang hiển thị.
 - Cài đặt chu kỳ lấy mẫu 1/2/5 giây và hiển thị trên thanh menu.
+
+## Theo dõi upload/download
+
+Chọn **Mạng** ở thanh bên hoặc nút mũi tên trong thẻ mạng của Tổng quan. App hiển thị tốc độ tức thời, biểu đồ 60 mẫu gần nhất, đỉnh trong biểu đồ, dung lượng quan sát được trong phiên và tốc độ/trạng thái từng giao diện vật lý. “Đang hoạt động” là trạng thái giao diện, không phải xác nhận có Internet.
+
+Đổi đơn vị **KB/s · MB/s** hoặc **Kbps · Mbps** ngay trên trang Mạng hoặc trong **⌘, → Đơn vị tốc độ mạng**. **1 MB/s = 8 Mbps**. Lựa chọn áp dụng cho trang Mạng, Tổng quan và thanh menu. Có thể tắt tốc độ trên thanh menu trong Cài đặt.
+
+App dùng bộ đếm 64-bit và thời gian thực giữa hai mẫu; không gửi yêu cầu speed test và không thu thập nội dung gói tin, SSID hay địa chỉ IP. Lưu lượng gồm Internet, mạng nội bộ và tác vụ nền trên các giao diện vật lý được hỗ trợ; không cộng thêm bộ đếm của VPN/bridge/loopback. Mẫu đầu, giao diện mới/kết nối lại, bộ đếm bị đặt lại hoặc khoảng mất số liệu sẽ lấy mốc mới, không suy ra tốc độ đột biến. Tổng phiên chỉ cộng các khoảng hợp lệ, đặt lại khi thoát app và không dùng làm số liệu tính cước.
 
 ## Cách dọn file
 

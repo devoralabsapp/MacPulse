@@ -27,7 +27,7 @@ It does not treat an old modification date as proof that a file is unused. It sh
 | Memory | Used, wired, compressed, cached memory, swap, and memory pressure when available |
 | Storage | Capacity, used space, and available space on the volume containing your home folder |
 | Battery | Charge percentage, remaining mAh, distinct full-charge and firmware design capacities, cycle count, a health estimate only for consistent references, macOS-reported condition, voltage, current, and time estimates when available |
-| Network | Upload/download rates from physical network interfaces |
+| Network | Dedicated live upload/download view, 60-sample chart, per-interface rates/status, observed session totals, byte/bit units, and optional menu bar speeds |
 | File cleanup | Large files ≥100 MB, files unmodified for ≥180 days, and optional user cache/log files ≥30 days old |
 | Menu bar | A live CPU readout and a compact resource summary |
 
@@ -59,6 +59,16 @@ Open `Package.swift` in Xcode to work on the source. Use the packaged `.app` whe
 
 Open the sidebar gear or press **⌘,**, then choose **Language / Ngôn ngữ → English, Tiếng Việt, or System default**. The choice is saved and updates app screens, the custom menu bar panel, and app messages immediately. Existing scan results can change language without rescanning or losing selection. macOS-owned dialogs and standard system menus follow macOS language preferences.
 
+## Monitor upload and download
+
+Open **Network / Mạng** in the sidebar, or use the arrow on the Overview network card. The page shows current upload/download speed, a chart of the last 60 samples, the peak within that chart, observed session traffic, and each physical interface's rates and active/inactive state. Interface activity does not establish Internet reachability.
+
+Choose **KB/s · MB/s** or **Kbps · Mbps** on the page or in Settings. Network units are decimal: **1 MB/s = 8 Mbps**. The same choice applies to Overview and the menu bar panel. Menu bar speeds are enabled by default and can be hidden in Settings without stopping collection.
+
+Rates use 64-bit kernel interface counters and actual monotonic elapsed time, not a fixed assumed timer interval. The first sample, new/reconnected interfaces, reset counters, and gaps establish a baseline rather than creating false speed spikes. Missing samples remain gaps in the chart. Valid idle samples show zero; unavailable samples show `—`.
+
+Statistics include LAN and background traffic on supported physical interfaces (`en*` and `pdp_ip*`). Loopback, VPN, and bridge interfaces are excluded from the sum. This is traffic monitoring, not a speed test, per-app attribution, packet-content capture, or a measurement of your Internet plan's maximum speed. Session totals include only valid observed intervals and reset when the app exits; they are not billing records or lifetime totals.
+
 ## Clean up files deliberately
 
 1. Open **Dọn dẹp** (Cleanup), choose a folder, or use Downloads.
@@ -87,7 +97,7 @@ Folder access follows macOS privacy permissions. If access is denied, select the
 - **RAM:** `host_statistics64` and `vm.swapusage`. Memory usage is calculated from active, inactive, purgeable, file-backed, wired, and compressed pages. RAM and swap use 1024-based units with macOS-style GB labels: a 32 GiB machine displays **32 GB**, while file and disk sizes retain decimal units. Values can differ from Activity Monitor because of timing and classification.
 - **Disk:** Foundation volume capacity values for the home folder's volume. APFS sharing, snapshots, and purgeable space can produce differences from System Settings. Cleanup file sizes are logical sizes, not a promise of reclaimable physical space.
 - **Battery:** IOPS for percentage/power state and `AppleSmartBattery` registry properties for raw charge when available, including nested `BatteryData` values. Full-charge capacity is distinct from firmware-reported `DesignCapacity`; learned `Qmax` values are not substituted for design. Raw gauge readings are not an independent physical-capacity measurement. If reported full charge exceeds the design reference, the app retains both readings, flags them for verification, and withholds its health estimate instead of displaying above 100%, inventing a new design value, or silently clamping to 100%. macOS-reported condition remains separate. Missing values display `—`; percentage is never relabeled as mAh.
-- **Network:** Physical interface byte counters, excluding VPN and bridge interfaces to avoid counting the same traffic twice.
+- **Network:** `sysctl(NET_RT_IFLIST2)` / `if_data64` counters, per-interface deltas, and monotonic uptime. This avoids the 4 GiB wrap of the old `getifaddrs` 32-bit byte counters. SystemConfiguration supplies interface display names/types without requesting SSIDs or IP addresses. No network test requests are sent.
 
 References: [IOPowerSources](https://developer.apple.com/documentation/iokit/iopowersources_h), [IOPMPowerSource](https://developer.apple.com/documentation/kernel/iopmpowersource), and [NSWorkspace.recycle](https://developer.apple.com/documentation/appkit/nsworkspace/recycle(_:completionhandler:)).
 
