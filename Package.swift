@@ -3,10 +3,11 @@ import PackageDescription
 
 let package = Package(
     name: "MacPulse",
+    defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     products: [.executable(name: "MacPulse", targets: ["MacPulse"])],
     targets: [
-        .target(name: "MacPulseCore"),
+        .target(name: "MacPulseCore", resources: [.process("Resources")]),
         .executableTarget(name: "MacPulse", dependencies: ["MacPulseCore"]),
         .testTarget(name: "MacPulseCoreTests", dependencies: ["MacPulseCore"])
     ],

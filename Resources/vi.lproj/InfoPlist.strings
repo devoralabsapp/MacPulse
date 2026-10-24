@@ -1,0 +1,4 @@
+"NSDownloadsFolderUsageDescription" = "MacPulse đọc tên, dung lượng và ngày sửa của file trong Downloads để bạn chọn file cần dọn.";
+"NSDocumentsFolderUsageDescription" = "MacPulse chỉ quét Documents khi bạn chọn thư mục này để tìm file có thể dọn.";
+"NSDesktopFolderUsageDescription" = "MacPulse chỉ quét Desktop khi bạn chọn thư mục này để tìm file có thể dọn.";
+"NSRemovableVolumesUsageDescription" = "MacPulse quét ổ đĩa ngoài khi bạn chọn thư mục trên ổ đĩa đó.";

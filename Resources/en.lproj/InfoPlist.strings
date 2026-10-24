@@ -1,0 +1,4 @@
+"NSDownloadsFolderUsageDescription" = "MacPulse reads file names, sizes, and modification dates in Downloads so you can choose files to clean up.";
+"NSDocumentsFolderUsageDescription" = "MacPulse scans Documents only when you choose this folder to find files to review.";
+"NSDesktopFolderUsageDescription" = "MacPulse scans Desktop only when you choose this folder to find files to review.";
+"NSRemovableVolumesUsageDescription" = "MacPulse scans external drives only when you choose a folder on that drive.";

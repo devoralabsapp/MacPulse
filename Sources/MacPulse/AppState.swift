@@ -78,8 +78,8 @@ final class CleanerModel: ObservableObject {
     @Published var isScanning = false
     @Published var isTrashing = false
     @Published var hasScanned = false
-    @Published var warnings: [String] = []
-    @Published var message: String?
+    @Published var warnings: [LocalizedMessage] = []
+    @Published var message: LocalizedMessage?
     @Published var inspected = 0
     @Published var folder: URL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads")
     @Published var includeCaches = false
@@ -100,17 +100,17 @@ final class CleanerModel: ObservableObject {
     var selectedSize: Int64 { selectedFiles.reduce(0) { $0 + $1.size } }
     var totalSize: Int64 { files.reduce(0) { $0 + $1.size } }
 
-    func chooseFolder() {
+    func chooseFolder(localizer l: Localizer) {
         guard !isScanning && !isTrashing else { return }
         let panel = NSOpenPanel()
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.message = "Chọn thư mục để tìm file lớn và file lâu chưa chỉnh sửa."
-        panel.prompt = "Chọn thư mục"
+        panel.message = l.text("Chọn thư mục để tìm file lớn và file lâu chưa chỉnh sửa.")
+        panel.prompt = l.text("Chọn thư mục")
         guard panel.runModal() == .OK, let url = panel.url else { return }
         guard !CleanupSafety.isProtected(url.resolvingSymlinksInPath()) else {
-            message = "Hãy chọn thư mục cá nhân. MacPulse không quét thư mục hệ thống hoặc ứng dụng."
+            message = LocalizedMessage("Hãy chọn thư mục cá nhân. MacPulse không quét thư mục hệ thống hoặc ứng dụng.")
             return
         }
         if scopeActive { scopeURL?.stopAccessingSecurityScopedResource() }
@@ -144,7 +144,7 @@ final class CleanerModel: ObservableObject {
             self.hasScanned = true
             self.isScanning = false
             self.cancellation = nil
-            if result.cancelled { self.message = "Đã dừng quét. Đang hiển thị các file đã tìm được." }
+            if result.cancelled { self.message = LocalizedMessage("Đã dừng quét. Đang hiển thị các file đã tìm được.") }
         }
     }
     func cancel() { cancellation?.cancel() }
@@ -162,20 +162,24 @@ final class CleanerModel: ObservableObject {
         guard !candidates.isEmpty else { return }
         isTrashing = true
         var removed = Set<String>()
-        var errors: [String] = []
+        var errors: [LocalizedMessage] = []
         // Move individually: preserve a truthful result even if another file fails.
         for file in candidates {
             do {
                 try CleanupSafety.validate(file)
                 let result = try await NSWorkspace.shared.recycle([file.url])
                 if result[file.url] != nil { removed.insert(file.id) }
-                else { errors.append("Không chuyển được “\(file.name)” vào Thùng rác.") }
-            } catch { errors.append(error.localizedDescription) }
+                else { errors.append(LocalizedMessage("Không chuyển được “%@” vào Thùng rác.", file.name)) }
+            } catch let error as CleanupError {
+                errors.append(error.message)
+            } catch {
+                errors.append(LocalizedMessage("Không thể chuyển file: %@", error.localizedDescription))
+            }
         }
         files.removeAll { removed.contains($0.id) }
         selected.subtract(removed)
         isTrashing = false
-        message = "Đã chuyển \(removed.count) file vào Thùng rác. Dung lượng chỉ được giải phóng sau khi bạn dọn Thùng rác trong Finder."
+        message = LocalizedMessage("Đã chuyển %@ file vào Thùng rác. Dung lượng chỉ được giải phóng sau khi bạn dọn Thùng rác trong Finder.", String(removed.count))
         warnings = Array(errors.prefix(8))
     }
 }

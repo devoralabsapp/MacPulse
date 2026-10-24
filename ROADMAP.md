@@ -12,10 +12,10 @@ MacPulse is a new project. These are proposed milestones, not shipped features o
 
 ## Make the app accessible to more users
 
-- [ ] Extract hard-coded UI strings into a localization catalog.
-- [ ] Add an English interface alongside Vietnamese.
+- [x] Extract UI strings into standard localization resources.
+- [x] Add an English interface alongside Vietnamese with a saved language preference.
 - [ ] Audit VoiceOver, keyboard focus, contrast, and text scaling.
-- [ ] Improve memory unit labels and explain pressure vs. utilization in the UI.
+- [x] Use binary units for memory, matching macOS labels, and explain pressure vs. utilization in the UI.
 - [ ] Add genuine screenshots after manual UI verification.
 
 ## Improve everyday use

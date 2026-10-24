@@ -3,6 +3,7 @@ import SwiftUI
 import MacPulseCore
 
 struct CleanerView: View {
+    @Environment(\.localizer) private var l
     @EnvironmentObject var cleaner: CleanerModel
     var body: some View {
         Panel {
@@ -14,42 +15,42 @@ struct CleanerView: View {
                         Text(cleaner.folder.path).font(.system(size: 10)).foregroundStyle(Palette.secondary).lineLimit(1).truncationMode(.middle).help(cleaner.folder.path)
                     }
                     Spacer()
-                    Button("Chọn thư mục…") { cleaner.chooseFolder() }.controlSize(.large).disabled(cleaner.isScanning || cleaner.isTrashing)
+                    Button(l.text("Chọn thư mục…")) { cleaner.chooseFolder(localizer: l) }.controlSize(.large).disabled(cleaner.isScanning || cleaner.isTrashing)
                     if cleaner.isScanning {
-                        Button { cleaner.cancel() } label: { Label("Dừng quét", systemImage: "stop.fill") }.buttonStyle(PrimaryButton(color: Palette.secondary))
+                        Button { cleaner.cancel() } label: { Label(l.text("Dừng quét"), systemImage: "stop.fill") }.buttonStyle(PrimaryButton(color: Palette.secondary))
                     } else {
-                        Button { cleaner.scan() } label: { Label(cleaner.hasScanned ? "Quét lại" : "Bắt đầu quét", systemImage: "magnifyingglass") }.buttonStyle(PrimaryButton()).disabled(cleaner.isTrashing)
+                        Button { cleaner.scan() } label: { Label(cleaner.hasScanned ? l.text("Quét lại") : l.text("Bắt đầu quét"), systemImage: "magnifyingglass") }.buttonStyle(PrimaryButton()).disabled(cleaner.isTrashing)
                     }
                 }
                 Divider()
                 HStack {
-                    Toggle("Quét thêm cache và nhật ký người dùng (cũ hơn 30 ngày)", isOn: $cleaner.includeCaches)
+                    Toggle(l.text("Quét thêm cache và nhật ký người dùng (cũ hơn 30 ngày)"), isOn: $cleaner.includeCaches)
                         .font(.system(size: 11)).toggleStyle(.checkbox).disabled(cleaner.isScanning || cleaner.isTrashing)
                     Spacer()
-                    Label("Xem trước khi xóa", systemImage: "checkmark.shield").font(.system(size: 10)).foregroundStyle(Palette.mint)
+                    Label(l.text("Xem trước khi xóa"), systemImage: "checkmark.shield").font(.system(size: 10)).foregroundStyle(Palette.mint)
                 }
-                Text("File lớn ≥ 100 MB · Chưa chỉnh sửa ≥ 180 ngày. Ngày sửa đổi không xác định được file còn sử dụng hay không.")
+                Text(l.text("File lớn ≥ 100 MB · Chưa chỉnh sửa ≥ 180 ngày. Ngày sửa đổi không xác định được file còn sử dụng hay không."))
                     .font(.system(size: 10)).foregroundStyle(Palette.secondary)
             }
         }
         if let message = cleaner.message {
-            Label(message, systemImage: "info.circle").font(.system(size: 12)).foregroundStyle(Palette.blue).textSelection(.enabled)
+            Label(l.render(message), systemImage: "info.circle").font(.system(size: 12)).foregroundStyle(Palette.blue).textSelection(.enabled)
         }
         if !cleaner.warnings.isEmpty {
             VStack(alignment: .leading, spacing: 5) {
-                ForEach(cleaner.warnings, id: \.self) { warning in Label(warning, systemImage: "exclamationmark.triangle").font(.system(size: 11)).foregroundStyle(Color(hex: 0xA8752B)).textSelection(.enabled) }
+                ForEach(cleaner.warnings, id: \.self) { warning in Label(l.render(warning), systemImage: "exclamationmark.triangle").font(.system(size: 11)).foregroundStyle(Color(hex: 0xA8752B)).textSelection(.enabled) }
             }
         }
         if cleaner.isScanning {
             Panel {
                 VStack(spacing: 18) {
                     ProgressView().controlSize(.large)
-                    Text("Đang xem qua các file…").font(.system(size: 16, weight: .medium))
-                    Text("Chỉ đọc thông tin file, không mở nội dung và không tự động xóa.").font(.system(size: 12)).foregroundStyle(Palette.secondary)
+                    Text(l.text("Đang xem qua các file…")).font(.system(size: 16, weight: .medium))
+                    Text(l.text("Chỉ đọc thông tin file, không mở nội dung và không tự động xóa.")).font(.system(size: 12)).foregroundStyle(Palette.secondary)
                 }.frame(maxWidth: .infinity).padding(.vertical, 64)
             }
         } else if !cleaner.hasScanned {
-            emptyState(icon: "sparkles", title: "Thêm khoảng trống. Bớt bận tâm.", text: "Bắt đầu quét để xem file lớn, file lâu chưa sửa và cache cũ.\nKhông có mục nào được chọn sẵn để xóa.")
+            emptyState(icon: "sparkles", title: l.text("Thêm khoảng trống. Bớt bận tâm."), text: l.text("Bắt đầu quét để xem file lớn, file lâu chưa sửa và cache cũ.\nKhông có mục nào được chọn sẵn để xóa."))
         } else {
             results
         }
@@ -58,26 +59,26 @@ struct CleanerView: View {
     private var results: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                SectionTitle(title: "\(cleaner.files.count.formatted()) file có thể xem lại", subtitle: "\(DisplayFormat.bytes(cleaner.totalSize)) dung lượng file · đã xem \(cleaner.inspected.formatted()) mục")
+                SectionTitle(title: l.text("%@ file có thể xem lại", l.number(cleaner.files.count)), subtitle: l.text("%@ dung lượng file · đã xem %@ mục", l.bytes(cleaner.totalSize), l.number(cleaner.inspected)))
                 Spacer()
                 HStack {
                     Image(systemName: "magnifyingglass").foregroundStyle(Palette.secondary)
-                    TextField("Tìm tên hoặc đường dẫn", text: $cleaner.query).textFieldStyle(.plain)
+                    TextField(l.text("Tìm tên hoặc đường dẫn"), text: $cleaner.query).textFieldStyle(.plain)
                 }.font(.system(size: 11)).padding(10).frame(width: 225).background(.white, in: RoundedRectangle(cornerRadius: 9))
             }
             HStack(spacing: 8) {
-                filterButton("Tất cả", category: nil)
-                ForEach(CleanupCategory.allCases) { category in filterButton(category.title, category: category) }
+                filterButton(l.text("Tất cả"), category: nil)
+                ForEach(CleanupCategory.allCases) { category in filterButton(l.text(category.title), category: category) }
             }
             if cleaner.visibleFiles.isEmpty {
-                emptyState(icon: "checkmark.circle", title: cleaner.files.isEmpty ? "Chưa có file phù hợp tiêu chí" : "Không có kết quả phù hợp", text: "Bạn có thể đổi thư mục, bật quét cache hoặc thay đổi bộ lọc.")
+                emptyState(icon: "checkmark.circle", title: cleaner.files.isEmpty ? l.text("Chưa có file phù hợp tiêu chí") : l.text("Không có kết quả phù hợp"), text: l.text("Bạn có thể đổi thư mục, bật quét cache hoặc thay đổi bộ lọc."))
             } else {
                 VStack(spacing: 0) {
                     HStack {
-                        Button { cleaner.toggleVisible() } label: { Image(systemName: Set(cleaner.visibleFiles.map(\.id)).isSubset(of: cleaner.selected) ? "checkmark.square.fill" : "square").foregroundStyle(Palette.blue) }.buttonStyle(.plain).help("Chọn / bỏ chọn các file đang hiển thị").disabled(cleaner.isTrashing)
-                        Text("TÊN FILE").frame(maxWidth: .infinity, alignment: .leading)
-                        Text("SỬA LẦN CUỐI").frame(width: 105, alignment: .leading)
-                        Text("DUNG LƯỢNG ↓").frame(width: 105, alignment: .trailing)
+                        Button { cleaner.toggleVisible() } label: { Image(systemName: Set(cleaner.visibleFiles.map(\.id)).isSubset(of: cleaner.selected) ? "checkmark.square.fill" : "square").foregroundStyle(Palette.blue) }.buttonStyle(.plain).help(l.text("Chọn / bỏ chọn các file đang hiển thị")).disabled(cleaner.isTrashing)
+                        Text(l.text("TÊN FILE")).frame(maxWidth: .infinity, alignment: .leading)
+                        Text(l.text("SỬA LẦN CUỐI")).frame(width: 105, alignment: .leading)
+                        Text(l.text("DUNG LƯỢNG ↓")).frame(width: 105, alignment: .trailing)
                         Color.clear.frame(width: 30)
                     }.font(.system(size: 9, weight: .semibold)).tracking(0.5).foregroundStyle(Palette.secondary).padding(.horizontal, 18).padding(.vertical, 15)
                     Divider()
@@ -92,12 +93,12 @@ struct CleanerView: View {
                     Divider()
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Đã chọn \(cleaner.selected.count) file · \(DisplayFormat.bytes(cleaner.selectedSize))").font(.system(size: 12, weight: .medium))
-                            Text("Khôi phục từ Thùng rác trong Finder khi cần.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
+                            Text(l.text("Đã chọn %@ file · %@", l.number(cleaner.selected.count), l.bytes(cleaner.selectedSize))).font(.system(size: 12, weight: .medium))
+                            Text(l.text("Khôi phục từ Thùng rác trong Finder khi cần.")).font(.system(size: 10)).foregroundStyle(Palette.secondary)
                         }
                         Spacer()
                         if cleaner.isTrashing { ProgressView().controlSize(.small) }
-                        Button { cleaner.confirmTrash = true } label: { Label(cleaner.isTrashing ? "Đang chuyển…" : "Chuyển vào Thùng rác", systemImage: "trash") }
+                        Button { cleaner.confirmTrash = true } label: { Label(cleaner.isTrashing ? l.text("Đang chuyển…") : l.text("Chuyển vào Thùng rác"), systemImage: "trash") }
                             .buttonStyle(PrimaryButton(color: cleaner.selected.isEmpty || cleaner.isTrashing ? Palette.secondary : Palette.blue))
                             .disabled(cleaner.selected.isEmpty || cleaner.isTrashing)
                     }.padding(18)
@@ -109,24 +110,24 @@ struct CleanerView: View {
     }
     private var trashConfirmation: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Label("Chuyển \(cleaner.selected.count) file vào Thùng rác?", systemImage: "trash").font(.system(size: 18, weight: .semibold))
-            Text("Tổng dung lượng file: \(DisplayFormat.bytes(cleaner.selectedSize)). Xem lại danh sách trước khi tiếp tục. Cache có thể được ứng dụng tạo lại.")
+            Label(l.text("Chuyển %@ file vào Thùng rác?", l.number(cleaner.selected.count)), systemImage: "trash").font(.system(size: 18, weight: .semibold))
+            Text(l.text("Tổng dung lượng file: %@. Xem lại danh sách trước khi tiếp tục. Cache có thể được ứng dụng tạo lại.", l.bytes(cleaner.selectedSize)))
                 .font(.system(size: 12)).foregroundStyle(Palette.secondary)
             ScrollView {
                 VStack(alignment: .leading, spacing: 11) {
                     ForEach(cleaner.selectedFiles) { file in
                         VStack(alignment: .leading, spacing: 3) {
-                            HStack { Text(file.name).lineLimit(1); Spacer(); Text(DisplayFormat.bytes(file.size)).foregroundStyle(Palette.secondary) }
+                            HStack { Text(file.name).lineLimit(1); Spacer(); Text(l.bytes(file.size)).foregroundStyle(Palette.secondary) }
                             Text(file.url.path).font(.system(size: 10)).foregroundStyle(Palette.secondary).textSelection(.enabled)
                         }.font(.system(size: 12))
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }.frame(height: 220).padding(12).background(Palette.background, in: RoundedRectangle(cornerRadius: 10))
-            Text("File nằm trong Thùng rác cho đến khi bạn tự dọn. File đã thay đổi từ lần quét sẽ được bỏ qua.").font(.system(size: 11)).foregroundStyle(Palette.secondary)
+            Text(l.text("File nằm trong Thùng rác cho đến khi bạn tự dọn. File đã thay đổi từ lần quét sẽ được bỏ qua.")).font(.system(size: 11)).foregroundStyle(Palette.secondary)
             HStack {
                 Spacer()
-                Button("Hủy", role: .cancel) { cleaner.confirmTrash = false }.keyboardShortcut(.cancelAction)
-                Button("Chuyển vào Thùng rác") { cleaner.confirmTrash = false; Task { await cleaner.trashSelected() } }.buttonStyle(PrimaryButton())
+                Button(l.text("Hủy"), role: .cancel) { cleaner.confirmTrash = false }.keyboardShortcut(.cancelAction)
+                Button(l.text("Chuyển vào Thùng rác")) { cleaner.confirmTrash = false; Task { await cleaner.trashSelected() } }.buttonStyle(PrimaryButton())
             }
         }.padding(26).frame(width: 570)
     }
@@ -149,25 +150,26 @@ struct CleanerView: View {
 }
 
 struct FileRow: View {
+    @Environment(\.localizer) private var l
     let file: CleanupCandidate
     @EnvironmentObject var cleaner: CleanerModel
     var body: some View {
         HStack(spacing: 12) {
             Button { cleaner.toggle(file.id) } label: {
                 Image(systemName: cleaner.selected.contains(file.id) ? "checkmark.square.fill" : "square").foregroundStyle(Palette.blue)
-            }.buttonStyle(.plain).accessibilityLabel("Chọn \(file.name)").disabled(cleaner.isTrashing)
+            }.buttonStyle(.plain).accessibilityLabel(l.text("Chọn %@", file.name)).disabled(cleaner.isTrashing)
             Image(nsImage: NSWorkspace.shared.icon(forFile: file.url.path)).resizable().frame(width: 27, height: 27)
             VStack(alignment: .leading, spacing: 5) {
                 Text(file.name).font(.system(size: 12, weight: .medium)).lineLimit(1).truncationMode(.middle)
                 Text(file.url.deletingLastPathComponent().path).font(.system(size: 10)).foregroundStyle(Palette.secondary).lineLimit(1).truncationMode(.middle)
             }.frame(maxWidth: .infinity, alignment: .leading).help(file.url.path)
-            Text(file.modified, format: .dateTime.day().month().year()).font(.system(size: 10)).foregroundStyle(Palette.secondary).frame(width: 105, alignment: .leading)
-            Text(DisplayFormat.bytes(file.size)).font(.system(size: 12, weight: .medium)).monospacedDigit().frame(width: 105, alignment: .trailing)
+            Text(file.modified, format: .dateTime.day().month().year().locale(l.locale)).font(.system(size: 10)).foregroundStyle(Palette.secondary).frame(width: 105, alignment: .leading)
+            Text(l.bytes(file.size)).font(.system(size: 12, weight: .medium)).monospacedDigit().frame(width: 105, alignment: .trailing)
             Button { NSWorkspace.shared.activateFileViewerSelecting([file.url]) } label: { Image(systemName: "folder").foregroundStyle(Palette.secondary) }
-                .buttonStyle(.plain).help("Hiện trong Finder").frame(width: 30)
+                .buttonStyle(.plain).help(l.text("Hiện trong Finder")).frame(width: 30)
         }.padding(.horizontal, 18).padding(.vertical, 14)
         .contextMenu {
-            Button("Hiện trong Finder") { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
+            Button(l.text("Hiện trong Finder")) { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
         }
     }
 }

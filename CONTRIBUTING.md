@@ -20,7 +20,7 @@ Open `Package.swift` in Xcode for editing. No external packages or API keys are 
 
 - Try the packaged app on your Mac and report hardware/macOS compatibility without sharing serial numbers.
 - Improve VoiceOver labels, keyboard navigation, or text layout.
-- Help move the Vietnamese UI strings into a localization catalog and add English.
+- Improve English/Vietnamese translations in `Sources/MacPulseCore/Resources/{en,vi}.lproj/Localizable.strings`, keeping keys and format placeholders aligned.
 - Add anonymized battery fixtures for missing/unsupported capacity values.
 - Extend cleanup tests for stale files, permission failures, and cloud placeholders.
 

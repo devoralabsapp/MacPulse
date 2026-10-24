@@ -20,6 +20,7 @@ extension Color {
 }
 
 struct Panel<Content: View>: View {
+    @Environment(\.localizer) private var l
     @ViewBuilder var content: Content
     var body: some View {
         content.padding(22).frame(maxWidth: .infinity, alignment: .leading)
@@ -29,17 +30,19 @@ struct Panel<Content: View>: View {
 }
 
 struct SectionTitle: View {
+    @Environment(\.localizer) private var l
     let title: String
     var subtitle: String? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(title).font(.system(size: 15, weight: .semibold)).foregroundStyle(Palette.ink)
-            if let subtitle { Text(subtitle).font(.system(size: 11)).foregroundStyle(Palette.secondary) }
+            Text(l.text(title)).font(.system(size: 15, weight: .semibold)).foregroundStyle(Palette.ink)
+            if let subtitle { Text(l.text(subtitle)).font(.system(size: 11)).foregroundStyle(Palette.secondary) }
         }
     }
 }
 
 struct MetricCard: View {
+    @Environment(\.localizer) private var l
     let title: String
     let icon: String
     let value: String
@@ -54,12 +57,12 @@ struct MetricCard: View {
                         .foregroundStyle(color).frame(width: 34, height: 34)
                         .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 10))
                     Spacer()
-                    Text(title.uppercased()).font(.system(size: 10, weight: .semibold)).tracking(1).foregroundStyle(Palette.secondary)
+                    Text(l.text(title).uppercased()).font(.system(size: 10, weight: .semibold)).tracking(1).foregroundStyle(Palette.secondary)
                 }
                 Text(value).font(.system(size: 30, weight: .semibold, design: .rounded)).foregroundStyle(Palette.ink).monospacedDigit().lineLimit(1).minimumScaleFactor(0.65)
                 VStack(alignment: .leading, spacing: 10) {
                     ProgressTrack(fraction: fraction, color: color)
-                    Text(caption).font(.system(size: 11)).foregroundStyle(Palette.secondary).lineLimit(1).minimumScaleFactor(0.8)
+                    Text(l.text(caption)).font(.system(size: 11)).foregroundStyle(Palette.secondary).lineLimit(1).minimumScaleFactor(0.8)
                 }
             }
         }
@@ -67,6 +70,7 @@ struct MetricCard: View {
 }
 
 struct ProgressTrack: View {
+    @Environment(\.localizer) private var l
     let fraction: Double
     let color: Color
     var body: some View {
@@ -80,6 +84,7 @@ struct ProgressTrack: View {
 }
 
 struct HistoryChart: View {
+    @Environment(\.localizer) private var l
     let primary: [Double]
     var secondary: [Double] = []
     var color = Palette.blue
@@ -115,29 +120,31 @@ struct HistoryChart: View {
                         context.stroke(line(primary), with: .color(color), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                     }.padding(.leading, 34).padding(.vertical, 5)
                 } else {
-                    Text("Đang thu thập mẫu đầu tiên…").font(.system(size: 12)).foregroundStyle(Palette.secondary).frame(maxWidth: .infinity)
+                    Text(l.text("Đang thu thập mẫu đầu tiên…")).font(.system(size: 12)).foregroundStyle(Palette.secondary).frame(maxWidth: .infinity)
                 }
             }
         }
         .frame(height: 150)
-        .accessibilityLabel("Biểu đồ tài nguyên. Mẫu gần nhất: \(DisplayFormat.percent(primary.last))")
+        .accessibilityLabel(l.text("Biểu đồ tài nguyên. Mẫu gần nhất: %@", l.percent(primary.last)))
     }
 }
 
 struct DetailRow: View {
+    @Environment(\.localizer) private var l
     let title: String
     let value: String
     var color: Color = Palette.ink
     var body: some View {
         HStack {
-            Text(title).foregroundStyle(Palette.secondary)
+            Text(l.text(title)).foregroundStyle(Palette.secondary)
             Spacer(minLength: 16)
-            Text(value).fontWeight(.medium).foregroundStyle(color).monospacedDigit()
+            Text(l.text(value)).fontWeight(.medium).foregroundStyle(color).monospacedDigit()
         }.font(.system(size: 12)).padding(.vertical, 6)
     }
 }
 
 struct LegendDot: View {
+    @Environment(\.localizer) private var l
     let title: String
     let color: Color
     var body: some View {

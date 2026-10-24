@@ -2,20 +2,22 @@
 
 [English](README.md) · [Giấy phép MIT](LICENSE) · [Hướng dẫn đóng góp](CONTRIBUTING.md)
 
-**Trạng thái:** dự án mới, đang phát triển. Build Universal và 11 bài kiểm thử lõi đã đạt; giao diện và toàn bộ luồng chuyển vào Thùng rác vẫn cần kiểm tra thủ công. Xem [kết quả xác minh](VERIFICATION.md).
+**Trạng thái:** dự án mới, đang phát triển. Có kiểm thử tự động và build Universal; giao diện và toàn bộ luồng chuyển vào Thùng rác vẫn cần kiểm tra thủ công. Xem [kết quả xác minh](VERIFICATION.md).
 
-App macOS native bằng SwiftUI, giao diện tiếng Việt, theo dõi tài nguyên trực tiếp và giúp xem lại những file có thể dọn. Yêu cầu macOS 14 trở lên. Không có dịch vụ mạng, tài khoản hoặc thư viện bên thứ ba.
+App macOS native bằng SwiftUI, giao diện tiếng Việt và tiếng Anh, theo dõi tài nguyên trực tiếp và giúp xem lại những file có thể dọn. Yêu cầu macOS 14 trở lên. Không có dịch vụ mạng, tài khoản hoặc thư viện bên thứ ba.
 
 ## Mở app
 
 Sau khi build, mở `dist/MacPulse.app`. Có thể kéo app vào Applications nếu muốn cài đặt. Đóng cửa sổ vẫn theo dõi bằng biểu tượng trên thanh menu; chọn **Thoát MacPulse** để dừng hoàn toàn.
+
+Đổi ngôn ngữ bằng biểu tượng bánh răng hoặc **⌘, → Ngôn ngữ / Language → English / Tiếng Việt / Theo hệ thống**. Lựa chọn được lưu và áp dụng ngay cho nội dung app, thanh menu riêng và thông báo, kể cả kết quả quét đang có. Hộp thoại và menu tiêu chuẩn do macOS quản lý vẫn theo thiết lập ngôn ngữ của macOS.
 
 ## Tính năng
 
 - CPU: tỷ lệ toàn hệ thống, user/system/idle và biểu đồ 60 mẫu gần nhất.
 - RAM: bộ nhớ đang dùng, wired, compressed, cache, swap và áp lực bộ nhớ nếu macOS cung cấp.
 - Storage: tổng dung lượng, đang dùng và còn trống trên volume chứa thư mục cá nhân.
-- Pin: phần trăm, điện lượng còn lại bằng mAh, dung lượng sạc đầy/thiết kế, số chu kỳ, điện áp, dòng điện và thời gian ước tính.
+- Pin: phần trăm, điện lượng còn lại bằng mAh, dung lượng điện sạc đầy và dung lượng thiết kế do firmware báo được ghi riêng; số chu kỳ, điện áp, dòng điện và thời gian ước tính.
 - Mạng: tốc độ tải lên/xuống trên giao diện mạng vật lý (không cộng lặp giao diện VPN/bridge).
 - Dọn dẹp: thư mục tùy chọn, file từ 100 MB, file chưa chỉnh sửa từ 180 ngày; có thể quét thêm cache/log người dùng từ 30 ngày.
 - Tìm theo tên/đường dẫn, lọc loại, hiện trong Finder, chọn nhiều file và xem danh sách xác nhận trước khi chuyển vào Thùng rác.
@@ -58,15 +60,15 @@ Tests dùng thư mục tạm riêng: phân loại tuổi/kích thước, cache m
 ## Nguồn số liệu & giới hạn
 
 - CPU: `host_statistics`; mẫu đầu cần chờ một chu kỳ để tính delta.
-- RAM: `host_statistics64` và `vm.swapusage`; dùng active + inactive − purgeable − file-backed + wired + compressed. Có thể chênh lệch Giám sát hoạt động do thời điểm lấy mẫu và cách phân loại của macOS. Áp lực bộ nhớ chỉ hiển thị khi sysctl được hệ thống hỗ trợ.
+- RAM: `host_statistics64` và `vm.swapusage`; dùng active + inactive − purgeable − file-backed + wired + compressed. RAM và swap dùng đơn vị nhị phân (1024) với nhãn GB theo macOS: máy 32 GiB sẽ hiển thị **32 GB**, không còn 34,36 GB. Ổ đĩa và dung lượng file vẫn dùng hệ thập phân. Có thể chênh lệch Giám sát hoạt động do thời điểm lấy mẫu và cách phân loại.
 - Storage: `volumeTotalCapacity` / `volumeAvailableCapacity` của thư mục cá nhân. APFS và dung lượng có thể thu hồi khiến số khác màn hình Storage trong Cài đặt. Dung lượng file trong bộ quét là logical size, không phải cam kết dung lượng thực thu hồi (APFS clone, sparse file và nén có thể khác).
-- Pin: IOPS cung cấp `%` và trạng thái nguồn; IOKit `AppleSmartBattery` cung cấp `AppleRawCurrentCapacity`/`AppleRawMaxCapacity` hoặc giá trị mAh kiểu cũ khi có. Những khóa registry này phụ thuộc phần cứng/macOS. Thiếu dữ liệu sẽ hiển thị `—`, không lấy phần trăm đổi thành mAh.
-- Sức khỏe pin là full-charge capacity / design capacity, không phải chẩn đoán bảo hành của Apple. Dòng điện dương khi sạc, âm khi xả, có thể bằng 0 khi giữ mức sạc.
+- Pin: IOPS cung cấp `%` và trạng thái nguồn; IOKit `AppleSmartBattery` cung cấp điện lượng mAh, bao gồm các trường trong `BatteryData` trên phiên bản macOS mới. Thiếu dữ liệu sẽ hiển thị `—`, không lấy phần trăm đổi thành mAh.
+- Dung lượng thiết kế lấy từ `DesignCapacity`, không thay bằng dung lượng sạc đầy hoặc `Qmax`. Tỷ lệ sạc đầy / thiết kế có thể vượt 100%; đây không phải chẩn đoán tình trạng pin của Apple. Phần trăm và điện lượng thô là các số đọc khác nhau, có thể không suy ra cùng một tỷ lệ. Dòng điện dương khi sạc, âm khi xả, có thể bằng 0 khi giữ mức sạc.
 
 Tham khảo API chính thức: [IOPowerSources](https://developer.apple.com/documentation/iokit/iopowersources_h), [IOPMPowerSource](https://developer.apple.com/documentation/kernel/iopmpowersource), [NSWorkspace.recycle](https://developer.apple.com/documentation/appkit/nsworkspace/recycle(_:completionhandler:)).
 
 ## Mã nguồn mở
 
-MacPulse phát hành theo [MIT License](LICENSE). Xem [hướng dẫn đóng góp](CONTRIBUTING.md), [lộ trình](ROADMAP.md) và [chính sách báo lỗi bảo mật](SECURITY.md). Giao diện hiện tại dùng tiếng Việt; bản tiếng Anh nằm trong lộ trình.
+MacPulse phát hành theo [MIT License](LICENSE). Xem [hướng dẫn đóng góp](CONTRIBUTING.md), [lộ trình](ROADMAP.md) và [chính sách báo lỗi bảo mật](SECURITY.md). Bản dịch có trong `Sources/MacPulseCore/Resources/{en,vi}.lproj/Localizable.strings`.
 
 Dự án được phát triển ban đầu với sự hỗ trợ của OpenAI Codex. MacPulse là dự án độc lập; không tuyên bố được OpenAI tài trợ hoặc đã được chấp nhận vào chương trình nào.

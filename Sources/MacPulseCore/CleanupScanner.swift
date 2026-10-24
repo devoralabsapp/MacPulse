@@ -42,7 +42,7 @@ public struct CleanupCandidate: Identifiable, Sendable {
 public struct ScanResult: Sendable {
     public var files: [CleanupCandidate] = []
     public var inspected = 0
-    public var warnings: [String] = []
+    public var warnings: [LocalizedMessage] = []
     public var cancelled = false
     public init() {}
 }
@@ -97,11 +97,14 @@ public enum CleanupSafety {
 
 public enum CleanupError: LocalizedError {
     case unsafe(String), changed(String)
-    public var errorDescription: String? {
+    public var message: LocalizedMessage {
         switch self {
-        case .unsafe(let name): return "Bỏ qua “\(name)”: đường dẫn không an toàn."
-        case .changed(let name): return "“\(name)” đã thay đổi từ lần quét. Hãy quét lại."
+        case .unsafe(let name): return LocalizedMessage("Bỏ qua “%@”: đường dẫn không an toàn.", name)
+        case .changed(let name): return LocalizedMessage("“%@” đã thay đổi từ lần quét. Hãy quét lại.", name)
         }
+    }
+    public var errorDescription: String? {
+        Localizer().render(message)
     }
 }
 
@@ -123,22 +126,22 @@ public struct CleanupScanner {
             if cancellation.isCancelled { result.cancelled = true; break }
             let root = source.url.standardizedFileURL.resolvingSymlinksInPath()
             guard !CleanupSafety.isProtected(root) else {
-                result.warnings.append("Bỏ qua thư mục được bảo vệ: \(root.path)"); continue
+                result.warnings.append(LocalizedMessage("Bỏ qua thư mục được bảo vệ: %@", root.path)); continue
             }
             guard fm.isReadableFile(atPath: root.path) else {
-                result.warnings.append("Chưa đọc được \(root.lastPathComponent). Hãy chọn lại thư mục hoặc cấp quyền trong Cài đặt hệ thống → Quyền riêng tư & Bảo mật → Tệp và thư mục.")
+                result.warnings.append(LocalizedMessage("Chưa đọc được %@. Hãy chọn lại thư mục hoặc cấp quyền trong Cài đặt hệ thống → Quyền riêng tư & Bảo mật → Tệp và thư mục.", root.lastPathComponent))
                 continue
             }
             guard let enumerator = fm.enumerator(at: root, includingPropertiesForKeys: Array(keys),
                 options: [.skipsHiddenFiles, .skipsPackageDescendants], errorHandler: { url, _ in
-                    if result.warnings.count < 8 { result.warnings.append("Không đọc được: \(url.lastPathComponent)") }
+                    if result.warnings.count < 8 { result.warnings.append(LocalizedMessage("Không đọc được: %@", url.lastPathComponent)) }
                     return !cancellation.isCancelled
                 }) else { continue }
             for case let url as URL in enumerator {
                 if cancellation.isCancelled { result.cancelled = true; break }
                 result.inspected += 1
                 if result.inspected > maxEntries {
-                    result.warnings.append("Đã đạt giới hạn \(maxEntries.formatted()) mục. Chọn thư mục nhỏ hơn để quét tiếp.")
+                    result.warnings.append(LocalizedMessage("Đã đạt giới hạn %@ mục. Chọn thư mục nhỏ hơn để quét tiếp.", String(maxEntries)))
                     result.files.sort { $0.size > $1.size }
                     return result
                 }

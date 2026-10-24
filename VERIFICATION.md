@@ -2,6 +2,16 @@
 
 Local verification on 25 October 2026:
 
+## Version 1.1.0 update
+
+- 20 core tests pass, including regression tests that format 8/16/32/64/128 GiB RAM as the corresponding macOS-style GB values in both languages, while preserving decimal file sizes.
+- Battery capacity fixtures keep full-charge capacity and firmware design capacity separate, support nested `BatteryData`, and reject percentage/boolean/invalid values as design mAh. The estimated full-charge/design ratio is no longer clipped at 100%.
+- English and Vietnamese catalogs contain the same 171 keys and matching format placeholders. Dynamic messages can rerender in the selected language without rescanning.
+- App packaging now includes the localization resource bundle and English/Vietnamese permission descriptions. `scripts/verify-app.swift` checks the translations inside the built app, independently of the build directory.
+- Manual verification of the live language selector, window layout, and complete Trash/restore flow remains outstanding.
+
+## Initial version verification
+
 | Check | Result |
 | --- | --- |
 | Debug build | Passed |

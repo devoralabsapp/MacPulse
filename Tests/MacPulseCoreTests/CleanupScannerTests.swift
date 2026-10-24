@@ -73,7 +73,7 @@ final class CleanupScannerTests: XCTestCase {
         try file("b.bin")
         let token = ScanCancellation(); token.cancel()
         XCTAssertTrue(scan(token: token).cancelled)
-        XCTAssertTrue(scan(limit: 1).warnings.contains { $0.contains("giới hạn") })
+        XCTAssertTrue(scan(limit: 1).warnings.contains { $0.key.contains("giới hạn") })
         var scanner = CleanupScanner(); scanner.largeFileThreshold = 100
         let result = scanner.scan(roots: [ScanRoot(url: root), ScanRoot(url: root)], cancellation: ScanCancellation())
         XCTAssertEqual(result.files.count, 2)
@@ -122,6 +122,6 @@ final class BatteryTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(snapshot.disk.available, 0)
         XCTAssertLessThanOrEqual(snapshot.disk.available, snapshot.disk.total)
         if let battery = snapshot.battery.percent { XCTAssertTrue((0...100).contains(battery)) }
-        print("Live metrics: CPU \(DisplayFormat.percent(snapshot.cpu.usage)), RAM \(DisplayFormat.bytes(snapshot.memory.used))/\(DisplayFormat.bytes(snapshot.memory.total)), disk free \(DisplayFormat.bytes(snapshot.disk.available)), battery \(DisplayFormat.percent(snapshot.battery.percent)), mAh \(DisplayFormat.number(snapshot.battery.currentMAh))")
+        print("Live metrics: CPU \(DisplayFormat.percent(snapshot.cpu.usage)), RAM \(DisplayFormat.memory(snapshot.memory.used))/\(DisplayFormat.memory(snapshot.memory.total)), disk free \(DisplayFormat.bytes(snapshot.disk.available)), battery \(DisplayFormat.percent(snapshot.battery.percent)), remaining mAh \(DisplayFormat.number(snapshot.battery.currentMAh)), full-charge mAh \(DisplayFormat.number(snapshot.battery.maximumMAh)), design mAh \(DisplayFormat.number(snapshot.battery.designMAh))")
     }
 }

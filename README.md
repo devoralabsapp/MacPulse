@@ -9,7 +9,7 @@
 
 [Tiếng Việt](README.vi.md) · [Contributing](CONTRIBUTING.md) · [Roadmap](ROADMAP.md) · [Report a bug](https://github.com/devoralabsapp/MacPulse/issues/new/choose)
 
-MacPulse is a native macOS utility for monitoring CPU, memory, storage, battery, and network activity, with a file cleanup workflow that lets you review each candidate before moving it to Trash. Built with SwiftUI, AppKit, and IOKit, it runs locally without accounts, analytics, or third-party dependencies. The current app interface is in Vietnamese.
+MacPulse is a native macOS utility for monitoring CPU, memory, storage, battery, and network activity, with a file cleanup workflow that lets you review each candidate before moving it to Trash. Built with SwiftUI, AppKit, and IOKit, it runs locally without accounts, analytics, or third-party dependencies. The app supports English and Vietnamese, selectable in Settings.
 
 **Early development:** core tests and Universal builds have been verified locally. Visual UI checks and the full Trash workflow still need manual verification. Builds are ad hoc signed and are not notarized by Apple. See [verification notes](VERIFICATION.md) for the exact scope of validation.
 
@@ -26,7 +26,7 @@ It does not treat an old modification date as proof that a file is unused. It sh
 | CPU | Total utilization, user/system/idle breakdown, core count, and a 60-sample history |
 | Memory | Used, wired, compressed, cached memory, swap, and memory pressure when available |
 | Storage | Capacity, used space, and available space on the volume containing your home folder |
-| Battery | Charge percentage, remaining mAh, full-charge/design capacity, cycle count, estimated health, voltage, current, and time estimates when available |
+| Battery | Charge percentage, remaining mAh, distinct full-charge and firmware design capacities, cycle count, estimated capacity ratio, voltage, current, and time estimates when available |
 | Network | Upload/download rates from physical network interfaces |
 | File cleanup | Large files ≥100 MB, files unmodified for ≥180 days, and optional user cache/log files ≥30 days old |
 | Menu bar | A live CPU readout and a compact resource summary |
@@ -55,6 +55,10 @@ The build script generates `dist/MacPulse.app` and `dist/MacPulse.zip`, includin
 
 Open `Package.swift` in Xcode to work on the source. Use the packaged `.app` when testing folder permissions. Closing the main window keeps menu bar monitoring available; choose **Thoát MacPulse** in the menu bar panel to quit.
 
+## Language
+
+Open the sidebar gear or press **⌘,**, then choose **Language / Ngôn ngữ → English, Tiếng Việt, or System default**. The choice is saved and updates app screens, the custom menu bar panel, and app messages immediately. Existing scan results can change language without rescanning or losing selection. macOS-owned dialogs and standard system menus follow macOS language preferences.
+
 ## Clean up files deliberately
 
 1. Open **Dọn dẹp** (Cleanup), choose a folder, or use Downloads.
@@ -72,9 +76,9 @@ Folder access follows macOS privacy permissions. If access is denied, select the
 ## How the measurements work
 
 - **CPU:** Mach `host_statistics`, calculated from the difference between samples. The first CPU reading needs one sampling interval.
-- **RAM:** `host_statistics64` and `vm.swapusage`. Memory usage is calculated from active, inactive, purgeable, file-backed, wired, and compressed pages. Values can differ from Activity Monitor because of timing and classification. Byte labels currently use decimal units, so 32 GiB is approximately 34.36 GB.
+- **RAM:** `host_statistics64` and `vm.swapusage`. Memory usage is calculated from active, inactive, purgeable, file-backed, wired, and compressed pages. RAM and swap use 1024-based units with macOS-style GB labels: a 32 GiB machine displays **32 GB**, while file and disk sizes retain decimal units. Values can differ from Activity Monitor because of timing and classification.
 - **Disk:** Foundation volume capacity values for the home folder's volume. APFS sharing, snapshots, and purgeable space can produce differences from System Settings. Cleanup file sizes are logical sizes, not a promise of reclaimable physical space.
-- **Battery:** IOPS for percentage/power state and `AppleSmartBattery` registry properties for raw charge when available. Registry properties depend on hardware/macOS. Missing values display `—`; percentage is never relabeled as mAh. Health is estimated full-charge capacity divided by design capacity, not an Apple diagnostic.
+- **Battery:** IOPS for percentage/power state and `AppleSmartBattery` registry properties for raw charge when available, including nested `BatteryData` values. Full-charge capacity is distinct from firmware-reported `DesignCapacity`; learned `Qmax` values are not substituted for design. The full-charge/design ratio can exceed 100% and is not an Apple health diagnosis. Missing values display `—`; percentage is never relabeled as mAh. Percentage and raw mAh are separate readings and may not imply the same ratio.
 - **Network:** Physical interface byte counters, excluding VPN and bridge interfaces to avoid counting the same traffic twice.
 
 References: [IOPowerSources](https://developer.apple.com/documentation/iokit/iopowersources_h), [IOPMPowerSource](https://developer.apple.com/documentation/kernel/iopmpowersource), and [NSWorkspace.recycle](https://developer.apple.com/documentation/appkit/nsworkspace/recycle(_:completionhandler:)).
@@ -93,7 +97,7 @@ The test suite uses isolated temporary files. It covers scan criteria, old-cache
 
 ## Help shape the project
 
-Contributions are welcome, particularly manual verification on different Mac models, English localization, battery compatibility fixtures, accessibility improvements, and cleanup safety tests. See the [roadmap](ROADMAP.md) and [contribution guide](CONTRIBUTING.md) for concrete starting points.
+Contributions are welcome, particularly manual verification on different Mac models, translation improvements, battery compatibility fixtures, accessibility improvements, and cleanup safety tests. See the [roadmap](ROADMAP.md) and [contribution guide](CONTRIBUTING.md) for concrete starting points. Translation resources live in `Sources/MacPulseCore/Resources/{en,vi}.lproj/Localizable.strings`.
 
 MacPulse was initially developed with assistance from OpenAI Codex. Generated changes remain subject to review, testing, and maintainer responsibility. MacPulse is an independent project with no claimed affiliation, sponsorship, or acceptance into an OpenAI program.
 
