@@ -36,7 +36,7 @@ jobs:
       - name: Verify packaged app
         run: |
           codesign --verify --deep --strict --verbose=2 dist/MacPulse.app
-          lipo -verify_arch arm64 x86_64 dist/MacPulse.app/Contents/MacOS/MacPulse
+          lipo dist/MacPulse.app/Contents/MacOS/MacPulse -verify_arch arm64 x86_64
           unzip -t dist/MacPulse.zip
           shasum -a 256 dist/MacPulse.zip > dist/MacPulse.zip.sha256
       - name: Upload development build
