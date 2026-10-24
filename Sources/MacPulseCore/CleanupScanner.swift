@@ -36,6 +36,7 @@ public struct CleanupCandidate: Identifiable, Sendable {
     public let modified: Date
     public let fileNumber: UInt64
     public let categories: Set<CleanupCategory>
+    public var assessment: CleanupAssessment
     public var name: String { url.lastPathComponent }
 }
 
@@ -81,7 +82,7 @@ public enum CleanupSafety {
     /// Recheck immediately before moving: a stale scan or a replaced symlink must never authorize deletion.
     public static func validate(_ candidate: CleanupCandidate, fileManager: FileManager = .default) throws {
         let resolved = candidate.url.resolvingSymlinksInPath().standardizedFileURL
-        guard resolved.path == candidate.url.standardizedFileURL.path,
+        guard candidate.assessment.canSelect, resolved.path == candidate.url.standardizedFileURL.path,
               isInside(resolved, root: candidate.root), !isProtected(resolved) else {
             throw CleanupError.unsafe(candidate.name)
         }
@@ -115,13 +116,15 @@ public struct CleanupScanner {
     public var maxEntries: Int = 100_000
     public init() {}
 
-    public func scan(roots: [ScanRoot], cancellation: ScanCancellation, now: Date = Date()) -> ScanResult {
+    public func scan(roots: [ScanRoot], cancellation: ScanCancellation, now: Date = Date(),
+                     usage: FileUsageSnapshot = FileUsageSnapshot(), assessor: CleanupAssessor = CleanupAssessor()) -> ScanResult {
         let fm = FileManager.default
         var result = ScanResult()
         var seen = Set<String>()
         let keys: Set<URLResourceKey> = [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey,
             .isAliasFileKey, .isPackageKey, .fileSizeKey, .fileAllocatedSizeKey,
-            .contentModificationDateKey, .isUbiquitousItemKey, .ubiquitousItemDownloadingStatusKey]
+            .contentModificationDateKey, .creationDateKey, .contentAccessDateKey,
+            .isUbiquitousItemKey, .ubiquitousItemDownloadingStatusKey]
         for source in roots {
             if cancellation.isCancelled { result.cancelled = true; break }
             let root = source.url.standardizedFileURL.resolvingSymlinksInPath()
@@ -155,9 +158,10 @@ public struct CleanupScanner {
                 if values.isUbiquitousItem == true && values.ubiquitousItemDownloadingStatus != .current && values.ubiquitousItemDownloadingStatus != .downloaded { continue }
                 let age = now.timeIntervalSince(modified) / 86_400
                 var categories = Set<CleanupCategory>()
-                if source.category == .cache || source.category == .logs {
+                let locationCategory = assessor.category(for: url) ?? source.category
+                if locationCategory == .cache || locationCategory == .logs {
                     guard age >= Double(cacheAgeDays) else { continue }
-                    categories.insert(source.category!)
+                    categories.insert(locationCategory!)
                 } else {
                     if Int64(size) >= largeFileThreshold { categories.insert(.large) }
                     if age >= Double(oldFileDays) { categories.insert(.old) }
@@ -167,7 +171,13 @@ public struct CleanupScanner {
                       let fileNumber = attrs[.systemFileNumber] as? NSNumber else { continue }
                 result.files.append(CleanupCandidate(url: url, root: root, size: Int64(size),
                     allocatedSize: Int64(values.fileAllocatedSize ?? size), modified: modified,
-                    fileNumber: fileNumber.uint64Value, categories: categories))
+                    fileNumber: fileNumber.uint64Value, categories: categories,
+                    assessment: assessor.assess(url: url, evidence: CleanupEvidence(modified: modified,
+                        created: values.creationDate, accessed: values.contentAccessDate,
+                        isCloud: values.isUbiquitousItem == true,
+                        linkCount: (attrs[.referenceCount] as? NSNumber)?.intValue ?? 0,
+                        isWritable: attrs[.immutable] as? Bool != true && fm.isWritableFile(atPath: url.path) &&
+                            fm.isWritableFile(atPath: url.deletingLastPathComponent().path)), usage: usage, now: now)))
             }
             if result.cancelled { break }
         }

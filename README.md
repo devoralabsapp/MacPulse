@@ -26,12 +26,12 @@ It does not treat an old modification date as proof that a file is unused. It sh
 | CPU | Total utilization, user/system/idle breakdown, core count, and a 60-sample history |
 | Memory | Used, wired, compressed, cached memory, swap, and memory pressure when available |
 | Storage | Capacity, used space, and available space on the volume containing your home folder |
-| Battery | Charge percentage, remaining mAh, distinct full-charge and firmware design capacities, cycle count, estimated capacity ratio, voltage, current, and time estimates when available |
+| Battery | Charge percentage, remaining mAh, distinct full-charge and firmware design capacities, cycle count, a health estimate only for consistent references, macOS-reported condition, voltage, current, and time estimates when available |
 | Network | Upload/download rates from physical network interfaces |
 | File cleanup | Large files ≥100 MB, files unmodified for ≥180 days, and optional user cache/log files ≥30 days old |
 | Menu bar | A live CPU readout and a compact resource summary |
 
-Cleanup results support search, category filters, multiple selection, and **Reveal in Finder**. Nothing is selected automatically. A confirmation sheet lists the selected files before any Trash operation.
+Cleanup results support search, category/risk filters, per-file reasons, multiple selection, and **Reveal in Finder**. Nothing is selected automatically. A confirmation sheet lists the selected files and their assessment before any Trash operation.
 
 ## Get started
 
@@ -64,12 +64,20 @@ Open the sidebar gear or press **⌘,**, then choose **Language / Ngôn ngữ �
 1. Open **Dọn dẹp** (Cleanup), choose a folder, or use Downloads.
 2. Optionally include old user caches and logs, then start the scan.
 3. Inspect the results and reveal unfamiliar files in Finder.
-4. Select files, choose **Chuyển vào Thùng rác** (Move to Trash), and review the confirmation list.
+4. Use the risk filter or **Select only lower-risk files**, then choose **Chuyển vào Thùng rác** (Move to Trash) and review the confirmation list. The lower-risk action replaces your current selection with the visible lower-risk items.
 5. Restore files using Finder's **Put Back** if needed. Space is reclaimed only after you empty Trash yourself.
 
-The scanner reads metadata, not file contents. It skips hidden files, symlinks, aliases, app/package contents, `node_modules`, designated system locations, and the user's Library outside Caches/Logs. Cloud-only iCloud items are skipped. Scans are cancellable and limited to 100,000 entries; use a smaller folder for larger collections.
+The scanner reads metadata, not file contents. It skips hidden files, symlinks, aliases, app/package contents, `node_modules`, designated system locations, and the user's Library outside Caches/Logs. Cloud-only iCloud items are skipped; detected downloaded cloud files are blocked from cleanup. Scans are cancellable and limited to 100,000 entries; use a smaller folder for larger collections.
 
-Immediately before a Trash request, MacPulse rechecks the path, file identity, size, and modification time. Changed files are skipped. This check reduces stale-scan mistakes; it does not provide an atomic filesystem security guarantee. Caches may be recreated by their apps, and old files may still be important. Start with disposable files when testing the cleanup workflow.
+| Assessment | Meaning |
+| --- | --- |
+| Lower risk | Certain `.cache`, `.tmp`, or `.temp` files in the standard user Caches folder, or recognized old log formats in user Logs. Modification, creation, and access dates that are available must be at least 30 days old, open-file inspection must complete cleanly, and no matching running app/open file may be observed. |
+| Review first | Personal files, unrecognized cache/log formats, recent activity, or incomplete inspection. Age and size do not prove a file is unneeded. |
+| Avoid cleanup | Observed open files, running cache/log owners, detected cloud data, databases, security material, backups, incomplete downloads, locked/unwritable files, and files with multiple links. Selection is disabled. |
+
+These labels are conservative heuristics, not a safety guarantee. The app checks the current user's open files using macOS `lsof`, with a timeout, and reads running app bundle IDs. Warnings, failure, empty results, or timeout disable lower-risk labels. Inspection cannot establish that no process will use a file later, and not every sync provider or valuable file can be recognized. Cache regeneration may need a network connection; deleting logs loses diagnostic history.
+
+Before a batch moves to Trash, MacPulse refreshes open-file/running-app information and reassesses each file. Blocked files and previously lower-risk files that no longer qualify are skipped. It also rechecks the path, file identity, size, and modification time immediately before a move. These checks reduce stale-scan mistakes; they do not provide an atomic filesystem security guarantee. Start with disposable files when testing the cleanup workflow.
 
 Folder access follows macOS privacy permissions. If access is denied, select the folder again or review **System Settings → Privacy & Security → Files and Folders**. MacPulse does not require administrator privileges, empty Trash, force-purge RAM, uninstall apps, or modify system settings.
 
@@ -78,7 +86,7 @@ Folder access follows macOS privacy permissions. If access is denied, select the
 - **CPU:** Mach `host_statistics`, calculated from the difference between samples. The first CPU reading needs one sampling interval.
 - **RAM:** `host_statistics64` and `vm.swapusage`. Memory usage is calculated from active, inactive, purgeable, file-backed, wired, and compressed pages. RAM and swap use 1024-based units with macOS-style GB labels: a 32 GiB machine displays **32 GB**, while file and disk sizes retain decimal units. Values can differ from Activity Monitor because of timing and classification.
 - **Disk:** Foundation volume capacity values for the home folder's volume. APFS sharing, snapshots, and purgeable space can produce differences from System Settings. Cleanup file sizes are logical sizes, not a promise of reclaimable physical space.
-- **Battery:** IOPS for percentage/power state and `AppleSmartBattery` registry properties for raw charge when available, including nested `BatteryData` values. Full-charge capacity is distinct from firmware-reported `DesignCapacity`; learned `Qmax` values are not substituted for design. The full-charge/design ratio can exceed 100% and is not an Apple health diagnosis. Missing values display `—`; percentage is never relabeled as mAh. Percentage and raw mAh are separate readings and may not imply the same ratio.
+- **Battery:** IOPS for percentage/power state and `AppleSmartBattery` registry properties for raw charge when available, including nested `BatteryData` values. Full-charge capacity is distinct from firmware-reported `DesignCapacity`; learned `Qmax` values are not substituted for design. Raw gauge readings are not an independent physical-capacity measurement. If reported full charge exceeds the design reference, the app retains both readings, flags them for verification, and withholds its health estimate instead of displaying above 100%, inventing a new design value, or silently clamping to 100%. macOS-reported condition remains separate. Missing values display `—`; percentage is never relabeled as mAh.
 - **Network:** Physical interface byte counters, excluding VPN and bridge interfaces to avoid counting the same traffic twice.
 
 References: [IOPowerSources](https://developer.apple.com/documentation/iokit/iopowersources_h), [IOPMPowerSource](https://developer.apple.com/documentation/kernel/iopmpowersource), and [NSWorkspace.recycle](https://developer.apple.com/documentation/appkit/nsworkspace/recycle(_:completionhandler:)).

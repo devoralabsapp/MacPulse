@@ -28,7 +28,7 @@ struct ContentView: View {
                     Image(systemName: "lock.shield").font(.system(size: 10))
                     Text(l.text("Dữ liệu ở trên máy của bạn"))
                     Spacer()
-                    Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.0")").foregroundStyle(Palette.secondary.opacity(0.8))
+                    Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.2.0")").foregroundStyle(Palette.secondary.opacity(0.8))
                 }.font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.horizontal, 30).padding(.vertical, 13)
             }.background(Palette.background)
         }

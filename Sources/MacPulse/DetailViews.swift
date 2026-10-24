@@ -112,7 +112,16 @@ struct BatteryView: View {
         HStack(spacing: 18) {
             MetricCard(title: l.text("Mức pin"), icon: "battery.75percent", value: l.percent(b.percent), caption: b.stateLabel, fraction: (b.percent ?? 0) / 100, color: Palette.mint)
             MetricCard(title: l.text("Còn lại"), icon: "bolt.fill", value: b.currentMAh.map { "\(l.number($0))" } ?? "—", caption: l.text("mAh · điện lượng hiện tại"), fraction: b.currentMAh.flatMap { current in b.maximumMAh.map { Double(current) / Double(max(1, $0)) } } ?? 0, color: Palette.blue)
-            MetricCard(title: l.text("Sạc đầy / thiết kế"), icon: "heart", value: l.percent(b.health), caption: l.text("Tỷ lệ dung lượng (ước tính)"), fraction: (b.health ?? 0) / 100, color: Palette.purple)
+            MetricCard(title: l.text("Sức khỏe pin (ước tính)"), icon: "heart", value: l.percent(b.health), caption: b.hasCapacityConflict ? l.text("Chưa xác minh được số liệu") : l.text("so với dung lượng thiết kế"), fraction: (b.health ?? 0) / 100, color: Palette.purple)
+        }
+        if b.hasCapacityConflict {
+            Panel {
+                VStack(alignment: .leading, spacing: 9) {
+                    Label(l.text("Số liệu pin chưa nhất quán"), systemImage: "exclamationmark.triangle").font(.system(size: 13, weight: .semibold)).foregroundStyle(Palette.orange)
+                    Text(l.text("Firmware báo dung lượng sạc đầy lớn hơn mốc thiết kế. App giữ nguyên các số đọc, không nâng mốc thiết kế, không ép về 100% và không suy ra sức khỏe pin từ cặp số này."))
+                        .font(.system(size: 12)).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
+                }
+            }
         }
         HStack(alignment: .top, spacing: 20) {
             Panel {
@@ -134,11 +143,12 @@ struct BatteryView: View {
                     SectionTitle(title: l.text("Nguồn điện hiện tại"))
                     Label(l.text(b.stateLabel), systemImage: b.isPluggedIn ? "powerplug.fill" : "battery.75percent")
                         .font(.system(size: 17, weight: .medium)).foregroundStyle(Palette.mint).padding(.vertical, 10)
+                    DetailRow(title: l.text("Tình trạng do macOS báo"), value: l.text(b.conditionLabel))
                     DetailRow(title: b.isCharging ? l.text("Ước tính đến khi đầy") : l.text("Thời gian pin ước tính"), value: b.minutesRemaining.map { l.text("%@ giờ %@ phút", l.number($0 / 60), l.number($0 % 60)) } ?? l.text("Chưa có ước tính"))
                     Divider()
                     Text(l.text("mAh được đọc từ bộ điều khiển pin qua IOKit. Nếu máy hoặc phiên bản macOS không cung cấp điện lượng thô, MacPulse hiển thị dấu — thay vì đổi phần trăm thành mAh."))
                         .font(.system(size: 12)).foregroundStyle(Palette.secondary).lineSpacing(5)
-                    Text(l.text("Dung lượng sạc đầy có thể lớn hơn thiết kế, nên tỷ lệ có thể vượt 100%. Đây không phải chẩn đoán tình trạng pin của Apple."))
+                    Text(l.text("Dung lượng thiết kế là mốc danh định do firmware báo. Số đọc thô không phải phép đo dung lượng vật lý độc lập; khi các mốc không nhất quán, cần đối chiếu thay vì kết luận pin có sức khỏe trên 100%."))
                         .font(.system(size: 11)).foregroundStyle(Palette.secondary).lineSpacing(4)
                     Text(l.text("Phần trăm pin lấy từ macOS; số mAh đọc trực tiếp từ bộ điều khiển pin và có thể không suy ra cùng tỷ lệ."))
                         .font(.system(size: 11)).foregroundStyle(Palette.secondary).lineSpacing(4)

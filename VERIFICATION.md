@@ -2,6 +2,14 @@
 
 Local verification on 25 October 2026:
 
+## Version 1.2.0 update
+
+- 35 tests pass with no failures. The open-file integration test observed its own disposable open fixture through unprivileged `lsof`; no user files were moved or deleted.
+- Assessment tests cover recognized standard cache/log paths, recent access/creation, incomplete checks, open files, running owners, cloud data, databases, security material, backups, partial downloads, locks/multiple links, and fake cache-folder/category hints.
+- Blocked candidates fail the core Trash validation check. New tests verify that risk increases when usage changes, and that inconsistent battery references produce no health estimate or fabricated 100%.
+- English/Vietnamese resources have matching keys and format parameters. Battery and cleanup explanations are available in both languages.
+- Risk labels remain heuristic, and process inspection is a point-in-time user-level snapshot. Manual checks of the new risk controls, live language switching, and the full Trash/restore flow are still outstanding.
+
 ## Version 1.1.0 update
 
 - 20 core tests pass, including regression tests that format 8/16/32/64/128 GiB RAM as the corresponding macOS-style GB values in both languages, while preserving decimal file sizes.

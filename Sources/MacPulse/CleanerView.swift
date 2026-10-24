@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import MacPulseCore
+import UniformTypeIdentifiers
 
 struct CleanerView: View {
     @Environment(\.localizer) private var l
@@ -31,6 +32,8 @@ struct CleanerView: View {
                 }
                 Text(l.text("File lớn ≥ 100 MB · Chưa chỉnh sửa ≥ 180 ngày. Ngày sửa đổi không xác định được file còn sử dụng hay không."))
                     .font(.system(size: 10)).foregroundStyle(Palette.secondary)
+                Text(l.text("Mức đánh giá là gợi ý, không bảo đảm file đã hết sử dụng. Nhãn ít rủi ro chỉ áp dụng cho một số cache/log cũ qua kiểm tra."))
+                    .font(.system(size: 10)).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
             }
         }
         if let message = cleaner.message {
@@ -45,7 +48,7 @@ struct CleanerView: View {
             Panel {
                 VStack(spacing: 18) {
                     ProgressView().controlSize(.large)
-                    Text(l.text("Đang xem qua các file…")).font(.system(size: 16, weight: .medium))
+                    Text(l.text("Đang kiểm tra file đang mở và thông tin file…")).font(.system(size: 16, weight: .medium))
                     Text(l.text("Chỉ đọc thông tin file, không mở nội dung và không tự động xóa.")).font(.system(size: 12)).foregroundStyle(Palette.secondary)
                 }.frame(maxWidth: .infinity).padding(.vertical, 64)
             }
@@ -70,15 +73,40 @@ struct CleanerView: View {
                 filterButton(l.text("Tất cả"), category: nil)
                 ForEach(CleanupCategory.allCases) { category in filterButton(l.text(category.title), category: category) }
             }
+            HStack(spacing: 16) {
+                ForEach(CleanupRisk.allCases) { risk in
+                    HStack(spacing: 5) {
+                        RiskBadge(risk: risk)
+                        Text(l.number(cleaner.count(risk))).font(.system(size: 11, weight: .medium)).monospacedDigit()
+                    }
+                }
+                Spacer()
+                Picker(l.text("Đánh giá"), selection: $cleaner.riskFilter) {
+                    Text(l.text("Tất cả mức đánh giá")).tag(nil as CleanupRisk?)
+                    ForEach(CleanupRisk.allCases) { risk in Text(l.text(risk.title)).tag(Optional(risk)) }
+                }.font(.system(size: 11)).frame(width: 200)
+            }
+            HStack {
+                Text(l.text("Cache/log cũ thường ít rủi ro hơn tài liệu cá nhân. Bật quét cache/log để xem các mục này."))
+                    .font(.system(size: 10)).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
+                Spacer()
+                Button(l.text("Chọn chỉ mục ít rủi ro")) { cleaner.selectLowerRisk() }
+                    .controlSize(.small).disabled(cleaner.lowerRiskVisibleIDs.isEmpty || cleaner.isTrashing)
+            }
+            if !cleaner.usageCheckComplete {
+                Label(l.text("Kiểm tra file đang mở chưa hoàn tất hoặc bị giới hạn quyền. Không có mục nào được gắn nhãn ít rủi ro."), systemImage: "exclamationmark.triangle")
+                    .font(.system(size: 11)).foregroundStyle(Color(hex: 0xA8752B)).fixedSize(horizontal: false, vertical: true)
+            }
             if cleaner.visibleFiles.isEmpty {
                 emptyState(icon: "checkmark.circle", title: cleaner.files.isEmpty ? l.text("Chưa có file phù hợp tiêu chí") : l.text("Không có kết quả phù hợp"), text: l.text("Bạn có thể đổi thư mục, bật quét cache hoặc thay đổi bộ lọc."))
             } else {
                 VStack(spacing: 0) {
                     HStack {
-                        Button { cleaner.toggleVisible() } label: { Image(systemName: Set(cleaner.visibleFiles.map(\.id)).isSubset(of: cleaner.selected) ? "checkmark.square.fill" : "square").foregroundStyle(Palette.blue) }.buttonStyle(.plain).help(l.text("Chọn / bỏ chọn các file đang hiển thị")).disabled(cleaner.isTrashing)
+                        Button { cleaner.toggleVisible() } label: { Image(systemName: !cleaner.selectableVisibleIDs.isEmpty && cleaner.selectableVisibleIDs.isSubset(of: cleaner.selected) ? "checkmark.square.fill" : "square").foregroundStyle(Palette.blue) }.buttonStyle(.plain).help(l.text("Chọn / bỏ chọn các file đang hiển thị")).disabled(cleaner.isTrashing || cleaner.selectableVisibleIDs.isEmpty)
                         Text(l.text("TÊN FILE")).frame(maxWidth: .infinity, alignment: .leading)
-                        Text(l.text("SỬA LẦN CUỐI")).frame(width: 105, alignment: .leading)
-                        Text(l.text("DUNG LƯỢNG ↓")).frame(width: 105, alignment: .trailing)
+                        Text(l.text("ĐÁNH GIÁ")).frame(width: 120, alignment: .leading)
+                        Text(l.text("SỬA LẦN CUỐI")).frame(width: 85, alignment: .leading)
+                        Text(l.text("DUNG LƯỢNG ↓")).frame(width: 90, alignment: .trailing)
                         Color.clear.frame(width: 30)
                     }.font(.system(size: 9, weight: .semibold)).tracking(0.5).foregroundStyle(Palette.secondary).padding(.horizontal, 18).padding(.vertical, 15)
                     Divider()
@@ -113,17 +141,26 @@ struct CleanerView: View {
             Label(l.text("Chuyển %@ file vào Thùng rác?", l.number(cleaner.selected.count)), systemImage: "trash").font(.system(size: 18, weight: .semibold))
             Text(l.text("Tổng dung lượng file: %@. Xem lại danh sách trước khi tiếp tục. Cache có thể được ứng dụng tạo lại.", l.bytes(cleaner.selectedSize)))
                 .font(.system(size: 12)).foregroundStyle(Palette.secondary)
+            if cleaner.selectedReviewCount > 0 {
+                Label(l.text("Có %@ file cần bạn tự xem lại; app chưa xác minh có thể bỏ dữ liệu này.", l.number(cleaner.selectedReviewCount)), systemImage: "exclamationmark.triangle")
+                    .font(.system(size: 12)).foregroundStyle(Color(hex: 0xA8752B))
+            }
             ScrollView {
                 VStack(alignment: .leading, spacing: 11) {
                     ForEach(cleaner.selectedFiles) { file in
                         VStack(alignment: .leading, spacing: 3) {
                             HStack { Text(file.name).lineLimit(1); Spacer(); Text(l.bytes(file.size)).foregroundStyle(Palette.secondary) }
                             Text(file.url.path).font(.system(size: 10)).foregroundStyle(Palette.secondary).textSelection(.enabled)
+                            HStack(alignment: .top) {
+                                RiskBadge(risk: file.assessment.risk)
+                                Text(l.render(file.assessment.reason)).font(.system(size: 10)).foregroundStyle(Palette.secondary)
+                            }
                         }.font(.system(size: 12))
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }.frame(height: 220).padding(12).background(Palette.background, in: RoundedRectangle(cornerRadius: 10))
-            Text(l.text("File nằm trong Thùng rác cho đến khi bạn tự dọn. File đã thay đổi từ lần quét sẽ được bỏ qua.")).font(.system(size: 11)).foregroundStyle(Palette.secondary)
+            Text(l.text("App kiểm tra lại trước khi chuyển. File thay đổi, đang mở hoặc có mức rủi ro tăng sẽ được bỏ qua. Đây là kiểm tra tại thời điểm đó, không phải bảo đảm tuyệt đối."))
+                .font(.system(size: 11)).foregroundStyle(Palette.secondary)
             HStack {
                 Spacer()
                 Button(l.text("Hủy"), role: .cancel) { cleaner.confirmTrash = false }.keyboardShortcut(.cancelAction)
@@ -157,19 +194,49 @@ struct FileRow: View {
         HStack(spacing: 12) {
             Button { cleaner.toggle(file.id) } label: {
                 Image(systemName: cleaner.selected.contains(file.id) ? "checkmark.square.fill" : "square").foregroundStyle(Palette.blue)
-            }.buttonStyle(.plain).accessibilityLabel(l.text("Chọn %@", file.name)).disabled(cleaner.isTrashing)
-            Image(nsImage: NSWorkspace.shared.icon(forFile: file.url.path)).resizable().frame(width: 27, height: 27)
+            }.buttonStyle(.plain).accessibilityLabel(l.text("Chọn %@", file.name)).disabled(cleaner.isTrashing || !file.assessment.canSelect).help(l.render(file.assessment.reason))
+            Image(nsImage: NSWorkspace.shared.icon(for: UTType(filenameExtension: file.url.pathExtension) ?? .data)).resizable().frame(width: 27, height: 27)
             VStack(alignment: .leading, spacing: 5) {
                 Text(file.name).font(.system(size: 12, weight: .medium)).lineLimit(1).truncationMode(.middle)
                 Text(file.url.deletingLastPathComponent().path).font(.system(size: 10)).foregroundStyle(Palette.secondary).lineLimit(1).truncationMode(.middle)
+                Text(l.render(file.assessment.reason)).font(.system(size: 10)).foregroundStyle(file.assessment.risk.tint).lineLimit(2).help(l.render(file.assessment.reason))
             }.frame(maxWidth: .infinity, alignment: .leading).help(file.url.path)
-            Text(file.modified, format: .dateTime.day().month().year().locale(l.locale)).font(.system(size: 10)).foregroundStyle(Palette.secondary).frame(width: 105, alignment: .leading)
-            Text(l.bytes(file.size)).font(.system(size: 12, weight: .medium)).monospacedDigit().frame(width: 105, alignment: .trailing)
+            RiskBadge(risk: file.assessment.risk).frame(width: 120, alignment: .leading).help(l.render(file.assessment.reason))
+            Text(file.modified, format: .dateTime.day().month().year().locale(l.locale)).font(.system(size: 10)).foregroundStyle(Palette.secondary).frame(width: 85, alignment: .leading)
+            Text(l.bytes(file.size)).font(.system(size: 12, weight: .medium)).monospacedDigit().frame(width: 90, alignment: .trailing)
             Button { NSWorkspace.shared.activateFileViewerSelecting([file.url]) } label: { Image(systemName: "folder").foregroundStyle(Palette.secondary) }
                 .buttonStyle(.plain).help(l.text("Hiện trong Finder")).frame(width: 30)
         }.padding(.horizontal, 18).padding(.vertical, 14)
         .contextMenu {
             Button(l.text("Hiện trong Finder")) { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
         }
+    }
+}
+
+private extension CleanupRisk {
+    var tint: Color {
+        switch self {
+        case .lowerRisk: return Palette.mint
+        case .review: return Color(hex: 0xAD752C)
+        case .avoid: return Color(hex: 0xC26060)
+        }
+    }
+    var icon: String {
+        switch self {
+        case .lowerRisk: return "checkmark.shield"
+        case .review: return "eye"
+        case .avoid: return "hand.raised"
+        }
+    }
+}
+
+private struct RiskBadge: View {
+    @Environment(\.localizer) private var l
+    let risk: CleanupRisk
+    var body: some View {
+        Label(l.text(risk.title), systemImage: risk.icon)
+            .font(.system(size: 9, weight: .semibold)).foregroundStyle(risk.tint)
+            .padding(.horizontal, 7).padding(.vertical, 6)
+            .background(risk.tint.opacity(0.08), in: Capsule()).lineLimit(1).minimumScaleFactor(0.8)
     }
 }

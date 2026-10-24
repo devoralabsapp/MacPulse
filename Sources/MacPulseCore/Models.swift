@@ -40,8 +40,20 @@ public struct BatteryMetrics: Sendable {
     public var minutesRemaining: Int?
     public var condition: String?
     public var health: Double? {
-        guard let maximumMAh, let designMAh, designMAh > 0 else { return nil }
+        guard let maximumMAh, let designMAh, designMAh > 0, maximumMAh > 0, maximumMAh <= designMAh else { return nil }
         return Double(maximumMAh) / Double(designMAh) * 100
+    }
+    public var hasCapacityConflict: Bool {
+        guard let maximumMAh, let designMAh, designMAh > 0 else { return false }
+        return maximumMAh > designMAh
+    }
+    public var conditionLabel: String {
+        switch condition?.lowercased() {
+        case "good", "normal": return "Bình thường"
+        case "fair", "check battery": return "Cần kiểm tra"
+        case "poor", "service recommended": return "Cần bảo trì"
+        default: return "Chưa có dữ liệu"
+        }
     }
     public var stateLabel: String {
         if !isPresent { return "Không phát hiện pin" }

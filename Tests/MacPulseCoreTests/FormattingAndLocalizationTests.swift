@@ -31,8 +31,8 @@ final class CapacityRegressionTests: XCTestCase {
         XCTAssertEqual(capacities.current, 5887)
         var battery = BatteryMetrics()
         battery.maximumMAh = capacities.maximum; battery.designMAh = capacities.design
-        XCTAssertEqual(battery.health ?? 0, 7801.0 / 7570.0 * 100, accuracy: 0.001)
-        XCTAssertGreaterThan(battery.health ?? 0, 100)
+        XCTAssertTrue(battery.hasCapacityConflict)
+        XCTAssertNil(battery.health, "Conflicting raw references must not become a health estimate or a fabricated 100%")
     }
     func testNestedBatteryDataAndLegacyFallback() {
         let nested = BatteryMetrics.capacities(from: [

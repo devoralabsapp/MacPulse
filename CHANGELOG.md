@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 — 2026-10-25
+
+- Withhold the battery-health estimate when full-charge and design references conflict. Preserve both raw readings and show the macOS-reported condition separately; do not invent design capacity or silently clamp to 100%.
+- Assess cleanup candidates as lower risk, review first, or avoid cleanup, with a visible reason, risk filters, counts, and an explicit lower-risk selection action.
+- Restrict lower-risk recommendations to recognized old cache/log formats in standard user folders, with checks for recent activity, open files, and running owners. Incomplete inspection falls back to review-only.
+- Block detected cloud data, databases, security material, backups, incomplete downloads, locked/unwritable files, and multiple links from selection.
+- Refresh usage information before moving a batch and reassess each file. Skip blocked or downgraded lower-risk items, retain the confirmation sheet, and move only to Trash.
+- Add bilingual explanations and regression coverage for assessment rules, blocked validation, open-file parsing, a disposable open-file fixture, and inconsistent battery readings.
+
 ## 1.1.0 — 2026-10-25
 
 - Display RAM, swap, wired, compressed, and cached memory using 1024-based units, so 32 GiB appears as 32 GB. Keep file and storage sizes decimal.

@@ -84,6 +84,8 @@ final class CleanerModel: ObservableObject {
     @Published var folder: URL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads")
     @Published var includeCaches = false
     @Published var filter: CleanupCategory?
+    @Published var riskFilter: CleanupRisk?
+    @Published var usageCheckComplete = false
     @Published var query = ""
     @Published var confirmTrash = false
     private var cancellation: ScanCancellation?
@@ -93,10 +95,15 @@ final class CleanerModel: ObservableObject {
     var visibleFiles: [CleanupCandidate] {
         files.filter { file in
             (filter == nil || file.categories.contains(filter!)) &&
+            (riskFilter == nil || file.assessment.risk == riskFilter) &&
             (query.isEmpty || file.name.localizedCaseInsensitiveContains(query) || file.url.path.localizedCaseInsensitiveContains(query))
         }
     }
-    var selectedFiles: [CleanupCandidate] { files.filter { selected.contains($0.id) } }
+    var selectedFiles: [CleanupCandidate] { files.filter { selected.contains($0.id) && $0.assessment.canSelect } }
+    var selectableVisibleIDs: Set<String> { Set(visibleFiles.filter { $0.assessment.canSelect }.map(\.id)) }
+    var lowerRiskVisibleIDs: Set<String> { Set(visibleFiles.filter { $0.assessment.risk == .lowerRisk }.map(\.id)) }
+    var selectedReviewCount: Int { selectedFiles.filter { $0.assessment.risk == .review }.count }
+    func count(_ risk: CleanupRisk) -> Int { files.filter { $0.assessment.risk == risk }.count }
     var selectedSize: Int64 { selectedFiles.reduce(0) { $0 + $1.size } }
     var totalSize: Int64 { files.reduce(0) { $0 + $1.size } }
 
@@ -120,7 +127,7 @@ final class CleanerModel: ObservableObject {
         resetResults()
     }
     func resetResults() {
-        files = []; selected = []; hasScanned = false; warnings = []; message = nil; inspected = 0
+        files = []; selected = []; hasScanned = false; warnings = []; message = nil; inspected = 0; usageCheckComplete = false
     }
     func scan() {
         guard !isScanning && !isTrashing else { return }
@@ -134,13 +141,16 @@ final class CleanerModel: ObservableObject {
             roots.append(ScanRoot(url: home.appendingPathComponent("Library/Caches"), category: .cache))
             roots.append(ScanRoot(url: home.appendingPathComponent("Library/Logs"), category: .logs))
         }
+        let bundleIDs = runningBundleIDs
         Task {
-            let result = await Task.detached(priority: .utility) {
-                CleanupScanner().scan(roots: roots, cancellation: token)
+            let (result, complete) = await Task.detached(priority: .utility) {
+                let usage = OpenFileInspector.capture(runningBundleIDs: bundleIDs)
+                return (CleanupScanner().scan(roots: roots, cancellation: token, usage: usage), usage.isComplete)
             }.value
             self.files = result.files
             self.warnings = result.warnings
             self.inspected = result.inspected
+            self.usageCheckComplete = complete
             self.hasScanned = true
             self.isScanning = false
             self.cancellation = nil
@@ -148,24 +158,48 @@ final class CleanerModel: ObservableObject {
         }
     }
     func cancel() { cancellation?.cancel() }
+    private var runningBundleIDs: Set<String> { Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier)) }
     func toggle(_ id: String) {
-        guard !isTrashing else { return }
+        guard !isTrashing, files.first(where: { $0.id == id })?.assessment.canSelect == true else { return }
         if selected.contains(id) { selected.remove(id) } else { selected.insert(id) }
     }
     func toggleVisible() {
-        let visible = Set(visibleFiles.map(\.id))
+        guard !isScanning && !isTrashing else { return }
+        let visible = selectableVisibleIDs
         if visible.isSubset(of: selected) { selected.subtract(visible) } else { selected.formUnion(visible) }
+    }
+    func selectLowerRisk() {
+        guard !isScanning && !isTrashing else { return }
+        selected = lowerRiskVisibleIDs
     }
     func trashSelected() async {
         guard !isTrashing && !isScanning else { return }
         let candidates = selectedFiles
         guard !candidates.isEmpty else { return }
         isTrashing = true
+        let bundleIDs = runningBundleIDs
+        let usage = await Task.detached(priority: .utility) { OpenFileInspector.capture(runningBundleIDs: bundleIDs) }.value
+        usageCheckComplete = usage.isComplete
+        if !usage.isComplete {
+            for index in files.indices where files[index].assessment.risk == .lowerRisk {
+                files[index].assessment = CleanupAssessment(.review, "Chưa kiểm tra đầy đủ file đang mở; không gắn nhãn ít rủi ro.")
+            }
+        }
         var removed = Set<String>()
         var errors: [LocalizedMessage] = []
         // Move individually: preserve a truthful result even if another file fails.
         for file in candidates {
             do {
+                let assessment = await Task.detached(priority: .utility) {
+                    CleanupAssessor().reassess(file, usage: usage)
+                }.value
+                if let index = files.firstIndex(where: { $0.id == file.id }) { files[index].assessment = assessment }
+                guard assessment.canSelect,
+                      !(file.assessment.risk == .lowerRisk && assessment.risk != .lowerRisk) else {
+                    selected.remove(file.id)
+                    errors.append(LocalizedMessage("Bỏ qua “%@”: đánh giá rủi ro đã thay đổi hoặc file không còn đủ điều kiện dọn. Hãy quét lại.", file.name))
+                    continue
+                }
                 try CleanupSafety.validate(file)
                 let result = try await NSWorkspace.shared.recycle([file.url])
                 if result[file.url] != nil { removed.insert(file.id) }

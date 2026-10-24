@@ -16,3 +16,5 @@ A useful report includes the affected commit, macOS version, a minimal reproduct
 - Packaging and distribution integrity.
 
 Cleanup validation is a preflight check, not an atomic filesystem security boundary. The app is not designed for hostile filesystems or use as a privileged cleanup service. It never requires administrator privileges or empties Trash. Source builds use an ad hoc signature; Developer ID signing and notarization are not configured.
+
+Risk assessments use metadata, known paths/extensions, running app IDs, and a current-user `lsof` snapshot. A lower-risk label is not proof that data is unneeded or that no process can open it later. Failed/incomplete inspection removes lower-risk eligibility. Detected cloud data, security material, databases, backups, active files, and locked/multiply-linked files cannot be selected. Reassessment before a batch and per-file validation still leave a race window; report bypasses using disposable fixtures.

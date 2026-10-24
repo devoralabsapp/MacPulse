@@ -21,17 +21,24 @@ Sau khi build, mở `dist/MacPulse.app`. Có thể kéo app vào Applications n�
 - Mạng: tốc độ tải lên/xuống trên giao diện mạng vật lý (không cộng lặp giao diện VPN/bridge).
 - Dọn dẹp: thư mục tùy chọn, file từ 100 MB, file chưa chỉnh sửa từ 180 ngày; có thể quét thêm cache/log người dùng từ 30 ngày.
 - Tìm theo tên/đường dẫn, lọc loại, hiện trong Finder, chọn nhiều file và xem danh sách xác nhận trước khi chuyển vào Thùng rác.
+- Đánh giá từng file: **ít rủi ro / cần xem lại / không khuyến nghị**, ghi rõ lý do; có bộ lọc và nút chọn chỉ các mục ít rủi ro đang hiển thị.
 - Cài đặt chu kỳ lấy mẫu 1/2/5 giây và hiển thị trên thanh menu.
 
 ## Cách dọn file
 
 1. Mở **Dọn dẹp** → **Chọn thư mục…** hoặc dùng Downloads mặc định.
 2. Bật quét thêm cache/log nếu muốn, rồi **Bắt đầu quét**. Quét chỉ đọc metadata, không tự chọn file.
-3. Xem kết quả và dùng biểu tượng thư mục để kiểm tra trong Finder. Ngày chỉnh sửa cũ chỉ là gợi ý, không chứng minh file đã hết sử dụng.
+3. Xem mức đánh giá, lý do từng file và dùng biểu tượng thư mục để kiểm tra trong Finder. Ngày chỉnh sửa cũ chỉ là gợi ý, không chứng minh file đã hết sử dụng. Nút **Chọn chỉ mục ít rủi ro** thay thế lựa chọn hiện tại bằng các mục ít rủi ro đang hiển thị.
 4. Chọn file → **Chuyển vào Thùng rác** → kiểm tra danh sách rồi xác nhận.
 5. File vẫn chiếm dung lượng cho đến khi tự dọn Thùng rác trong Finder. Có thể dùng **Put Back / Đặt lại** trong Finder để khôi phục trước đó.
 
 MacPulse không xóa vĩnh viễn, không gỡ ứng dụng, không dọn RAM cưỡng bức và không can thiệp hệ thống. Quét bỏ qua file ẩn, symlink, alias, app/package, thư mục phát triển `node_modules`, vùng hệ thống và Library ngoài Caches/Logs. Không tải file iCloud chỉ có trên cloud. Trước khi chuyển file, app kiểm tra lại đường dẫn, inode, dung lượng và ngày sửa để bỏ qua file đã thay đổi. Cache có thể được ứng dụng tạo lại; không nên chọn file nếu chưa biết công dụng.
+
+**Ít rủi ro** chỉ áp dụng cho một số file `.cache`, `.tmp`, `.temp` trong thư mục cache chuẩn và nhật ký cũ nhận diện được trong Logs. Các ngày sửa/tạo/truy cập được cung cấp phải cũ ít nhất 30 ngày, kiểm tra file đang mở phải hoàn tất, và chưa quan sát thấy file hoặc ứng dụng sở hữu đang hoạt động. Đây là gợi ý, không phải bảo đảm an toàn tuyệt đối; cache có thể cần tải lại, còn xóa log sẽ mất lịch sử chẩn đoán.
+
+**Cần xem lại** dành cho file cá nhân, định dạng chưa nhận diện, hoạt động gần đây hoặc kiểm tra chưa đầy đủ. **Không khuyến nghị** và chặn chọn đối với file đang mở, cache/log của app đang chạy, dữ liệu đồng bộ nhận diện được, cơ sở dữ liệu, khóa bảo mật, bản sao lưu, file tải dở, file bị khóa hoặc nhiều liên kết.
+
+App dùng `lsof` cho các tiến trình của người dùng hiện tại và đọc danh sách ứng dụng đang chạy; không dùng sudo, không đọc nội dung file và không gửi danh sách lên mạng. Khi lệnh cảnh báo, lỗi, không có kết quả hoặc hết thời gian, app không gắn nhãn ít rủi ro. Trước khi chuyển vào Thùng rác, app lấy lại ảnh chụp trạng thái sử dụng và đánh giá lại; nếu file bị chặn hoặc mục ít rủi ro không còn đạt tiêu chí, app bỏ qua. Kiểm tra chỉ có giá trị tại thời điểm thực hiện và không phát hiện được mọi tình huống hay dịch vụ đồng bộ.
 
 Nếu macOS từ chối truy cập, chọn lại thư mục bằng hộp thoại hoặc cấp quyền **Cài đặt hệ thống → Quyền riêng tư & Bảo mật → Tệp và thư mục**. App không yêu cầu quyền quản trị. Quét giới hạn 100.000 mục/lần; thư mục quá lớn nên chia thành các thư mục con. Kết quả không được lưu giữa các lần mở app.
 
@@ -63,7 +70,7 @@ Tests dùng thư mục tạm riêng: phân loại tuổi/kích thước, cache m
 - RAM: `host_statistics64` và `vm.swapusage`; dùng active + inactive − purgeable − file-backed + wired + compressed. RAM và swap dùng đơn vị nhị phân (1024) với nhãn GB theo macOS: máy 32 GiB sẽ hiển thị **32 GB**, không còn 34,36 GB. Ổ đĩa và dung lượng file vẫn dùng hệ thập phân. Có thể chênh lệch Giám sát hoạt động do thời điểm lấy mẫu và cách phân loại.
 - Storage: `volumeTotalCapacity` / `volumeAvailableCapacity` của thư mục cá nhân. APFS và dung lượng có thể thu hồi khiến số khác màn hình Storage trong Cài đặt. Dung lượng file trong bộ quét là logical size, không phải cam kết dung lượng thực thu hồi (APFS clone, sparse file và nén có thể khác).
 - Pin: IOPS cung cấp `%` và trạng thái nguồn; IOKit `AppleSmartBattery` cung cấp điện lượng mAh, bao gồm các trường trong `BatteryData` trên phiên bản macOS mới. Thiếu dữ liệu sẽ hiển thị `—`, không lấy phần trăm đổi thành mAh.
-- Dung lượng thiết kế lấy từ `DesignCapacity`, không thay bằng dung lượng sạc đầy hoặc `Qmax`. Tỷ lệ sạc đầy / thiết kế có thể vượt 100%; đây không phải chẩn đoán tình trạng pin của Apple. Phần trăm và điện lượng thô là các số đọc khác nhau, có thể không suy ra cùng một tỷ lệ. Dòng điện dương khi sạc, âm khi xả, có thể bằng 0 khi giữ mức sạc.
+- Dung lượng thiết kế lấy từ `DesignCapacity`, không thay bằng dung lượng sạc đầy hoặc `Qmax`. Nếu firmware báo sạc đầy lớn hơn mốc thiết kế, app giữ nguyên hai số đọc nhưng cảnh báo cần xác minh và không tính sức khỏe pin từ cặp số đó; không hiện trên 100%, không tự sửa mốc thiết kế hoặc ép kết quả về 100%. Tình trạng do macOS báo được hiển thị riêng. Số đọc firmware không phải phép đo dung lượng vật lý độc lập. Dòng điện dương khi sạc, âm khi xả, có thể bằng 0 khi giữ mức sạc.
 
 Tham khảo API chính thức: [IOPowerSources](https://developer.apple.com/documentation/iokit/iopowersources_h), [IOPMPowerSource](https://developer.apple.com/documentation/kernel/iopmpowersource), [NSWorkspace.recycle](https://developer.apple.com/documentation/appkit/nsworkspace/recycle(_:completionhandler:)).
 
