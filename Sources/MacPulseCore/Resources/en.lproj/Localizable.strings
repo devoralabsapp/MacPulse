@@ -306,3 +306,79 @@
 "Đường dẫn không an toàn hoặc file không được hỗ trợ." = "Unsafe path or unsupported file.";
 "Có %@ thao tác chưa hoàn tất. Xem thông báo và kiểm tra lại danh sách." = "%@ operations could not complete. Review the messages and updated file list.";
 "Dữ liệu theo dõi ở trên thiết bị" = "Monitoring data stays on this device";
+
+"Báo cáo pin qua USB" = "USB battery report";
+
+"Bản ghi tại thời điểm đọc · không cập nhật trực tiếp" = "Snapshot at capture time · not live";
+
+"Nhãn thiết bị" = "Device label";
+
+"Thời điểm đọc" = "Captured at";
+
+"Nguồn báo cáo" = "Report source";
+
+"Tỷ lệ sạc đầy/thiết kế" = "Full-charge/design ratio";
+
+"Các mốc dung lượng không nhất quán. Giữ nguyên số đọc và tạm ẩn tỷ lệ sức khỏe pin." = "Capacity references are inconsistent. Raw readings are preserved and the health ratio is withheld.";
+
+"Đây là số liệu firmware tại thời điểm ghi. Tỷ lệ dung lượng không phải chỉ số Tình trạng pin được Apple xác nhận. Trường không được cung cấp hiển thị —." = "These are firmware readings at capture time. The capacity ratio is not an Apple-certified Battery Health value. Unavailable fields show —.";
+
+"Chi tiết nguồn dữ liệu" = "Data provenance";
+
+"Báo cáo pin không hợp lệ hoặc phiên bản chưa được hỗ trợ." = "The battery report is invalid or its version is unsupported.";
+
+"File báo cáo pin vượt giới hạn 64 KB." = "The battery report exceeds the 64 KB limit.";
+
+"Thiết bị chưa cung cấp các trường pin được hỗ trợ. Thử mở khóa, chọn Tin cậy và đọc lại." = "The device did not provide supported battery fields. Unlock it, choose Trust, and try again.";
+
+"Chưa tìm thấy libimobiledevice. Cài bằng Homebrew rồi tìm lại thiết bị." = "libimobiledevice was not found. Install it with Homebrew, then scan again.";
+
+"Không đọc được thiết bị. Kiểm tra cáp USB, mở khóa và chọn Tin cậy trên iPhone/iPad." = "Could not read the device. Check the USB cable, unlock the iPhone/iPad, and choose Trust.";
+
+"Đọc USB quá thời gian chờ. Mở khóa thiết bị và thử lại." = "The USB read timed out. Unlock the device and try again.";
+
+"Nhãn thiết bị cần từ 1 đến 80 ký tự, không chứa ký tự điều khiển." = "The device label must contain 1–80 characters with no control characters.";
+
+"Không lưu được báo cáo pin. Hãy chọn vị trí khác." = "Could not save the battery report. Choose another location.";
+
+"Xuất báo cáo pin" = "Export battery report";
+
+"Pin iPhone / iPad qua USB" = "iPhone / iPad battery via USB";
+
+"Kết nối thiết bị, mở khóa và chọn Tin cậy máy Mac này." = "Connect the device, unlock it, and choose Trust This Computer.";
+
+"Thiết bị USB" = "USB device";
+
+"Chưa có thiết bị" = "No device";
+
+"Tìm thiết bị" = "Find devices";
+
+"Đọc pin qua USB" = "Read battery via USB";
+
+"Chưa thấy iPhone/iPad qua USB. Kiểm tra cáp, mở khóa và chọn Tin cậy." = "No iPhone/iPad found over USB. Check the cable, unlock the device, and choose Trust.";
+
+"Thiết lập lần đầu & chuyển báo cáo sang iOS" = "First-time setup & transfer to iOS";
+
+"Cài công cụ USB bằng Homebrew trong Terminal:" = "Install the USB tools with Homebrew in Terminal:";
+
+"Hướng dẫn Homebrew" = "Homebrew instructions";
+
+"MacPulse tìm công cụ tại /opt/homebrew/bin hoặc /usr/local/bin. Công cụ được cài riêng, không đóng gói trong app." = "MacPulse looks for the tools in /opt/homebrew/bin or /usr/local/bin. They are installed separately and are not bundled with the app.";
+
+"Chọn đúng thiết bị khi có nhiều iPhone/iPad. Xuất JSON, chuyển bằng AirDrop hoặc Files rồi chọn Nhập báo cáo pin trên iOS. Báo cáo không chứa UDID hay số sê-ri; nhãn thiết bị do bạn đặt." = "Select the correct device if several are connected. Export JSON, transfer it with AirDrop or Files, and choose Import battery report on iOS. Reports contain no UDID or serial numbers; you set the device label.";
+
+"Chỉ thông tin pin, nguồn và thời điểm đọc." = "Only battery readings, provenance, and capture time.";
+
+"Thông tin pin từ máy Mac" = "Battery details from your Mac";
+
+"Nhập báo cáo JSON do MacPulse trên Mac xuất qua USB." = "Import a JSON report captured over USB by MacPulse on Mac.";
+
+"Trên Mac: Pin & nguồn điện → Pin iPhone / iPad qua USB → Đọc pin → Xuất báo cáo pin. Chuyển file bằng AirDrop hoặc Files rồi nhập ở đây." = "On Mac: Battery & Power → iPhone / iPad battery via USB → Read battery → Export battery report. Transfer the file with AirDrop or Files, then import it here.";
+
+"Nhập báo cáo pin" = "Import battery report";
+
+"Báo cáo có thể thuộc thiết bị khác. Kiểm tra nhãn và thời điểm đọc; MacPulse không tự xác nhận báo cáo thuộc iPhone/iPad này." = "A report may belong to another device. Check its label and capture time; MacPulse does not automatically verify that it belongs to this iPhone/iPad.";
+
+"Bỏ báo cáo đã nhập" = "Remove imported report";
+
+"Phản hồi chẩn đoán USB vượt giới hạn 2 MB." = "The USB diagnostics response exceeds the 2 MB limit.";

@@ -20,7 +20,7 @@ You can also select an installed iPhone/iPad Simulator and Run without a paid de
 | CPU | MacPulse process CPU time, normalized across the reported core count; **not system-wide CPU** |
 | RAM | MacPulse physical memory footprint, reported device physical RAM, and advisory app allocation headroom; **not total RAM used by other apps** |
 | Storage | Capacity and available bytes of the app's volume; may differ from Settings because of APFS/purgeable storage |
-| Battery | Percentage, charging state, Low Power Mode, and OS thermal state. mAh, design capacity, health, and cycles are not inferred |
+| Battery | Live percentage, charging state, Low Power Mode, and thermal state. Import dated USB reports from MacPulse on Mac for firmware capacity/cycles when available; no mAh inferred from percentage |
 | Network | Observed physical-interface upload/download rates, chart, per-interface status, and session totals while active |
 | Files | Large/old files inside a directory explicitly selected through Files; preview, manual selection, Recovery, restore, and confirmed permanent deletion |
 | Appearance | Ocean / Forest / Violet / Graphite; System default / Light / Dark; English / Vietnamese |
@@ -30,6 +30,10 @@ Sampling pauses when the app is inactive. Resume starts new CPU/network baseline
 Simulator hardware readings may reflect the host Mac. Battery data can be unavailable, shown as **—**. Simulator success does not establish physical-device battery accuracy or App Store approval.
 
 Apple's public [battery API](https://developer.apple.com/documentation/uikit/uidevice/batterylevel) provides battery level; [app memory headroom](https://developer.apple.com/documentation/os/os_proc_available_memory) is advisory and distinct from free system RAM. The app uses only its own process task information and does not inspect another app's private data.
+
+## Imported battery reports
+
+Overview offers **Import battery report** for JSON exported by MacPulse on Mac after a USB read. The last valid report persists locally and can be removed. Fields retain their query/key provenance and capture timestamp. A report may belong to another device; no automatic identity match or live update is claimed. Invalid imports leave the previous report intact. [USB setup and report format](USB-battery.md).
 
 ## File cleanup and recovery
 

@@ -2,6 +2,14 @@
 
 Local verification on 25 October 2026:
 
+## Version 1.6.0: USB battery reports
+
+- 80 shared/macOS tests pass without failures or skips. New synthetic tests cover SmartBattery/GasGauge parsing, fallback and explicit USB device selection, field provenance, percentage rejection, conflicting references, privacy allowlists, version/range/date validation, coordinated bounded reads, directories/symlinks, process failures, timeouts, and output limits.
+- iPhone Simulator integration tests pass for report file import; the import UI opens and dismisses the native Files picker. The picker follows the system language (Vietnamese on the local Simulator), independently of the app's selected language.
+- On the dedicated iPad Simulator, all 16 unit/integration and three UI tests pass. The full adaptive navigation/appearance checks remain green alongside the new report entry point. Rendered production report panels with synthetic values were visually reviewed in English and Vietnamese at phone width; the iPad import screen was also checked from its XCTest screenshot.
+- The version 1.6.0 Universal macOS package and unsigned arm64 iOS device package build successfully. The Mac package passes signature and architecture checks; the iOS package passes family, privacy, localization, and license checks.
+- No physical iPhone/iPad USB diagnostics were read. Real firmware field availability/units, trust/unlock dialogs, cable disconnects, multi-device selection, macOS save-panel export, and a full AirDrop → Files import still require hardware verification. libimobiledevice is a separately installed optional tool, not bundled. No user files were cleaned or device settings changed.
+
 ## Version 1.5.0: iPhone and iPad
 
 - 65 shared/macOS tests pass locally, without failures or skips. The 13 added cases cover process CPU baselines/normalization and disposable file recovery, including restore collisions, changed files, symlinked parents, sensitive files, cancellation, unknown recovery folders, path traversal, unexpected entry contents, oversized markers, and symlinked markers.

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "deviceLabel": "Example iPhone (synthetic data)",
+  "capturedAt": "2026-10-25T00:00:00Z",
+  "design": { "value": 4200, "query": "AppleSmartBattery", "field": "DesignCapacity" },
+  "maximum": { "value": 3900, "query": "AppleSmartBattery", "field": "AppleRawMaxCapacity" },
+  "current": { "value": 2000, "query": "AppleSmartBattery", "field": "AppleRawCurrentCapacity" },
+  "cycles": { "value": 128, "query": "AppleSmartBattery", "field": "CycleCount" }
+}

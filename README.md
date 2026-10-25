@@ -9,7 +9,7 @@
 
 [Tiếng Việt](README.vi.md) · [Contributing](CONTRIBUTING.md) · [Roadmap](ROADMAP.md) · [Report a bug](https://github.com/devoralabsapp/MacPulse/issues/new/choose)
 
-MacPulse is a native macOS utility for monitoring CPU, memory, storage, battery, and network activity, with a file cleanup workflow that lets you review each candidate before moving it to Trash. Built with SwiftUI, AppKit, and IOKit, it runs locally without accounts, analytics, or third-party dependencies. The app supports English and Vietnamese, selectable in Settings.
+MacPulse is a native macOS utility for monitoring CPU, memory, storage, battery, and network activity, with a file cleanup workflow that lets you review each candidate before moving it to Trash. Built with SwiftUI, AppKit, and IOKit, it runs locally without accounts or analytics. Monitoring uses Apple frameworks; the optional iPhone/iPad USB reader uses separately installed libimobiledevice tools. The app supports English and Vietnamese, selectable in Settings.
 
 **Early development:** core tests, Universal builds, and offscreen view renders have been checked locally. Interactive controls and the full Trash workflow still need manual verification. Builds are ad hoc signed and are not notarized by Apple. See [verification notes](VERIFICATION.md) for the exact scope of validation.
 
@@ -24,6 +24,12 @@ It does not treat an old modification date as proof that a file is unused. It sh
 A native **iOS/iPadOS 17+** app is included in `iOS/MacPulse.xcodeproj`, scheme **MacPulse-iOS**. It adapts to iPhone tabs and an iPad sidebar, with the same themes and languages. It monitors its own process CPU/RAM, storage, battery percentage, and network counters, and reviews files in a folder you grant through Files. iOS does not offer the Mac app's full hardware/private-file access; mAh and other apps' CPU/RAM are not fabricated.
 
 [Build, device signing, platform limits, and recovery guide](docs/iOS.md) · [Hướng dẫn tiếng Việt](docs/iOS.vi.md)
+
+## iPhone/iPad battery details over USB
+
+In **Battery & Power**, install the optional USB tools (`brew install libimobiledevice`), connect and trust your device, choose it, and select **Read battery via USB**. MacPulse queries design/full-charge/current capacity and cycle count when firmware exposes supported fields. Export a JSON report and import it from Overview on iOS. Reports are dated snapshots, contain no UDID/serials, and do not replace live battery level.
+
+[Setup, supported fields, report format, and limitations](docs/USB-battery.md) · [Tiếng Việt](docs/USB-battery.vi.md)
 
 ## Features (macOS)
 
@@ -42,7 +48,7 @@ Cleanup results support search, category/risk filters, per-file reasons, multipl
 
 ## Get started
 
-Requirements: **macOS 14 or later** and **Swift 6 or later** through Xcode or Command Line Tools. Only Apple system frameworks are used.
+Requirements: **macOS 14 or later** and **Swift 6 or later** through Xcode or Command Line Tools. Core monitoring uses Apple system frameworks. USB battery inspection is optional and requires separately installed libimobiledevice tools.
 
 ```sh
 git clone https://github.com/devoralabsapp/MacPulse.git

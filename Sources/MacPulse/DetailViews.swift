@@ -162,5 +162,6 @@ struct BatteryView: View {
             Label(l.text("Máy này không có pin hoặc macOS chưa cho phép đọc thông tin pin."), systemImage: "info.circle")
                 .font(.system(size: 12)).foregroundStyle(theme.secondaryText)
         }
+        ConnectedBatteryView()
     }
 }

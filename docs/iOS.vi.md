@@ -26,6 +26,10 @@ Lấy mẫu dừng khi app không hoạt động; khi trở lại sẽ lấy m�
 
 **Simulator có thể phản ánh phần cứng máy Mac**, pin có thể không có số liệu và hiện **—**. Kiểm thử Simulator không thay thế kiểm tra pin trên thiết bị thật. Xem [API pin công khai](https://developer.apple.com/documentation/uikit/uidevice/batterylevel) và [giới hạn cấp phát của app](https://developer.apple.com/documentation/os/os_proc_available_memory).
 
+## Báo cáo pin từ Mac
+
+Ở Tổng quan, chọn **Nhập báo cáo pin** và chọn JSON xuất từ MacPulse trên Mac sau khi đọc iPhone/iPad qua USB. Báo cáo lưu trên máy qua các lần mở app; có thể bỏ bằng **Bỏ báo cáo đã nhập**. Dữ liệu được ghi riêng với thời điểm, nguồn và nhãn; không tự xác nhận thuộc iPhone/iPad hiện tại và không cập nhật trực tiếp. [Hướng dẫn chi tiết](USB-battery.vi.md).
+
 ## Dọn file và khôi phục
 
 Chọn thư mục trong Files. App tìm file từ 100 MB hoặc chưa sửa từ 180 ngày, không chọn sẵn mục nào. Không thể kiểm tra file đang mở bởi app khác trên iOS; nhãn chỉ là cần xem lại hoặc không khuyến nghị, không khẳng định file đã hết sử dụng. Bỏ qua/chặn các định dạng nhạy cảm, cơ sở dữ liệu, bản sao lưu, tải dở, symlink, package, file khóa hoặc có nhiều liên kết.

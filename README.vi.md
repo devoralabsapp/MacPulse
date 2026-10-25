@@ -4,13 +4,19 @@
 
 **Trạng thái:** dự án mới, đang phát triển. Đã chạy kiểm thử tự động, build Universal và kiểm tra bản render giao diện từ dữ liệu mẫu; thao tác tương tác và toàn bộ luồng chuyển vào Thùng rác vẫn cần kiểm tra thủ công. Xem [kết quả xác minh](VERIFICATION.md).
 
-App macOS native bằng SwiftUI, giao diện tiếng Việt và tiếng Anh, theo dõi tài nguyên trực tiếp và giúp xem lại những file có thể dọn. Yêu cầu macOS 14 trở lên. Không có dịch vụ mạng, tài khoản hoặc thư viện bên thứ ba.
+App macOS native bằng SwiftUI, giao diện tiếng Việt và tiếng Anh, theo dõi tài nguyên trực tiếp và giúp xem lại những file có thể dọn. Yêu cầu macOS 14 trở lên. Không có dịch vụ mạng hay tài khoản. Theo dõi cơ bản dùng framework Apple; đọc pin iPhone/iPad qua USB dùng công cụ libimobiledevice cài riêng.
 
 ## iPhone và iPad
 
 Đã có bản native cho **iOS/iPadOS 17+**, project `iOS/MacPulse.xcodeproj`, scheme **MacPulse-iOS**. Có tab trên iPhone, thanh bên trên iPad, cùng theme và Việt/Anh. CPU/RAM chỉ đo tiến trình MacPulse; không suy ra mAh pin và không dọn cache của app khác. Quét file trong thư mục bạn chọn qua Files, có khu khôi phục và xác nhận xóa vĩnh viễn.
 
 [Xem cách cài bằng Xcode, ký app và giới hạn iOS](docs/iOS.vi.md) · [English guide](docs/iOS.md)
+
+## Đọc pin iPhone/iPad qua USB
+
+Trong **Pin & nguồn điện**, cài công cụ tùy chọn (`brew install libimobiledevice`), kết nối USB, mở khóa và chọn Tin cậy. Chọn thiết bị rồi **Đọc pin qua USB** để xem dung lượng thiết kế, sạc đầy, còn lại và số chu kỳ khi firmware cung cấp trường được hỗ trợ. **Xuất báo cáo pin** thành JSON, chuyển sang iPhone/iPad và nhập ở Tổng quan. Đây là bản ghi có thời điểm đọc, không thay thế mức pin trực tiếp. Báo cáo không chứa UDID/số sê-ri.
+
+[Hướng dẫn, định dạng và giới hạn](docs/USB-battery.vi.md) · [English](docs/USB-battery.md)
 
 ## Mở app trên Mac
 

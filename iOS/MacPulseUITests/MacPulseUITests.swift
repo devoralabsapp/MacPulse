@@ -1,6 +1,28 @@
 import XCTest
 
 final class MacPulseUITests: XCTestCase {
+    @MainActor func testBatteryReportImportEntryOpensFilesPicker() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["-appLanguage", "en"]
+        app.launch()
+        navigate("Overview", app: app)
+        let button = app.buttons["battery.import"]
+        for _ in 0..<10 {
+            if button.exists && button.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(button.exists); XCTAssertTrue(button.isHittable)
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "Battery-report-import"; screenshot.lifetime = .keepAlways; add(screenshot)
+        button.tap()
+        // Document-provider UI follows the OS language, independently of MacPulse's language.
+        let cancel = app.buttons.matching(NSPredicate(format: "label IN %@", ["Cancel", "Hủy"])).firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10))
+        cancel.tap()
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+    }
+
     @MainActor func testAdaptiveNavigationAndPersistedAppearance() throws {
         continueAfterFailure = false
         let app = XCUIApplication()

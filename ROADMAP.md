@@ -34,5 +34,7 @@ MacPulse is a new project. These are proposed milestones, not shipped features o
 ## iPhone and iPad
 
 - [x] Native iOS/iPadOS app, adaptive navigation, themes, local monitoring, and scoped file recovery.
+- [x] Optional Mac USB battery reader and dated JSON reports imported on iPhone/iPad.
+- [ ] Verify USB diagnostics fields, units, disconnect handling, and multi-device selection on physical iPhone/iPad hardware.
 - [ ] Verify device battery/network counters and Files providers on physical iPhone/iPad hardware.
 - [ ] Prepare signing, accessibility review, and an owner-managed TestFlight distribution.

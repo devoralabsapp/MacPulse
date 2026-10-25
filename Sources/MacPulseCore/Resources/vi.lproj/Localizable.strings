@@ -306,3 +306,79 @@
 "Đường dẫn không an toàn hoặc file không được hỗ trợ." = "Đường dẫn không an toàn hoặc file không được hỗ trợ.";
 "Có %@ thao tác chưa hoàn tất. Xem thông báo và kiểm tra lại danh sách." = "Có %@ thao tác chưa hoàn tất. Xem thông báo và kiểm tra lại danh sách.";
 "Dữ liệu theo dõi ở trên thiết bị" = "Dữ liệu theo dõi ở trên thiết bị";
+
+"Báo cáo pin qua USB" = "Báo cáo pin qua USB";
+
+"Bản ghi tại thời điểm đọc · không cập nhật trực tiếp" = "Bản ghi tại thời điểm đọc · không cập nhật trực tiếp";
+
+"Nhãn thiết bị" = "Nhãn thiết bị";
+
+"Thời điểm đọc" = "Thời điểm đọc";
+
+"Nguồn báo cáo" = "Nguồn báo cáo";
+
+"Tỷ lệ sạc đầy/thiết kế" = "Tỷ lệ sạc đầy/thiết kế";
+
+"Các mốc dung lượng không nhất quán. Giữ nguyên số đọc và tạm ẩn tỷ lệ sức khỏe pin." = "Các mốc dung lượng không nhất quán. Giữ nguyên số đọc và tạm ẩn tỷ lệ sức khỏe pin.";
+
+"Đây là số liệu firmware tại thời điểm ghi. Tỷ lệ dung lượng không phải chỉ số Tình trạng pin được Apple xác nhận. Trường không được cung cấp hiển thị —." = "Đây là số liệu firmware tại thời điểm ghi. Tỷ lệ dung lượng không phải chỉ số Tình trạng pin được Apple xác nhận. Trường không được cung cấp hiển thị —.";
+
+"Chi tiết nguồn dữ liệu" = "Chi tiết nguồn dữ liệu";
+
+"Báo cáo pin không hợp lệ hoặc phiên bản chưa được hỗ trợ." = "Báo cáo pin không hợp lệ hoặc phiên bản chưa được hỗ trợ.";
+
+"File báo cáo pin vượt giới hạn 64 KB." = "File báo cáo pin vượt giới hạn 64 KB.";
+
+"Thiết bị chưa cung cấp các trường pin được hỗ trợ. Thử mở khóa, chọn Tin cậy và đọc lại." = "Thiết bị chưa cung cấp các trường pin được hỗ trợ. Thử mở khóa, chọn Tin cậy và đọc lại.";
+
+"Chưa tìm thấy libimobiledevice. Cài bằng Homebrew rồi tìm lại thiết bị." = "Chưa tìm thấy libimobiledevice. Cài bằng Homebrew rồi tìm lại thiết bị.";
+
+"Không đọc được thiết bị. Kiểm tra cáp USB, mở khóa và chọn Tin cậy trên iPhone/iPad." = "Không đọc được thiết bị. Kiểm tra cáp USB, mở khóa và chọn Tin cậy trên iPhone/iPad.";
+
+"Đọc USB quá thời gian chờ. Mở khóa thiết bị và thử lại." = "Đọc USB quá thời gian chờ. Mở khóa thiết bị và thử lại.";
+
+"Nhãn thiết bị cần từ 1 đến 80 ký tự, không chứa ký tự điều khiển." = "Nhãn thiết bị cần từ 1 đến 80 ký tự, không chứa ký tự điều khiển.";
+
+"Không lưu được báo cáo pin. Hãy chọn vị trí khác." = "Không lưu được báo cáo pin. Hãy chọn vị trí khác.";
+
+"Xuất báo cáo pin" = "Xuất báo cáo pin";
+
+"Pin iPhone / iPad qua USB" = "Pin iPhone / iPad qua USB";
+
+"Kết nối thiết bị, mở khóa và chọn Tin cậy máy Mac này." = "Kết nối thiết bị, mở khóa và chọn Tin cậy máy Mac này.";
+
+"Thiết bị USB" = "Thiết bị USB";
+
+"Chưa có thiết bị" = "Chưa có thiết bị";
+
+"Tìm thiết bị" = "Tìm thiết bị";
+
+"Đọc pin qua USB" = "Đọc pin qua USB";
+
+"Chưa thấy iPhone/iPad qua USB. Kiểm tra cáp, mở khóa và chọn Tin cậy." = "Chưa thấy iPhone/iPad qua USB. Kiểm tra cáp, mở khóa và chọn Tin cậy.";
+
+"Thiết lập lần đầu & chuyển báo cáo sang iOS" = "Thiết lập lần đầu & chuyển báo cáo sang iOS";
+
+"Cài công cụ USB bằng Homebrew trong Terminal:" = "Cài công cụ USB bằng Homebrew trong Terminal:";
+
+"Hướng dẫn Homebrew" = "Hướng dẫn Homebrew";
+
+"MacPulse tìm công cụ tại /opt/homebrew/bin hoặc /usr/local/bin. Công cụ được cài riêng, không đóng gói trong app." = "MacPulse tìm công cụ tại /opt/homebrew/bin hoặc /usr/local/bin. Công cụ được cài riêng, không đóng gói trong app.";
+
+"Chọn đúng thiết bị khi có nhiều iPhone/iPad. Xuất JSON, chuyển bằng AirDrop hoặc Files rồi chọn Nhập báo cáo pin trên iOS. Báo cáo không chứa UDID hay số sê-ri; nhãn thiết bị do bạn đặt." = "Chọn đúng thiết bị khi có nhiều iPhone/iPad. Xuất JSON, chuyển bằng AirDrop hoặc Files rồi chọn Nhập báo cáo pin trên iOS. Báo cáo không chứa UDID hay số sê-ri; nhãn thiết bị do bạn đặt.";
+
+"Chỉ thông tin pin, nguồn và thời điểm đọc." = "Chỉ thông tin pin, nguồn và thời điểm đọc.";
+
+"Thông tin pin từ máy Mac" = "Thông tin pin từ máy Mac";
+
+"Nhập báo cáo JSON do MacPulse trên Mac xuất qua USB." = "Nhập báo cáo JSON do MacPulse trên Mac xuất qua USB.";
+
+"Trên Mac: Pin & nguồn điện → Pin iPhone / iPad qua USB → Đọc pin → Xuất báo cáo pin. Chuyển file bằng AirDrop hoặc Files rồi nhập ở đây." = "Trên Mac: Pin & nguồn điện → Pin iPhone / iPad qua USB → Đọc pin → Xuất báo cáo pin. Chuyển file bằng AirDrop hoặc Files rồi nhập ở đây.";
+
+"Nhập báo cáo pin" = "Nhập báo cáo pin";
+
+"Báo cáo có thể thuộc thiết bị khác. Kiểm tra nhãn và thời điểm đọc; MacPulse không tự xác nhận báo cáo thuộc iPhone/iPad này." = "Báo cáo có thể thuộc thiết bị khác. Kiểm tra nhãn và thời điểm đọc; MacPulse không tự xác nhận báo cáo thuộc iPhone/iPad này.";
+
+"Bỏ báo cáo đã nhập" = "Bỏ báo cáo đã nhập";
+
+"Phản hồi chẩn đoán USB vượt giới hạn 2 MB." = "Phản hồi chẩn đoán USB vượt giới hạn 2 MB.";

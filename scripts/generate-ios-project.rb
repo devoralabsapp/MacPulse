@@ -63,8 +63,8 @@ app.build_configurations.each do |config|
   b['GENERATE_INFOPLIST_FILE'] = 'NO'
   b['ASSETCATALOG_COMPILER_APPICON_NAME'] = 'AppIcon'
   b.delete('ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME')
-  b['MARKETING_VERSION'] = '1.5.0'
-  b['CURRENT_PROJECT_VERSION'] = '6'
+  b['MARKETING_VERSION'] = '1.6.0'
+  b['CURRENT_PROJECT_VERSION'] = '7'
   b['ENABLE_PREVIEWS'] = 'YES'
 end
 unit.build_configurations.each do |config|

@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import MacPulseCore
+import UniformTypeIdentifiers
 
 struct MobileOverviewView: View {
     @Environment(\.localizer) private var l
@@ -53,6 +54,7 @@ struct MobileOverviewView: View {
                             .font(.caption).foregroundStyle(theme.secondaryText)
                     }
                 }
+                MobileBatteryImportView()
                 Panel {
                     VStack(alignment: .leading, spacing: 8) {
                         SectionTitle(title: "Ổ đĩa")
@@ -74,6 +76,61 @@ struct MobileOverviewView: View {
         MetricCard(title: "RAM của app", icon: "memorychip", value: s.appMemory.map(l.memory) ?? "—", caption: l.text("Bộ nhớ đang chiếm dụng"), fraction: s.appMemory.map { Double($0) / Double(max(1, s.physicalMemory)) } ?? 0, color: theme.chartSecondary)
         MetricCard(title: "Ổ đĩa", icon: "internaldrive", value: s.disk.total > 0 ? l.bytes(s.disk.available) : "—", caption: l.text("còn trống · %@ tổng", l.bytes(s.disk.total)), fraction: s.disk.fraction, color: theme.warning)
         MetricCard(title: "Pin", icon: "battery.75percent", value: l.percent(s.batteryPercent), caption: l.text(s.batteryStateKey), fraction: (s.batteryPercent ?? 0) / 100, color: theme.success)
+    }
+}
+
+private struct MobileBatteryImportView: View {
+    @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
+    @AppStorage("importedBatteryReport") private var storedReport = Data()
+    @State private var choosing = false
+    @State private var reading = false
+    @State private var message: LocalizedMessage?
+    private var report: DeviceBatteryReport? { try? BatteryReportCodec.decode(storedReport) }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Panel {
+                VStack(alignment: .leading, spacing: 14) {
+                    SectionTitle(title: "Thông tin pin từ máy Mac", subtitle: "Nhập báo cáo JSON do MacPulse trên Mac xuất qua USB.")
+                    Text(l.text("Trên Mac: Pin & nguồn điện → Pin iPhone / iPad qua USB → Đọc pin → Xuất báo cáo pin. Chuyển file bằng AirDrop hoặc Files rồi nhập ở đây."))
+                        .font(.caption).foregroundStyle(theme.secondaryText)
+                    Button { choosing = true } label: { Label(l.text("Nhập báo cáo pin"), systemImage: "square.and.arrow.down") }
+                        .buttonStyle(PrimaryButton()).disabled(reading).accessibilityIdentifier("battery.import")
+                    if reading { ProgressView() }
+                    if let message {
+                        Label(l.render(message), systemImage: "exclamationmark.triangle").font(.caption).foregroundStyle(theme.warning)
+                    }
+                    Text(l.text("Báo cáo có thể thuộc thiết bị khác. Kiểm tra nhãn và thời điểm đọc; MacPulse không tự xác nhận báo cáo thuộc iPhone/iPad này."))
+                        .font(.caption).foregroundStyle(theme.secondaryText)
+                }
+            }
+            if let report {
+                DeviceBatteryReportPanel(report: report).accessibilityIdentifier("battery.report")
+                Button(l.text("Bỏ báo cáo đã nhập"), role: .destructive) { storedReport = Data(); message = nil }
+                    .accessibilityIdentifier("battery.removeReport")
+            }
+        }
+        .fileImporter(isPresented: $choosing, allowedContentTypes: [.json]) { result in
+            switch result {
+            case let .success(url):
+                reading = true; message = nil
+                Task {
+                    let loaded = await Task.detached {
+                        Result {
+                            let scoped = url.startAccessingSecurityScopedResource()
+                            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+                            return try BatteryReportCodec.encode(BatteryReportCodec.read(from: url))
+                        }
+                    }.value
+                    switch loaded {
+                    case let .success(data): storedReport = data
+                    case let .failure(error): message = (error as? BatteryReportError ?? .invalid).message
+                    }
+                    reading = false
+                }
+            case .failure: message = BatteryReportError.invalid.message
+            }
+        }
     }
 }
 

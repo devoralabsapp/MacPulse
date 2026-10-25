@@ -1,6 +1,43 @@
 import SwiftUI
 import MacPulseCore
 
+/// Shared presentation deliberately keeps host snapshots separate from live device metrics.
+struct DeviceBatteryReportPanel: View {
+    @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
+    let report: DeviceBatteryReport
+    var body: some View {
+        Panel {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionTitle(title: "Báo cáo pin qua USB", subtitle: "Bản ghi tại thời điểm đọc · không cập nhật trực tiếp")
+                DetailRow(title: "Nhãn thiết bị", value: report.deviceLabel)
+                DetailRow(title: "Thời điểm đọc", value: report.capturedAt.formatted(.dateTime.year().month().day().hour().minute().second().locale(l.locale)))
+                DetailRow(title: "Nguồn báo cáo", value: "MacPulse · libimobiledevice · USB")
+                Divider()
+                DetailRow(title: "Dung lượng thiết kế (firmware)", value: capacity(report.design))
+                DetailRow(title: "Dung lượng điện sạc đầy", value: capacity(report.maximum))
+                DetailRow(title: "Điện lượng còn lại (mAh)", value: capacity(report.current))
+                DetailRow(title: "Số chu kỳ sạc", value: l.number(report.cycles?.value))
+                DetailRow(title: "Tỷ lệ sạc đầy/thiết kế", value: l.percent(report.health))
+                if report.hasCapacityConflict {
+                    Label(l.text("Các mốc dung lượng không nhất quán. Giữ nguyên số đọc và tạm ẩn tỷ lệ sức khỏe pin."), systemImage: "exclamationmark.triangle")
+                        .font(.caption).foregroundStyle(theme.warning)
+                }
+                Text(l.text("Đây là số liệu firmware tại thời điểm ghi. Tỷ lệ dung lượng không phải chỉ số Tình trạng pin được Apple xác nhận. Trường không được cung cấp hiển thị —."))
+                    .font(.caption).foregroundStyle(theme.secondaryText)
+                DisclosureGroup(l.text("Chi tiết nguồn dữ liệu")) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach([report.design, report.maximum, report.current, report.cycles].compactMap { $0 }, id: \.field) { reading in
+                            Text(reading.provenance).font(.caption.monospaced()).textSelection(.enabled)
+                        }
+                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.top, 8)
+                }.font(.caption)
+            }
+        }
+    }
+    private func capacity(_ reading: BatteryReading?) -> String { reading.map { "\(l.number($0.value)) mAh" } ?? "—" }
+}
+
 extension Color {
     init(hex: UInt32) {
         self.init(.sRGB, red: Double((hex >> 16) & 255) / 255,

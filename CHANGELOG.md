@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.0 — 2026-10-25
+
+- Add optional USB battery inspection on Mac using separately installed libimobiledevice tools, explicit USB device selection, bounded command output, and timeouts.
+- Query AppleSmartBattery, AppleARMPMUCharger, and GasGauge; retain field provenance, reject normalized percentage fields as mAh, and suppress health ratios for inconsistent capacities.
+- Export minimal versioned JSON without UDID, serials, or raw diagnostics. Import and retain dated reports on iPhone/iPad, visibly separate from live battery metrics.
+- Validate schema, units, ranges, labels, timestamps, and bounded coordinated file reads; preserve the previous report on import failure. Add bilingual controls and USB setup/report documentation.
+
 ## 1.5.0 — 2026-10-25
 
 - Add a native iPhone/iPad app targeting iOS/iPadOS 17+, with compact tabs and a regular-width sidebar.
