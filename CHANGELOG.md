@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add Command Line, Visual Studio Code, and Dracula themes on macOS and iOS, each with light/dark palettes and persistent selection.
+- Give developer themes monospaced typography, compact shared panels and controls, plus a prompt/breadcrumb and theme status in the macOS main window.
+- Make macOS appearance previews scrollable to accommodate all seven themes, and include English screenshots of the running Overview in both READMEs.
+
 ## 1.6.0 — 2026-10-25
 
 - Add optional USB battery inspection on Mac using separately installed libimobiledevice tools, explicit USB device selection, bounded command output, and timeouts.

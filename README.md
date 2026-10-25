@@ -11,7 +11,11 @@
 
 MacPulse is a native macOS utility for monitoring CPU, memory, storage, battery, and network activity, with a file cleanup workflow that lets you review each candidate before moving it to Trash. Built with SwiftUI, AppKit, and IOKit, it runs locally without accounts or analytics. Monitoring uses Apple frameworks; the optional iPhone/iPad USB reader uses separately installed libimobiledevice tools. The app supports English and Vietnamese, selectable in Settings.
 
-**Early development:** core tests, Universal builds, and offscreen view renders have been checked locally. Interactive controls and the full Trash workflow still need manual verification. Builds are ad hoc signed and are not notarized by Apple. See [verification notes](VERIFICATION.md) for the exact scope of validation.
+![MacPulse Overview in English with the Visual Studio Code theme](docs/screenshots/overview-visual-studio-code.png)
+
+*The running macOS app with live local readings, English, and Visual Studio Code in Dark mode.*
+
+**Early development:** core tests, Universal builds, macOS appearance controls, and view layouts have been checked locally. The full Trash workflow still needs manual verification. Builds are ad hoc signed and are not notarized by Apple. See [verification notes](VERIFICATION.md) for the exact scope of validation.
 
 ## Why MacPulse?
 
@@ -42,7 +46,7 @@ In **Battery & Power**, install the optional USB tools (`brew install libimobile
 | Network | Dedicated live upload/download view, 60-sample chart, per-interface rates/status, observed session totals, byte/bit units, and optional menu bar speeds |
 | File cleanup | Large files ≥100 MB, files unmodified for ≥180 days, and optional user cache/log files ≥30 days old |
 | Menu bar | A live CPU readout and a compact resource summary |
-| Appearance | Ocean, Forest, Violet, and Graphite palettes; System default, Light, and Dark modes; saved preferences |
+| Appearance | Ocean, Forest, Violet, Graphite, Command Line, Visual Studio Code, and Dracula; System default, Light, and Dark modes; saved preferences |
 
 Cleanup results support search, category/risk filters, per-file reasons, multiple selection, and **Reveal in Finder**. Nothing is selected automatically. A confirmation sheet lists the selected files and their assessment before any Trash operation.
 
@@ -70,7 +74,15 @@ Open `Package.swift` in Xcode to work on the source. Use the packaged `.app` whe
 
 ## Appearance
 
-Use the **palette icon** at the top right of the main window to choose **Ocean, Forest, Violet, or Graphite** and **System default, Light, or Dark**. Open **Settings (⌘,) → Appearance** for visual palette previews. System default follows macOS appearance, including its automatic changes.
+Use the **palette icon** at the top right of the main window to choose **Ocean, Forest, Violet, Graphite, Command Line, Visual Studio Code, or Dracula** and **System default, Light, or Dark**. Open **Settings (⌘,) → Appearance** for scrollable visual palette previews. System default follows macOS appearance, including its automatic changes.
+
+The three developer themes add monospaced typography, compact spacing, and squared panels. Command Line pairs a green terminal palette with a shell prompt; Visual Studio Code uses neutral editor surfaces with blue and violet accents; Dracula combines purple and cyan. Each has both light and dark variants. Theme names describe visual inspiration; MacPulse is an independent app.
+
+| Command Line · Dark | Dracula · Dark |
+| --- | --- |
+| ![English Overview with the Command Line theme](docs/screenshots/overview-command-line.png) | ![English Overview with the Dracula theme](docs/screenshots/overview-dracula.png) |
+
+These are captures of the running macOS app. Readings change with local activity. See [screenshot notes](docs/screenshots/README.md) for capture settings.
 
 The choice is saved and shared by app windows, Settings, the menu bar popup, and app-owned sheets. Switching themes preserves monitoring history, scan results, and file selection. Safety labels retain their own green/amber/red meanings across palettes. The macOS status item and system-owned dialogs use native system styling.
 

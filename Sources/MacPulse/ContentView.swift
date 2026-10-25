@@ -15,7 +15,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 header
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 22) {
+                    VStack(alignment: .leading, spacing: theme.preset.isDeveloperStyle ? 18 : 22) {
                         switch page {
                         case .overview: OverviewView(page: $page)
                         case .performance: PerformanceView()
@@ -24,7 +24,7 @@ struct ContentView: View {
                         case .battery: BatteryView()
                         case .cleaner: CleanerView()
                         }
-                    }.padding(26)
+                    }.padding(theme.preset.isDeveloperStyle ? 22 : 26)
                 }
                 footer
             }.background(theme.background)
@@ -36,12 +36,12 @@ struct ContentView: View {
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 11) {
-                Image(systemName: "waveform.path.ecg").font(.system(size: 22, weight: .medium))
+                Image(systemName: "waveform.path.ecg").font(theme.font(size: 22, weight: .medium))
                     .foregroundStyle(theme.onButton).frame(width: 40, height: 40)
-                    .background(theme.button, in: RoundedRectangle(cornerRadius: 12))
+                    .background(theme.button, in: RoundedRectangle(cornerRadius: theme.controlRadius))
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("MacPulse").font(.system(size: 20, weight: .bold, design: .rounded))
-                    Text(l.text("Giám sát hệ thống")).font(.system(size: 11)).foregroundStyle(theme.secondaryText)
+                    Text("MacPulse").font(theme.font(size: 20, weight: .bold, design: .rounded))
+                    Text(l.text("Giám sát hệ thống")).font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
                 }
             }.padding(.horizontal, 8).padding(.bottom, 34)
             navigationGroup("THEO DÕI", pages: [.overview, .performance, .network, .battery])
@@ -49,15 +49,15 @@ struct ContentView: View {
             Spacer(minLength: 24)
             HStack(spacing: 8) {
                 Circle().fill(theme.success).frame(width: 7, height: 7)
-                Text(l.text("Đang theo dõi")).font(.system(size: 11, weight: .medium))
+                Text(l.text("Đang theo dõi")).font(theme.font(size: 11, weight: .medium))
             }.foregroundStyle(theme.secondaryText).padding(.horizontal, 12).padding(.bottom, 20)
             Rectangle().fill(theme.border).frame(height: 1).padding(.bottom, 18)
             HStack(spacing: 10) {
-                Image(systemName: "laptopcomputer").font(.system(size: 20)).foregroundStyle(theme.secondaryText)
+                Image(systemName: "laptopcomputer").font(theme.font(size: 20)).foregroundStyle(theme.secondaryText)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(l.text("Máy Mac của bạn")).font(.system(size: 12, weight: .medium))
+                    Text(l.text("Máy Mac của bạn")).font(theme.font(size: 12, weight: .medium))
                     Text("macOS \(ProcessInfo.processInfo.operatingSystemVersion.majorVersion).\(ProcessInfo.processInfo.operatingSystemVersion.minorVersion)")
-                        .font(.system(size: 11)).foregroundStyle(theme.secondaryText)
+                        .font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
                 }
                 Spacer(minLength: 0)
                 SettingsLink { Image(systemName: "gearshape").frame(width: 28, height: 32).foregroundStyle(theme.secondaryText) }
@@ -71,7 +71,7 @@ struct ContentView: View {
 
     private func navigationGroup(_ title: String, pages: [AppPage]) -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(l.text(title)).font(.system(size: 10, weight: .semibold)).tracking(1.2)
+            Text(l.text(title)).font(theme.font(size: 10, weight: .semibold)).tracking(1.2)
                 .foregroundStyle(theme.secondaryText).padding(.horizontal, 12).padding(.bottom, 7)
             ForEach(pages) { item in
                 SidebarItem(title: l.text(item.title), icon: item.icon, selected: item == page) { page = item }
@@ -82,36 +82,53 @@ struct ContentView: View {
     private var header: some View {
         HStack(alignment: .center, spacing: 14) {
             VStack(alignment: .leading, spacing: 7) {
-                Text(l.text(page.title)).font(.system(size: 27, weight: .bold, design: .rounded))
-                Text(l.text(page.subtitle)).font(.system(size: 12)).foregroundStyle(theme.secondaryText)
+                if theme.preset.isDeveloperStyle {
+                    HStack(spacing: 7) {
+                        Image(systemName: theme.preset.symbolName).foregroundStyle(theme.accent)
+                        Text(theme.preset == .commandLine ? "~/macpulse $" : "MacPulse / \(l.text(page.title))")
+                    }
+                    .font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
+                }
+                Text(l.text(page.title)).font(theme.font(size: 27, weight: .bold, design: .rounded))
+                Text(l.text(page.subtitle)).font(theme.font(size: 12)).foregroundStyle(theme.secondaryText)
             }
             Spacer(minLength: 12)
             HStack(spacing: 6) {
                 Circle().fill(theme.success).frame(width: 6, height: 6)
-                Text(l.text("Trực tiếp")).font(.system(size: 11, weight: .medium))
+                Text(l.text("Trực tiếp")).font(theme.font(size: 11, weight: .medium))
             }.foregroundStyle(theme.success).padding(.horizontal, 11).padding(.vertical, 8)
                 .background(theme.success.opacity(0.08), in: Capsule())
             HStack(spacing: 4) {
                 ThemeMenu()
                 Button { monitor.sample() } label: {
-                    Image(systemName: "arrow.clockwise").font(.system(size: 14))
+                    Image(systemName: "arrow.clockwise").font(theme.font(size: 14))
                         .foregroundStyle(theme.secondaryText).frame(width: 34, height: 34)
                 }.buttonStyle(.plain).help(l.text("Cập nhật ngay (⌘R)")).accessibilityLabel(l.text("Cập nhật ngay"))
             }
         }
-        .padding(.horizontal, 28).padding(.top, 42).padding(.bottom, 24)
+        .padding(.horizontal, 28).padding(.top, theme.preset.isDeveloperStyle ? 30 : 42)
+        .padding(.bottom, theme.preset.isDeveloperStyle ? 20 : 24)
         .background(theme.surface)
         .overlay(alignment: .bottom) { Rectangle().fill(theme.border.opacity(0.7)).frame(height: 1) }
     }
 
     private var footer: some View {
         HStack(spacing: 7) {
-            Image(systemName: "lock.shield").font(.system(size: 11))
+            Image(systemName: "lock.shield").font(theme.font(size: 11))
             Text(l.text("Dữ liệu ở trên máy của bạn"))
             Spacer()
+            if theme.preset.isDeveloperStyle {
+                Image(systemName: theme.preset.symbolName)
+                Text(theme.preset.title)
+                Rectangle().fill(theme.border).frame(width: 1, height: 12).padding(.horizontal, 6)
+            }
             Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.6.0")")
-        }.font(.system(size: 11)).foregroundStyle(theme.secondaryText)
+        }.font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
             .padding(.horizontal, 28).padding(.vertical, 13)
+            .background(theme.preset.isDeveloperStyle ? theme.surfaceSecondary : theme.background)
+            .overlay(alignment: .top) {
+                if theme.preset.isDeveloperStyle { Rectangle().fill(theme.border).frame(height: 1) }
+            }
     }
 }
 
@@ -125,16 +142,16 @@ private struct SidebarItem: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 11) {
-                Image(systemName: icon).font(.system(size: 15, weight: selected ? .semibold : .regular)).frame(width: 21)
-                Text(title).font(.system(size: 13, weight: selected ? .semibold : .medium))
+                Image(systemName: icon).font(theme.font(size: 15, weight: selected ? .semibold : .regular)).frame(width: 21)
+                Text(title).font(theme.font(size: 13, weight: selected ? .semibold : .medium))
                 Spacer(minLength: 0)
                 if selected { Circle().fill(theme.accent).frame(width: 5, height: 5) }
             }
             .foregroundStyle(selected ? theme.accent : theme.secondaryText)
             .padding(.horizontal, 12).padding(.vertical, 12)
             .background(selected ? theme.selection : hovered ? theme.surface.opacity(0.7) : .clear,
-                        in: RoundedRectangle(cornerRadius: 10))
-            .contentShape(RoundedRectangle(cornerRadius: 10))
+                        in: RoundedRectangle(cornerRadius: theme.controlRadius))
+            .contentShape(RoundedRectangle(cornerRadius: theme.controlRadius))
         }
         .buttonStyle(.plain).onHover { hovered = $0 }
         .accessibilityAddTraits(selected ? .isSelected : [])
@@ -158,7 +175,7 @@ struct OverviewView: View {
         }
         HStack(alignment: .top, spacing: 18) {
             Panel {
-                VStack(alignment: .leading, spacing: 22) {
+                VStack(alignment: .leading, spacing: theme.preset.isDeveloperStyle ? 16 : 22) {
                     HStack {
                         SectionTitle(title: l.text("Nhịp hoạt động"), subtitle: l.text("60 mẫu gần nhất trong phiên này"))
                         Spacer()
@@ -170,7 +187,7 @@ struct OverviewView: View {
                         Text(l.text("Cũ hơn"))
                         Spacer()
                         Text(l.text("Hiện tại: CPU %@ · RAM %@", l.percent(s.cpu.usage), l.percent(s.memory.total > 0 ? s.memory.fraction * 100 : nil)))
-                    }.font(.system(size: 10)).foregroundStyle(theme.secondaryText)
+                    }.font(theme.font(size: 10)).foregroundStyle(theme.secondaryText)
                 }
             }
             Panel {
@@ -193,10 +210,10 @@ struct OverviewView: View {
                     HStack {
                         SectionTitle(title: l.text("Dọn dẹp có kiểm soát"), subtitle: l.text("Bắt đầu từ những file bạn không còn cần."))
                         Spacer()
-                        Image(systemName: "sparkles").font(.system(size: 26)).foregroundStyle(theme.accent.opacity(0.7))
+                        Image(systemName: "sparkles").font(theme.font(size: 26)).foregroundStyle(theme.accent.opacity(0.7))
                     }
                     Text(l.text("Xem file lớn từ 100 MB, file chưa sửa trong 180 ngày và cache cũ. Chọn từng mục trước khi dọn."))
-                        .font(.system(size: 12)).lineSpacing(5).foregroundStyle(theme.secondaryText).fixedSize(horizontal: false, vertical: true)
+                        .font(theme.font(size: 12)).lineSpacing(5).foregroundStyle(theme.secondaryText).fixedSize(horizontal: false, vertical: true)
                     Button { page = .cleaner } label: { Label(l.text("Khám phá & dọn dẹp"), systemImage: "arrow.right") }.buttonStyle(PrimaryButton())
                 }
             }
@@ -213,10 +230,10 @@ struct OverviewView: View {
     }
     private func networkRow(title: String, value: String, icon: String, color: Color) -> some View {
         HStack(spacing: 13) {
-            Image(systemName: icon).font(.system(size: 15, weight: .medium)).foregroundStyle(color).frame(width: 33, height: 33).background(color.opacity(0.08), in: Circle())
+            Image(systemName: icon).font(theme.font(size: 15, weight: .medium)).foregroundStyle(color).frame(width: 33, height: 33).background(color.opacity(0.08), in: Circle())
             VStack(alignment: .leading, spacing: 5) {
-                Text(title).font(.system(size: 11)).foregroundStyle(theme.secondaryText)
-                Text(value).font(.system(size: 21, weight: .medium, design: .rounded)).monospacedDigit()
+                Text(title).font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
+                Text(value).font(theme.font(size: 21, weight: .medium, design: .rounded)).monospacedDigit()
             }
         }.padding(.vertical, 3)
     }

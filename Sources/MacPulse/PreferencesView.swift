@@ -22,28 +22,29 @@ private struct AppearanceSettingsView: View {
     @AppStorage("themeAppearance") private var appearance = ThemeAppearance.system.rawValue
     @AppStorage("themePreset") private var preset = ThemePreset.ocean.rawValue
     var body: some View {
-        VStack(alignment: .leading, spacing: 22) {
-            SectionTitle(title: "Không gian làm việc của bạn", subtitle: "Chọn giao diện phù hợp với cách bạn làm việc.")
-            VStack(alignment: .leading, spacing: 10) {
-                Text(l.text("Chế độ hiển thị")).font(.system(size: 12, weight: .semibold))
-                Picker(l.text("Chế độ hiển thị"), selection: $appearance) {
-                    ForEach(ThemeAppearance.allCases, id: \.rawValue) { item in Text(l.text(item.title)).tag(item.rawValue) }
-                }.pickerStyle(.segmented).labelsHidden()
-            }
-            VStack(alignment: .leading, spacing: 12) {
-                Text(l.text("Bảng màu")).font(.system(size: 12, weight: .semibold))
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                    ForEach(ThemePreset.allCases, id: \.rawValue) { item in
-                        ThemePreviewCard(preset: item, isDark: colorScheme == .dark, selected: preset == item.rawValue) {
-                            preset = item.rawValue
+        ScrollView {
+            VStack(alignment: .leading, spacing: 22) {
+                SectionTitle(title: "Không gian làm việc của bạn", subtitle: "Chọn giao diện phù hợp với cách bạn làm việc.")
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(l.text("Chế độ hiển thị")).font(theme.font(size: 12, weight: .semibold))
+                    Picker(l.text("Chế độ hiển thị"), selection: $appearance) {
+                        ForEach(ThemeAppearance.allCases, id: \.rawValue) { item in Text(l.text(item.title)).tag(item.rawValue) }
+                    }.pickerStyle(.segmented).labelsHidden()
+                }
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(l.text("Bảng màu")).font(theme.font(size: 12, weight: .semibold))
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                        ForEach(ThemePreset.allCases, id: \.rawValue) { item in
+                            ThemePreviewCard(preset: item, isDark: colorScheme == .dark, selected: preset == item.rawValue) {
+                                preset = item.rawValue
+                            }
                         }
                     }
                 }
-            }
-            Label(l.text("Giao diện được lưu tự động và áp dụng cho mọi cửa sổ MacPulse."), systemImage: "checkmark.circle")
-                .font(.system(size: 11)).foregroundStyle(theme.secondaryText).fixedSize(horizontal: false, vertical: true)
-            Spacer(minLength: 0)
-        }.padding(22)
+                Label(l.text("Giao diện được lưu tự động và áp dụng cho mọi cửa sổ MacPulse."), systemImage: "checkmark.circle")
+                    .font(theme.font(size: 11)).foregroundStyle(theme.secondaryText).fixedSize(horizontal: false, vertical: true)
+            }.padding(22)
+        }
     }
 }
 
@@ -60,7 +61,8 @@ private struct ThemePreviewCard: View {
             VStack(spacing: 0) {
                 HStack(spacing: 8) {
                     VStack(alignment: .leading, spacing: 7) {
-                        RoundedRectangle(cornerRadius: 3).fill(preview.accent).frame(width: 17, height: 17)
+                        Image(systemName: preset.symbolName).font(.system(size: 15))
+                            .foregroundStyle(preview.accent).frame(width: 17, height: 17)
                         RoundedRectangle(cornerRadius: 2).fill(preview.accent.opacity(0.25)).frame(height: 5)
                         RoundedRectangle(cornerRadius: 2).fill(preview.secondaryText.opacity(0.2)).frame(height: 5)
                         RoundedRectangle(cornerRadius: 2).fill(preview.secondaryText.opacity(0.2)).frame(width: 22, height: 5)
@@ -71,7 +73,7 @@ private struct ThemePreviewCard: View {
                             previewMetric(color: preview.accent)
                             previewMetric(color: preview.chartSecondary)
                         }
-                        RoundedRectangle(cornerRadius: 5).fill(preview.surface)
+                        RoundedRectangle(cornerRadius: preview.controlRadius).fill(preview.surface)
                             .overlay {
                                 Path { p in
                                     p.move(to: CGPoint(x: 9, y: 23)); p.addLines([
@@ -84,17 +86,18 @@ private struct ThemePreviewCard: View {
                 }.frame(height: 91).background(preview.background).clipped().accessibilityHidden(true)
                 HStack {
                     Circle().fill(preview.accent).frame(width: 8, height: 8)
-                    Text(preset.title).font(.system(size: 12, weight: .semibold))
+                    Text(preset.title).font(preview.font(size: 12, weight: .semibold))
                     Spacer()
                     Image(systemName: selected ? "checkmark.circle.fill" : "circle")
                         .foregroundStyle(selected ? theme.accent : theme.secondaryText)
                 }.padding(11).foregroundStyle(theme.text).background(theme.surface)
             }
-            .clipShape(RoundedRectangle(cornerRadius: 11))
-            .overlay(RoundedRectangle(cornerRadius: 11).stroke(selected ? theme.accent : theme.border, lineWidth: selected ? 2 : 1))
-            .contentShape(RoundedRectangle(cornerRadius: 11))
+            .clipShape(RoundedRectangle(cornerRadius: preview.cornerRadius))
+            .overlay(RoundedRectangle(cornerRadius: preview.cornerRadius).stroke(selected ? theme.accent : theme.border, lineWidth: selected ? 2 : 1))
+            .contentShape(RoundedRectangle(cornerRadius: preview.cornerRadius))
         }
         .buttonStyle(.plain).accessibilityLabel(preset.title)
+        .accessibilityIdentifier("theme.\(preset.rawValue)")
         .accessibilityAddTraits(selected ? .isSelected : [])
         .help(l.text("Chọn bảng màu %@", preset.title))
     }

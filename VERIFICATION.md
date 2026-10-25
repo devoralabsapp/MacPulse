@@ -2,6 +2,13 @@
 
 Local verification on 25 October 2026:
 
+## Developer themes (unreleased)
+
+- All 80 shared/macOS tests pass without failures or skips when run outside the restricted execution sandbox. The existing contrast tests iterate over all seven palettes in both light and dark modes (14 combinations), including text, selected navigation, buttons, chart lines, and semantic risk labels/badges. A sandboxed run could not coordinate some temporary-file fixtures; the unrestricted rerun passed.
+- The Universal macOS package builds successfully with both x86_64 and arm64 slices, and passes strict ad hoc signature/resource verification. The unsigned arm64 iOS device package also builds and passes family, localization, privacy-manifest, and license checks after the shared theme/component changes.
+- In the running macOS app, verified English selection, the quick appearance menu, Light/Dark changes, scrolling to the last appearance preview, theme selection from Settings, and persisted theme/language/mode after quitting and relaunching. Reviewed the new themes on Overview and captured actual app-window screenshots with live metrics for the READMEs.
+- The screenshots are real local readings, not synthetic fixtures or offscreen renders. No file scan, Trash operation, or USB device query was performed for this update. iOS theme interaction and automatic macOS appearance transitions were not retested; the iOS result above is a build check.
+
 ## Version 1.6.0: USB battery reports
 
 - 80 shared/macOS tests pass without failures or skips. New synthetic tests cover SmartBattery/GasGauge parsing, fallback and explicit USB device selection, field provenance, percentage rejection, conflicting references, privacy allowlists, version/range/date validation, coordinated bounded reads, directories/symlinks, process failures, timeouts, and output limits.
@@ -68,7 +75,7 @@ Tests cover battery percentage-vs-mAh parsing, raw/legacy/missing capacity data,
 
 ## Limits of this verification
 
-- Earlier direct UI automation for macOS was unavailable because permission to control the app was not granted. Version 1.4.0 adds offscreen render checks of the app’s own view code with sample data. These do not verify interactive settings, menu bar behavior, folder selection, or the complete Trash/restore workflow.
+- Earlier direct UI automation for macOS was unavailable because permission to control the app was not granted. Version 1.4.0 used offscreen render checks with sample data. The developer-theme update above additionally verifies macOS appearance controls and captures the running app; menu bar behavior, folder selection, and the complete Trash/restore workflow remain outside that update's verification scope.
 - Tests ran on the `x86_64` host. The `arm64` slice was cross-compiled, not run natively on Apple Silicon during this verification.
 - No user files were cleaned. The test suite uses isolated temporary fixtures and does not exercise a real Trash operation.
 - The app is ad hoc signed, not Apple-notarized. Build and unit test success do not establish production readiness.

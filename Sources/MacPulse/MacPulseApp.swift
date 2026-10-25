@@ -57,7 +57,7 @@ struct MenuBarView: View {
     private var unit: NetworkRateUnit { NetworkRateUnit(rawValue: rateUnit) ?? .bytes }
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack { Text("MacPulse").font(.headline); Spacer(); Text(l.text("TRỰC TIẾP")).font(.system(size: 9, weight: .bold)).foregroundStyle(theme.success) }
+            HStack { Text("MacPulse").font(.headline); Spacer(); Text(l.text("TRỰC TIẾP")).font(theme.font(size: 9, weight: .bold)).foregroundStyle(theme.success) }
             menuRow("CPU", value: l.percent(monitor.snapshot.cpu.usage), icon: "cpu")
             menuRow(l.text("RAM đang dùng"), value: l.memory(monitor.snapshot.memory.used), icon: "memorychip")
             menuRow(l.text("Ổ đĩa còn trống"), value: l.bytes(monitor.snapshot.disk.available), icon: "internaldrive")
@@ -75,6 +75,6 @@ struct MenuBarView: View {
         }.padding(22).frame(width: 320).background(theme.surface)
     }
     private func menuRow(_ title: String, value: String, icon: String) -> some View {
-        HStack { Label(title, systemImage: icon); Spacer(); Text(value).monospacedDigit().fontWeight(.medium) }.font(.system(size: 12))
+        HStack { Label(title, systemImage: icon); Spacer(); Text(value).monospacedDigit().fontWeight(.medium) }.font(theme.font(size: 12))
     }
 }

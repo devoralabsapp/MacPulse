@@ -2,9 +2,16 @@ import SwiftUI
 import MacPulseCore
 
 struct AppTheme {
+    let preset: ThemePreset
     let palette: ThemePalette
     init(preset: ThemePreset = .ocean, isDark: Bool = false) {
+        self.preset = preset
         palette = ThemePalette(preset: preset, isDark: isDark)
+    }
+    var cornerRadius: CGFloat { preset.isDeveloperStyle ? 5 : 16 }
+    var controlRadius: CGFloat { preset.isDeveloperStyle ? 4 : 9 }
+    func font(size: CGFloat, weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
+        .system(size: size, weight: weight, design: preset.isDeveloperStyle ? .monospaced : design)
     }
     var background: Color { Color(hex: palette.background.hex) }
     var surface: Color { Color(hex: palette.surface.hex) }
@@ -52,6 +59,7 @@ struct ThemeScope<Content: View>: View {
     var body: some View {
         content.environment(\.appTheme, theme).tint(theme.accent)
             .foregroundStyle(theme.text)
+            .fontDesign(theme.preset.isDeveloperStyle ? .monospaced : .default)
             .preferredColorScheme(preferredScheme)
     }
 }
@@ -72,7 +80,7 @@ struct ThemeMenu: View {
                 ForEach(ThemePreset.allCases, id: \.rawValue) { item in Text(item.title).tag(item.rawValue) }
             }
         } label: {
-            Image(systemName: "paintpalette").font(.system(size: 15))
+            Image(systemName: "paintpalette").font(theme.font(size: 15))
                 .foregroundStyle(theme.secondaryText).frame(width: 34, height: 34)
         }
         .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()

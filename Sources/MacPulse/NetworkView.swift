@@ -37,7 +37,7 @@ struct NetworkView: View {
                     }
                     Spacer()
                     Text(l.text("Hiện tại"))
-                }.font(.system(size: 10)).foregroundStyle(theme.secondaryText)
+                }.font(theme.font(size: 10)).foregroundStyle(theme.secondaryText)
             }
         }
         Panel {
@@ -46,37 +46,37 @@ struct NetworkView: View {
                     SectionTitle(title: l.text("Giao diện mạng"), subtitle: l.text(network.statusKey))
                     Spacer()
                     Text(l.text("%@ giao diện đang hoạt động", l.number(network.activeCount)))
-                        .font(.system(size: 11)).foregroundStyle(theme.secondaryText)
+                        .font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
                 }
                 if network.interfaces.isEmpty {
                     Label(l.text(network.statusKey), systemImage: "network")
-                        .font(.system(size: 12)).foregroundStyle(theme.secondaryText).padding(.vertical, 12)
+                        .font(theme.font(size: 12)).foregroundStyle(theme.secondaryText).padding(.vertical, 12)
                 } else {
                     HStack {
                         Text(l.text("GIAO DIỆN")).frame(maxWidth: .infinity, alignment: .leading)
                         Text(l.text("TRẠNG THÁI")).frame(width: 110, alignment: .leading)
                         Text(l.text("TẢI XUỐNG")).frame(width: 135, alignment: .trailing)
                         Text(l.text("TẢI LÊN")).frame(width: 135, alignment: .trailing)
-                    }.font(.system(size: 9, weight: .semibold)).foregroundStyle(theme.secondaryText)
+                    }.font(theme.font(size: 9, weight: .semibold)).foregroundStyle(theme.secondaryText)
                     ForEach(network.interfaces) { interface in
                         Divider()
                         HStack(spacing: 14) {
                             Image(systemName: interface.kind.icon).foregroundStyle(interface.isActive ? theme.accent : theme.secondaryText).frame(width: 24)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(interface.displayName).font(.system(size: 12, weight: .medium)).lineLimit(1)
-                                Text(interface.name).font(.system(size: 10, design: .monospaced)).foregroundStyle(theme.secondaryText)
+                                Text(interface.displayName).font(theme.font(size: 12, weight: .medium)).lineLimit(1)
+                                Text(interface.name).font(theme.font(size: 10, design: .monospaced)).foregroundStyle(theme.secondaryText)
                             }.frame(maxWidth: .infinity, alignment: .leading)
                             Label(l.text(interface.isActive ? "Đang hoạt động" : "Không hoạt động"), systemImage: interface.isActive ? "circle.fill" : "circle")
-                                .font(.system(size: 9)).foregroundStyle(interface.isActive ? theme.success : theme.secondaryText).frame(width: 110, alignment: .leading)
+                                .font(theme.font(size: 9)).foregroundStyle(interface.isActive ? theme.success : theme.secondaryText).frame(width: 110, alignment: .leading)
                             Text(l.networkRate(interface.download, unit: unit)).foregroundStyle(theme.accent).frame(width: 135, alignment: .trailing)
                             Text(l.networkRate(interface.upload, unit: unit)).foregroundStyle(theme.chartSecondary).frame(width: 135, alignment: .trailing)
-                        }.font(.system(size: 12, weight: .medium, design: .rounded)).monospacedDigit().padding(.vertical, 5)
+                        }.font(theme.font(size: 12, weight: .medium, design: .rounded)).monospacedDigit().padding(.vertical, 5)
                     }
                 }
             }
         }
         Text(l.text("Lưu lượng gồm Internet, mạng nội bộ và tác vụ nền trên giao diện vật lý; không phải tốc độ tối đa của gói cước. Dữ liệu được đọc trên máy, không chạy speed test hay thu thập nội dung gói tin. Tổng phiên chỉ cộng các khoảng lấy mẫu hợp lệ và đặt lại khi thoát app."))
-            .font(.system(size: 11)).foregroundStyle(theme.secondaryText).lineSpacing(4).fixedSize(horizontal: false, vertical: true)
+            .font(theme.font(size: 11)).foregroundStyle(theme.secondaryText).lineSpacing(4).fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -94,15 +94,15 @@ private struct NetworkSpeedCard: View {
         Panel {
             VStack(alignment: .leading, spacing: 18) {
                 HStack {
-                    Image(systemName: icon).font(.system(size: 18, weight: .semibold)).foregroundStyle(color)
+                    Image(systemName: icon).font(theme.font(size: 18, weight: .semibold)).foregroundStyle(color)
                         .frame(width: 38, height: 38).background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
-                    Text(title).font(.system(size: 13, weight: .semibold)).foregroundStyle(theme.secondaryText)
+                    Text(title).font(theme.font(size: 13, weight: .semibold)).foregroundStyle(theme.secondaryText)
                     Spacer()
                 }
-                Text(l.networkRate(rate, unit: unit)).font(.system(size: 38, weight: .semibold, design: .rounded))
+                Text(l.networkRate(rate, unit: unit)).font(theme.font(size: 38, weight: .semibold, design: .rounded))
                     .foregroundStyle(color).monospacedDigit().lineLimit(1).minimumScaleFactor(0.65)
                 Text(l.text("Đỉnh trong biểu đồ: %@", l.networkRate(peak, unit: unit)))
-                    .font(.system(size: 11)).foregroundStyle(theme.secondaryText)
+                    .font(theme.font(size: 11)).foregroundStyle(theme.secondaryText)
                 Divider()
                 DetailRow(title: l.text("Đã quan sát trong phiên"), value: l.bytes(observed))
             }
@@ -127,7 +127,7 @@ private struct NetworkHistoryChart: View {
             VStack {
                 ForEach([1.0, 0.75, 0.5, 0.25, 0], id: \.self) { fraction in
                     HStack(spacing: 12) {
-                        Text(l.networkRate(scale * fraction, unit: unit)).font(.system(size: 9, design: .monospaced))
+                        Text(l.networkRate(scale * fraction, unit: unit)).font(theme.font(size: 9, design: .monospaced))
                             .foregroundStyle(theme.secondaryText).frame(width: 85, alignment: .trailing).lineLimit(1).minimumScaleFactor(0.7)
                         Rectangle().fill(theme.border).frame(height: 1)
                     }
@@ -152,7 +152,7 @@ private struct NetworkHistoryChart: View {
                     context.stroke(line(\.upload), with: .color(theme.chartSecondary), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                 }.padding(.leading, 97).padding(.vertical, 5)
             } else {
-                Text(l.text("Đang thu thập mẫu đầu tiên…")).font(.system(size: 12)).foregroundStyle(theme.secondaryText).padding(.leading, 97)
+                Text(l.text("Đang thu thập mẫu đầu tiên…")).font(theme.font(size: 12)).foregroundStyle(theme.secondaryText).padding(.leading, 97)
             }
         }
         .frame(height: 190)

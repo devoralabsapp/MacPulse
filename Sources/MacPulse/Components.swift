@@ -50,10 +50,10 @@ struct Panel<Content: View>: View {
     @Environment(\.appTheme) private var theme
     @ViewBuilder var content: Content
     var body: some View {
-        content.padding(22).frame(maxWidth: .infinity, alignment: .leading)
-            .background(theme.surface, in: RoundedRectangle(cornerRadius: 16))
-            .overlay(RoundedRectangle(cornerRadius: 16).stroke(theme.border.opacity(0.7), lineWidth: 1))
-            .shadow(color: theme.text.opacity(0.025), radius: 10, x: 0, y: 3)
+        content.padding(theme.preset.isDeveloperStyle ? 18 : 22).frame(maxWidth: .infinity, alignment: .leading)
+            .background(theme.surface, in: RoundedRectangle(cornerRadius: theme.cornerRadius))
+            .overlay(RoundedRectangle(cornerRadius: theme.cornerRadius).stroke(theme.border.opacity(0.7), lineWidth: 1))
+            .shadow(color: theme.text.opacity(theme.preset.isDeveloperStyle ? 0 : 0.025), radius: 10, x: 0, y: 3)
     }
 }
 
@@ -64,8 +64,8 @@ struct SectionTitle: View {
     var subtitle: String? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(l.text(title)).font(.system(size: 16, weight: .semibold)).foregroundStyle(theme.text)
-            if let subtitle { Text(l.text(subtitle)).font(.system(size: 12)).foregroundStyle(theme.secondaryText) }
+            Text(l.text(title)).font(theme.font(size: 16, weight: .semibold)).foregroundStyle(theme.text)
+            if let subtitle { Text(l.text(subtitle)).font(theme.font(size: 12)).foregroundStyle(theme.secondaryText) }
         }
     }
 }
@@ -81,19 +81,19 @@ struct MetricCard: View {
     let color: Color
     var body: some View {
         Panel {
-            VStack(alignment: .leading, spacing: 17) {
+            VStack(alignment: .leading, spacing: theme.preset.isDeveloperStyle ? 12 : 17) {
                 HStack {
-                    Text(l.text(title)).font(.system(size: 12, weight: .medium)).foregroundStyle(theme.secondaryText)
+                    Text(l.text(title)).font(theme.font(size: 12, weight: .medium)).foregroundStyle(theme.secondaryText)
                     Spacer(minLength: 4)
-                    Image(systemName: icon).font(.system(size: 15, weight: .medium))
+                    Image(systemName: icon).font(theme.font(size: 15, weight: .medium))
                         .foregroundStyle(color).frame(width: 32, height: 32)
-                        .background(color.opacity(0.09), in: RoundedRectangle(cornerRadius: 9))
+                        .background(color.opacity(0.09), in: RoundedRectangle(cornerRadius: theme.controlRadius))
                 }
-                Text(value).font(.system(size: 32, weight: .semibold, design: .rounded))
+                Text(value).font(theme.font(size: 32, weight: .semibold, design: .rounded))
                     .foregroundStyle(theme.text).monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
                 VStack(alignment: .leading, spacing: 11) {
                     ProgressTrack(fraction: fraction, color: color)
-                    Text(l.text(caption)).font(.system(size: 12)).foregroundStyle(theme.secondaryText)
+                    Text(l.text(caption)).font(theme.font(size: 12)).foregroundStyle(theme.secondaryText)
                         .lineLimit(2).frame(height: 30, alignment: .topLeading)
                 }
             }
@@ -129,7 +129,7 @@ struct HistoryChart: View {
                 VStack {
                     ForEach([100, 75, 50, 25, 0], id: \.self) { value in
                         HStack(spacing: 10) {
-                            Text("\(value)").font(.system(size: 9, design: .monospaced)).foregroundStyle(theme.secondaryText).frame(width: 24, alignment: .trailing)
+                            Text("\(value)").font(theme.font(size: 9, design: .monospaced)).foregroundStyle(theme.secondaryText).frame(width: 24, alignment: .trailing)
                             Rectangle().fill(theme.border).frame(height: 1)
                         }
                         if value != 0 { Spacer(minLength: 0) }
@@ -155,11 +155,11 @@ struct HistoryChart: View {
                         context.stroke(line(primary), with: .color(chartColor), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                     }.padding(.leading, 34).padding(.vertical, 5)
                 } else {
-                    Text(l.text("Đang thu thập mẫu đầu tiên…")).font(.system(size: 12)).foregroundStyle(theme.secondaryText).frame(maxWidth: .infinity)
+                    Text(l.text("Đang thu thập mẫu đầu tiên…")).font(theme.font(size: 12)).foregroundStyle(theme.secondaryText).frame(maxWidth: .infinity)
                 }
             }
         }
-        .frame(height: 150)
+        .frame(height: theme.preset.isDeveloperStyle ? 112 : 150)
         .accessibilityLabel(l.text("Biểu đồ tài nguyên. Mẫu gần nhất: %@", l.percent(primary.last)))
     }
 }
@@ -175,7 +175,7 @@ struct DetailRow: View {
             Text(l.text(title)).foregroundStyle(theme.secondaryText)
             Spacer(minLength: 16)
             Text(l.text(value)).fontWeight(.medium).foregroundStyle(color ?? theme.text).monospacedDigit()
-        }.font(.system(size: 12)).padding(.vertical, 6)
+        }.font(theme.font(size: 12)).padding(.vertical, theme.preset.isDeveloperStyle ? 4 : 6)
     }
 }
 
@@ -185,7 +185,7 @@ struct LegendDot: View {
     let title: String
     let color: Color
     var body: some View {
-        HStack(spacing: 6) { Circle().fill(color).frame(width: 6, height: 6); Text(title).font(.system(size: 11)).foregroundStyle(theme.secondaryText) }
+        HStack(spacing: 6) { Circle().fill(color).frame(width: 6, height: 6); Text(title).font(theme.font(size: 11)).foregroundStyle(theme.secondaryText) }
     }
 }
 
@@ -194,13 +194,13 @@ struct PrimaryButton: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
     var secondary = false
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label.font(.system(size: 12, weight: .semibold))
+        configuration.label.font(theme.font(size: 12, weight: .semibold))
             .foregroundStyle(secondary || !isEnabled ? theme.secondaryText : theme.onButton)
             .padding(.horizontal, 17).padding(.vertical, 11)
             .background(secondary || !isEnabled ? theme.surfaceSecondary : theme.button,
-                        in: RoundedRectangle(cornerRadius: 9))
-            .overlay(RoundedRectangle(cornerRadius: 9).stroke(secondary || !isEnabled ? theme.border : .clear, lineWidth: 1))
+                        in: RoundedRectangle(cornerRadius: theme.controlRadius))
+            .overlay(RoundedRectangle(cornerRadius: theme.controlRadius).stroke(secondary || !isEnabled ? theme.border : .clear, lineWidth: 1))
             .opacity(configuration.isPressed ? 0.75 : 1)
-            .contentShape(RoundedRectangle(cornerRadius: 9))
+            .contentShape(RoundedRectangle(cornerRadius: theme.controlRadius))
     }
 }
