@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import Darwin
 import IOKit
@@ -129,3 +130,5 @@ public final class SystemReader {
     }
 
 }
+
+#endif

@@ -6,7 +6,13 @@
 
 App macOS native bằng SwiftUI, giao diện tiếng Việt và tiếng Anh, theo dõi tài nguyên trực tiếp và giúp xem lại những file có thể dọn. Yêu cầu macOS 14 trở lên. Không có dịch vụ mạng, tài khoản hoặc thư viện bên thứ ba.
 
-## Mở app
+## iPhone và iPad
+
+Đã có bản native cho **iOS/iPadOS 17+**, project `iOS/MacPulse.xcodeproj`, scheme **MacPulse-iOS**. Có tab trên iPhone, thanh bên trên iPad, cùng theme và Việt/Anh. CPU/RAM chỉ đo tiến trình MacPulse; không suy ra mAh pin và không dọn cache của app khác. Quét file trong thư mục bạn chọn qua Files, có khu khôi phục và xác nhận xóa vĩnh viễn.
+
+[Xem cách cài bằng Xcode, ký app và giới hạn iOS](docs/iOS.vi.md) · [English guide](docs/iOS.md)
+
+## Mở app trên Mac
 
 Sau khi build, mở `dist/MacPulse.app`. Có thể kéo app vào Applications nếu muốn cài đặt. Đóng cửa sổ vẫn theo dõi bằng biểu tượng trên thanh menu; chọn **Thoát MacPulse** để dừng hoàn toàn.
 

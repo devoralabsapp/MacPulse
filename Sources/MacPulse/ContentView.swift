@@ -109,7 +109,7 @@ struct ContentView: View {
             Image(systemName: "lock.shield").font(.system(size: 11))
             Text(l.text("Dữ liệu ở trên máy của bạn"))
             Spacer()
-            Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.4.0")")
+            Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.5.0")")
         }.font(.system(size: 11)).foregroundStyle(theme.secondaryText)
             .padding(.horizontal, 28).padding(.vertical, 13)
     }

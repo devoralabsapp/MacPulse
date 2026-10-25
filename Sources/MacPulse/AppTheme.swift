@@ -56,6 +56,7 @@ struct ThemeScope<Content: View>: View {
     }
 }
 
+#if os(macOS)
 struct ThemeMenu: View {
     @Environment(\.localizer) private var l
     @Environment(\.appTheme) private var theme
@@ -78,3 +79,5 @@ struct ThemeMenu: View {
         .help(l.text("Đổi giao diện")).accessibilityLabel(l.text("Đổi giao diện"))
     }
 }
+
+#endif

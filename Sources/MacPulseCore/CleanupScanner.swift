@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 
 public enum CleanupCategory: String, CaseIterable, Identifiable, Sendable {
@@ -46,14 +47,6 @@ public struct ScanResult: Sendable {
     public var warnings: [LocalizedMessage] = []
     public var cancelled = false
     public init() {}
-}
-
-public final class ScanCancellation: @unchecked Sendable {
-    private let lock = NSLock()
-    private var value = false
-    public init() {}
-    public func cancel() { lock.lock(); value = true; lock.unlock() }
-    public var isCancelled: Bool { lock.lock(); defer { lock.unlock() }; return value }
 }
 
 public enum CleanupSafety {
@@ -185,3 +178,5 @@ public struct CleanupScanner {
         return result
     }
 }
+
+#endif

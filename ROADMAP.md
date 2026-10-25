@@ -30,3 +30,9 @@ MacPulse is a new project. These are proposed milestones, not shipped features o
 - [ ] Add Developer ID signing and Apple notarization when a maintainer signing identity is available.
 - [ ] Publish tested releases with checksums and documented compatibility.
 - [ ] Keep CI, contributor documentation, and cleanup regression coverage up to date.
+
+## iPhone and iPad
+
+- [x] Native iOS/iPadOS app, adaptive navigation, themes, local monitoring, and scoped file recovery.
+- [ ] Verify device battery/network counters and Files providers on physical iPhone/iPad hardware.
+- [ ] Prepare signing, accessibility review, and an owner-managed TestFlight distribution.

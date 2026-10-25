@@ -2,7 +2,7 @@
 
 **Know what your Mac is doing. Choose what to clean up.**
 
-[![macOS CI](https://github.com/devoralabsapp/MacPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/devoralabsapp/MacPulse/actions/workflows/ci.yml)
+[![Apple platforms CI](https://github.com/devoralabsapp/MacPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/devoralabsapp/MacPulse/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-202b3c)
 ![Swift 6+](https://img.shields.io/badge/Swift-6%2B-orange)
@@ -19,7 +19,13 @@ System information should be understandable, and file cleanup should be a decisi
 
 It does not treat an old modification date as proof that a file is unused. It shows candidates, their locations, sizes, and dates so you can decide what to keep.
 
-## Features
+## iPhone and iPad
+
+A native **iOS/iPadOS 17+** app is included in `iOS/MacPulse.xcodeproj`, scheme **MacPulse-iOS**. It adapts to iPhone tabs and an iPad sidebar, with the same themes and languages. It monitors its own process CPU/RAM, storage, battery percentage, and network counters, and reviews files in a folder you grant through Files. iOS does not offer the Mac app's full hardware/private-file access; mAh and other apps' CPU/RAM are not fabricated.
+
+[Build, device signing, platform limits, and recovery guide](docs/iOS.md) · [Hướng dẫn tiếng Việt](docs/iOS.vi.md)
+
+## Features (macOS)
 
 | Area | What you can inspect |
 | --- | --- |

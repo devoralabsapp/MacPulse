@@ -1,0 +1,659 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02BCAA4282665F58BE76A3FA /* MobileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC030651055BE74C876FBD /* MobileTests.swift */; };
+		09AD9AC7C136792DD72F40FE /* MobileFilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F123284AEDFBF144B3E86F /* MobileFilesModel.swift */; };
+		1A2F414A888A3D0A935899F9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6893CE5B142AA84ADB318CD9 /* PrivacyInfo.xcprivacy */; };
+		20DE1FF955E47D6ADD478B66 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D687BA80058D85889B2936A8 /* AppTheme.swift */; };
+		233507C4B6B274B9C7D43ABD /* MacPulseCore in Frameworks */ = {isa = PBXBuildFile; productRef = D3AB485267F371A9A0D03091 /* MacPulseCore */; };
+		408ED36EDDB647BB07AACC50 /* MobileSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED416423F474132B7F7FF24E /* MobileSettingsView.swift */; };
+		471FDF749B1D80356CD54C3E /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95F164289346B15A45417D6 /* Components.swift */; };
+		6EB4A8CC1741E57E50B3A7E7 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = AB2976DA54003286FE0FE722 /* LICENSE */; };
+		828DB0814525F084BD4DFEC5 /* MacPulseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F740F4A2E7325F157959427 /* MacPulseUITests.swift */; };
+		964D0C7F5574825B4C16338F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF15D77E51C7467E30B68786 /* Foundation.framework */; };
+		97B5346399F8D2E43416CA17 /* MacPulseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 563B10C1E0CD46F05EEB0021 /* MacPulseCore */; };
+		9C198F4031D70281B32BDD87 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF15D77E51C7467E30B68786 /* Foundation.framework */; };
+		9CA1B788FBBF5F667A9C258E /* MobileDeviceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB30C1B52BE71A0416E8CC4C /* MobileDeviceTests.swift */; };
+		E48FA1D2F955607CFF5B229C /* MobileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC02282EC370ACAA595CAE /* MobileMonitor.swift */; };
+		E6483BABFBBCA98141234DF4 /* MobileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102DB6F5754E3E1B4DFE59DE /* MobileViews.swift */; };
+		EB2B539D3D1DA1FCFD38A19B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8A997150AAA2757FB836337 /* Assets.xcassets */; };
+		F2BACECBF9B5770A242A99C3 /* MacPulseMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336308237B9C352448A88188 /* MacPulseMobileApp.swift */; };
+		F4BD2B7F108AA20B7536C02E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF15D77E51C7467E30B68786 /* Foundation.framework */; };
+		FA6AAAD2343ED77BE4B3F030 /* MobileFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED82BF27C21F6C089FFCAB8 /* MobileFilesView.swift */; };
+		FDDEC83A744AAAF702F3A5A6 /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E22D1586DF8AA4703C80E8 /* AppLocalization.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		781686A509842C0BFEB71602 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 24F6026F73146847AF8FEA9D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64FF43F69A1A7C2C9EDEF80B;
+			remoteInfo = MacPulseMobile;
+		};
+		E9137A9DEB3ED282287375F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 24F6026F73146847AF8FEA9D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64FF43F69A1A7C2C9EDEF80B;
+			remoteInfo = MacPulseMobile;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05BC030651055BE74C876FBD /* MobileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileTests.swift; path = ../Tests/MacPulseCoreTests/MobileTests.swift; sourceTree = "<group>"; };
+		102DB6F5754E3E1B4DFE59DE /* MobileViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileViews.swift; sourceTree = "<group>"; };
+		14664E7F6FFE99713208061F /* MacPulseMobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPulseMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1ED82BF27C21F6C089FFCAB8 /* MobileFilesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileFilesView.swift; sourceTree = "<group>"; };
+		1F740F4A2E7325F157959427 /* MacPulseUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MacPulseUITests.swift; path = MacPulseUITests/MacPulseUITests.swift; sourceTree = "<group>"; };
+		336308237B9C352448A88188 /* MacPulseMobileApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacPulseMobileApp.swift; sourceTree = "<group>"; };
+		5FDC02282EC370ACAA595CAE /* MobileMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileMonitor.swift; sourceTree = "<group>"; };
+		6893CE5B142AA84ADB318CD9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		69F784182C88002696CF95F5 /* MacPulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB2976DA54003286FE0FE722 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		AE8A81B72891E2115C3E705B /* MacPulseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacPulseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8F123284AEDFBF144B3E86F /* MobileFilesModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileFilesModel.swift; sourceTree = "<group>"; };
+		CF15D77E51C7467E30B68786 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		D3E22D1586DF8AA4703C80E8 /* AppLocalization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLocalization.swift; path = ../Sources/MacPulse/AppLocalization.swift; sourceTree = "<group>"; };
+		D687BA80058D85889B2936A8 /* AppTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppTheme.swift; path = ../Sources/MacPulse/AppTheme.swift; sourceTree = "<group>"; };
+		DB30C1B52BE71A0416E8CC4C /* MobileDeviceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileDeviceTests.swift; path = MacPulseTests/MobileDeviceTests.swift; sourceTree = "<group>"; };
+		E95F164289346B15A45417D6 /* Components.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Components.swift; path = ../Sources/MacPulse/Components.swift; sourceTree = "<group>"; };
+		ED416423F474132B7F7FF24E /* MobileSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileSettingsView.swift; sourceTree = "<group>"; };
+		F755602BDB0DFAC97BF3BFFD /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F8A997150AAA2757FB836337 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8EB7702A5F25BB31D22B6F9B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4BD2B7F108AA20B7536C02E /* Foundation.framework in Frameworks */,
+				97B5346399F8D2E43416CA17 /* MacPulseCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCD85EBE076754838E07A3F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C198F4031D70281B32BDD87 /* Foundation.framework in Frameworks */,
+				233507C4B6B274B9C7D43ABD /* MacPulseCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C31D9F4B1ACB3506FCAE2A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				964D0C7F5574825B4C16338F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		18B846C0F91CCBEEE94EDD27 = {
+			isa = PBXGroup;
+			children = (
+				BA61385020EBF40A83BF57DC /* Products */,
+				96CC1F30D447F6CEBA295695 /* Frameworks */,
+				8ECA316D69544DCCCAFEF2BC /* MacPulse */,
+				9F85F7EE493F53F43D7A462C /* Shared UI */,
+				B326A9E2C81E1DDA77DB0AAA /* Tests */,
+				AB2976DA54003286FE0FE722 /* LICENSE */,
+			);
+			sourceTree = "<group>";
+		};
+		8ECA316D69544DCCCAFEF2BC /* MacPulse */ = {
+			isa = PBXGroup;
+			children = (
+				336308237B9C352448A88188 /* MacPulseMobileApp.swift */,
+				B8F123284AEDFBF144B3E86F /* MobileFilesModel.swift */,
+				1ED82BF27C21F6C089FFCAB8 /* MobileFilesView.swift */,
+				5FDC02282EC370ACAA595CAE /* MobileMonitor.swift */,
+				ED416423F474132B7F7FF24E /* MobileSettingsView.swift */,
+				102DB6F5754E3E1B4DFE59DE /* MobileViews.swift */,
+				F8A997150AAA2757FB836337 /* Assets.xcassets */,
+				6893CE5B142AA84ADB318CD9 /* PrivacyInfo.xcprivacy */,
+				F755602BDB0DFAC97BF3BFFD /* Info.plist */,
+			);
+			name = MacPulse;
+			path = MacPulse;
+			sourceTree = "<group>";
+		};
+		96CC1F30D447F6CEBA295695 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DB5CA30AA550E3148F3C7CAB /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9F85F7EE493F53F43D7A462C /* Shared UI */ = {
+			isa = PBXGroup;
+			children = (
+				D687BA80058D85889B2936A8 /* AppTheme.swift */,
+				D3E22D1586DF8AA4703C80E8 /* AppLocalization.swift */,
+				E95F164289346B15A45417D6 /* Components.swift */,
+			);
+			name = "Shared UI";
+			sourceTree = "<group>";
+		};
+		B326A9E2C81E1DDA77DB0AAA /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				05BC030651055BE74C876FBD /* MobileTests.swift */,
+				DB30C1B52BE71A0416E8CC4C /* MobileDeviceTests.swift */,
+				1F740F4A2E7325F157959427 /* MacPulseUITests.swift */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		BA61385020EBF40A83BF57DC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				69F784182C88002696CF95F5 /* MacPulse.app */,
+				14664E7F6FFE99713208061F /* MacPulseMobileTests.xctest */,
+				AE8A81B72891E2115C3E705B /* MacPulseUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DB5CA30AA550E3148F3C7CAB /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CF15D77E51C7467E30B68786 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DCBCA3939EF9E91F3B8CA89 /* MacPulseMobileTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D63F2386FA9379291D6E556 /* Build configuration list for PBXNativeTarget "MacPulseMobileTests" */;
+			buildPhases = (
+				788A9714A78398D150DA624C /* Sources */,
+				CCD85EBE076754838E07A3F2 /* Frameworks */,
+				68F92355DEC7D1E92554934C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A75EA0CE8C1F03985EA65E7C /* PBXTargetDependency */,
+			);
+			name = MacPulseMobileTests;
+			packageProductDependencies = (
+				D3AB485267F371A9A0D03091 /* MacPulseCore */,
+			);
+			productName = MacPulseMobileTests;
+			productReference = 14664E7F6FFE99713208061F /* MacPulseMobileTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		64FF43F69A1A7C2C9EDEF80B /* MacPulseMobile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD663A4364CFA435EA135621 /* Build configuration list for PBXNativeTarget "MacPulseMobile" */;
+			buildPhases = (
+				01F396F5760A48288D4002D9 /* Sources */,
+				8EB7702A5F25BB31D22B6F9B /* Frameworks */,
+				D58C36113E2D5F406BAB4DB5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacPulseMobile;
+			packageProductDependencies = (
+				563B10C1E0CD46F05EEB0021 /* MacPulseCore */,
+			);
+			productName = MacPulseMobile;
+			productReference = 69F784182C88002696CF95F5 /* MacPulse.app */;
+			productType = "com.apple.product-type.application";
+		};
+		65468C615F8E73BF4E1D970C /* MacPulseUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B1F120ECDCD9AC2A89BA653 /* Build configuration list for PBXNativeTarget "MacPulseUITests" */;
+			buildPhases = (
+				69155C3FBAF41A216F40586C /* Sources */,
+				F5C31D9F4B1ACB3506FCAE2A /* Frameworks */,
+				A47C4820F338A6C21E084EC4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				407DC7D7BCE7D82C41F6750C /* PBXTargetDependency */,
+			);
+			name = MacPulseUITests;
+			productName = MacPulseUITests;
+			productReference = AE8A81B72891E2115C3E705B /* MacPulseUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		24F6026F73146847AF8FEA9D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = A06E2DEFF0B2AE8CA99087CC /* Build configuration list for PBXProject "MacPulse" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				vi,
+				Base,
+			);
+			mainGroup = 18B846C0F91CCBEEE94EDD27;
+			minimizedProjectReferenceProxies = 0;
+			packageReferences = (
+				C2C85C8111C8BEEAF0DAF77D /* XCLocalSwiftPackageReference ".." */,
+			);
+			preferredProjectObjectVersion = 100;
+			productRefGroup = BA61385020EBF40A83BF57DC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				64FF43F69A1A7C2C9EDEF80B /* MacPulseMobile */,
+				5DCBCA3939EF9E91F3B8CA89 /* MacPulseMobileTests */,
+				65468C615F8E73BF4E1D970C /* MacPulseUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		68F92355DEC7D1E92554934C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A47C4820F338A6C21E084EC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D58C36113E2D5F406BAB4DB5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB2B539D3D1DA1FCFD38A19B /* Assets.xcassets in Resources */,
+				1A2F414A888A3D0A935899F9 /* PrivacyInfo.xcprivacy in Resources */,
+				6EB4A8CC1741E57E50B3A7E7 /* LICENSE in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01F396F5760A48288D4002D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2BACECBF9B5770A242A99C3 /* MacPulseMobileApp.swift in Sources */,
+				09AD9AC7C136792DD72F40FE /* MobileFilesModel.swift in Sources */,
+				FA6AAAD2343ED77BE4B3F030 /* MobileFilesView.swift in Sources */,
+				E48FA1D2F955607CFF5B229C /* MobileMonitor.swift in Sources */,
+				408ED36EDDB647BB07AACC50 /* MobileSettingsView.swift in Sources */,
+				E6483BABFBBCA98141234DF4 /* MobileViews.swift in Sources */,
+				20DE1FF955E47D6ADD478B66 /* AppTheme.swift in Sources */,
+				FDDEC83A744AAAF702F3A5A6 /* AppLocalization.swift in Sources */,
+				471FDF749B1D80356CD54C3E /* Components.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		69155C3FBAF41A216F40586C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				828DB0814525F084BD4DFEC5 /* MacPulseUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		788A9714A78398D150DA624C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02BCAA4282665F58BE76A3FA /* MobileTests.swift in Sources */,
+				9CA1B788FBBF5F667A9C258E /* MobileDeviceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		407DC7D7BCE7D82C41F6750C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MacPulseMobile;
+			target = 64FF43F69A1A7C2C9EDEF80B /* MacPulseMobile */;
+			targetProxy = E9137A9DEB3ED282287375F4 /* PBXContainerItemProxy */;
+		};
+		A75EA0CE8C1F03985EA65E7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MacPulseMobile;
+			target = 64FF43F69A1A7C2C9EDEF80B /* MacPulseMobile */;
+			targetProxy = 781686A509842C0BFEB71602 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		15F1C179EE9E8C2FEE9503BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MacPulse/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macpulse.mobile;
+				PRODUCT_MODULE_NAME = MacPulseMobile;
+				PRODUCT_NAME = MacPulse;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5B143CBFF3E6C5A70582F1A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macpulse.mobile.MacPulseMobileTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacPulse.app/MacPulse";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		83BA613C4D6B85DAFAF51F03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macpulse.mobile.MacPulseUITests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MacPulseMobile;
+			};
+			name = Debug;
+		};
+		9CE90CFDC7D6F2EF8EE177FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C2C9A538D954522D23E93628 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MacPulse/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macpulse.mobile;
+				PRODUCT_MODULE_NAME = MacPulseMobile;
+				PRODUCT_NAME = MacPulse;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D63822D6C525251A6FAF18F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macpulse.mobile.MacPulseMobileTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacPulse.app/MacPulse";
+			};
+			name = Debug;
+		};
+		F6F5FA20D6A3A4EF4EBEF812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F9F5BD00E8FB8F99EF5DBF29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.macpulse.mobile.MacPulseUITests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MacPulseMobile;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1B1F120ECDCD9AC2A89BA653 /* Build configuration list for PBXNativeTarget "MacPulseUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F9F5BD00E8FB8F99EF5DBF29 /* Release */,
+				83BA613C4D6B85DAFAF51F03 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D63F2386FA9379291D6E556 /* Build configuration list for PBXNativeTarget "MacPulseMobileTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B143CBFF3E6C5A70582F1A4 /* Release */,
+				D63822D6C525251A6FAF18F4 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A06E2DEFF0B2AE8CA99087CC /* Build configuration list for PBXProject "MacPulse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6F5FA20D6A3A4EF4EBEF812 /* Debug */,
+				9CE90CFDC7D6F2EF8EE177FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD663A4364CFA435EA135621 /* Build configuration list for PBXNativeTarget "MacPulseMobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15F1C179EE9E8C2FEE9503BF /* Release */,
+				C2C9A538D954522D23E93628 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		C2C85C8111C8BEEAF0DAF77D /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		563B10C1E0CD46F05EEB0021 /* MacPulseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2C85C8111C8BEEAF0DAF77D /* XCLocalSwiftPackageReference ".." */;
+			productName = MacPulseCore;
+		};
+		D3AB485267F371A9A0D03091 /* MacPulseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2C85C8111C8BEEAF0DAF77D /* XCLocalSwiftPackageReference ".." */;
+			productName = MacPulseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 24F6026F73146847AF8FEA9D /* Project object */;
+}

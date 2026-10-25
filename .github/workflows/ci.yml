@@ -1,4 +1,4 @@
-name: macOS CI
+name: Apple platforms CI
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
         run: swift --version
       - name: Validate shell scripts and app metadata
         run: |
-          bash -n scripts/test.sh scripts/build-app.sh
+          bash -n scripts/test.sh scripts/build-app.sh scripts/build-ios.sh scripts/test-ios.sh
           plutil -lint Resources/Info.plist
       - name: Run core tests
         run: bash scripts/test.sh
@@ -48,3 +48,36 @@ jobs:
             dist/MacPulse.zip.sha256
           retention-days: 14
           if-no-files-found: error
+
+  ios:
+    name: iOS Simulator tests and device build
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate iOS resources
+        run: |
+          xcodebuild -version
+          plutil -lint iOS/MacPulse/Info.plist iOS/MacPulse/PrivacyInfo.xcprivacy
+      - name: Run iPhone Simulator core and UI tests
+        run: bash scripts/test-ios.sh
+      - name: Build unsigned arm64 device app
+        run: bash scripts/build-ios.sh --device
+      - name: Upload unsigned development build
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: MacPulse-iOS-device-unsigned
+          path: dist/MacPulse-iOS-Device-unsigned.zip
+          retention-days: 14
+          if-no-files-found: error
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: MacPulse-iOS-test-results
+          path: .build/ios/Logs/Test/
+          retention-days: 7
+          if-no-files-found: ignore

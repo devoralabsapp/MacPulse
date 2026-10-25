@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 
 public enum CleanupRisk: String, CaseIterable, Identifiable, Sendable {
@@ -127,3 +128,5 @@ public struct CleanupAssessor: Sendable {
         return assess(url: candidate.url, evidence: evidence, usage: usage, now: now)
     }
 }
+
+#endif

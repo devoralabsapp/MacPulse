@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import Darwin
 import SystemConfiguration
@@ -75,3 +76,5 @@ public final class NetworkReader {
         }
     }
 }
+
+#endif

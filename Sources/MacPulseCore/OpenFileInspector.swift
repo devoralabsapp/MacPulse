@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import Darwin
 
@@ -56,3 +57,5 @@ public enum OpenFileInspector {
         return paths
     }
 }
+
+#endif
