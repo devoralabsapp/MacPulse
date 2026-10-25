@@ -7,4 +7,3 @@ public final class ScanCancellation: @unchecked Sendable {
     public func cancel() { lock.lock(); value = true; lock.unlock() }
     public var isCancelled: Bool { lock.lock(); defer { lock.unlock() }; return value }
 }
-
