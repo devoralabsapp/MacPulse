@@ -202,7 +202,7 @@ public struct MobileFileStore: Sendable {
         }
         guard url.path == url.resolvingSymlinksInPath().path,
               (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true,
-              (try? Data(contentsOf: url.appendingPathComponent(Self.markerName))) == Self.marker else { throw MobileFileError.recoveryConflict }
+              (try? boundedData(url.appendingPathComponent(Self.markerName), limit: Self.marker.count)) == Self.marker else { throw MobileFileError.recoveryConflict }
         return url
     }
     private func readRecord(id: UUID, recovery: URL) throws -> MobileRecoveryItem {
@@ -212,9 +212,22 @@ public struct MobileFileStore: Sendable {
         guard metadata.path == metadata.resolvingSymlinksInPath().path,
               let attrs = try? FileManager.default.attributesOfItem(atPath: metadata.path),
               ((attrs[.size] as? NSNumber)?.intValue ?? Int.max) < 32_768 else { throw MobileFileError.unsafe }
-        let record = try JSONDecoder().decode(MobileRecoveryItem.self, from: Data(contentsOf: metadata))
+        let record = try JSONDecoder().decode(MobileRecoveryItem.self, from: boundedData(metadata, limit: 32_768))
         guard record.id == id else { throw MobileFileError.unsafe }
         return record
+    }
+    private func boundedData(_ url: URL, limit: Int) throws -> Data {
+        guard url.path == url.resolvingSymlinksInPath().path else { throw MobileFileError.unsafe }
+        let attrs = try FileManager.default.attributesOfItem(atPath: url.path)
+        guard attrs[.type] as? FileAttributeType == .typeRegular,
+              (attrs[.referenceCount] as? NSNumber)?.intValue == 1,
+              let size = (attrs[.size] as? NSNumber)?.int64Value, size >= 0, size <= limit else { throw MobileFileError.unsafe }
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        // Bound the read itself as well: a file can grow after the metadata check.
+        let data = try handle.read(upToCount: limit + 1) ?? Data()
+        guard data.count <= limit else { throw MobileFileError.unsafe }
+        return data
     }
     private func validateRecovery(_ item: MobileRecoveryItem, recovery: URL, directory: URL) throws -> URL {
         let current = try readRecord(id: item.id, recovery: recovery)

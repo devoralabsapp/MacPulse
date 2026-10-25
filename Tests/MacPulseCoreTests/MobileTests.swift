@@ -110,6 +110,25 @@ final class MobileFileStoreTests: XCTestCase {
         XCTAssertThrowsError(try store.permanentlyDelete(item))
         XCTAssertTrue(FileManager.default.fileExists(atPath: extra.path))
     }
+    func testOversizedRecoveryMarkerIsRejected() throws {
+        try fixture()
+        let recovery = root.appendingPathComponent(MobileFileStore.recoveryName, isDirectory: true)
+        try FileManager.default.createDirectory(at: recovery, withIntermediateDirectories: false)
+        try Data(repeating: 65, count: 65_536).write(to: recovery.appendingPathComponent(".macpulse-recovery.json"))
+        XCTAssertThrowsError(try store.moveToRecovery(candidate()))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: root.appendingPathComponent("old.txt").path))
+    }
+    func testSymlinkedRecoveryMarkerIsRejectedEvenWhenContentsMatch() throws {
+        try fixture(); try store.moveToRecovery(candidate())
+        let recovery = root.appendingPathComponent(MobileFileStore.recoveryName)
+        let marker = recovery.appendingPathComponent(".macpulse-recovery.json")
+        let outside = directory.appendingPathComponent("copied-marker.json")
+        try FileManager.default.copyItem(at: marker, to: outside)
+        try FileManager.default.removeItem(at: marker)
+        try FileManager.default.createSymbolicLink(at: marker, withDestinationURL: outside)
+        XCTAssertThrowsError(try store.recoveryItems())
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outside.path))
+    }
     func testTraversalInRecoveryMetadataIsRejected() throws {
         try fixture(); try store.moveToRecovery(candidate())
         let item = try XCTUnwrap(store.recoveryItems().first)

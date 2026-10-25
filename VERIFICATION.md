@@ -4,8 +4,8 @@ Local verification on 25 October 2026:
 
 ## Version 1.5.0: iPhone and iPad
 
-- 63 shared/macOS tests pass locally, without failures or skips. The 11 added cases cover process CPU baselines/normalization and disposable file recovery, including restore collisions, changed files, symlinked parents, sensitive files, cancellation, unknown recovery folders, path traversal, and unexpected entry contents.
-- On dedicated Simulators, 12 unit/integration tests plus the English adaptive-navigation/persisted-appearance UI test pass on iPhone 17 Pro (iOS 26.5), iPad Pro 11-inch M5 (iPadOS 26.5), and iPhone 15 Pro (iOS 17.0). An additional Vietnamese/light-theme/navigation UI test passes on iPhone 17 Pro.
+- 65 shared/macOS tests pass locally, without failures or skips. The 13 added cases cover process CPU baselines/normalization and disposable file recovery, including restore collisions, changed files, symlinked parents, sensitive files, cancellation, unknown recovery folders, path traversal, unexpected entry contents, oversized markers, and symlinked markers.
+- On dedicated Simulators, 12 unit/integration tests plus the English adaptive-navigation/persisted-appearance UI test pass on iPhone 17 Pro (iOS 26.5), iPad Pro 11-inch M5 (iPadOS 26.5), and iPhone 15 Pro (iOS 17.0). An additional Vietnamese/light-theme/navigation UI test passes on iPhone 17 Pro. The expanded 14-test iOS unit/integration suite also passes there after adding bounded recovery-metadata reads.
 - Actual XCTest screenshots of iPhone/iPad Overview and Appearance were visually reviewed. UI tests change palettes/mode, relaunch to check saved appearance, and navigate to Network and Files. They do not grant access to or delete real user files.
 - Release Simulator and unsigned arm64 device builds pass. Packaging verifies both iPhone/iPad device families, English/Vietnamese mobile translations, privacy manifest, and MIT License. The generated 1024-pixel iOS icon is opaque RGB.
 - The macOS Universal app still builds and passes signature, architecture, and resource checks after separating platform-specific sources.

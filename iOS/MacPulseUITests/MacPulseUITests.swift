@@ -11,6 +11,7 @@ final class MacPulseUITests: XCTestCase {
         navigate("Settings", app: app)
         let violet = app.buttons["theme.violet"]
         XCTAssertTrue(violet.waitForExistence(timeout: 5)); violet.tap()
+        reveal(app.staticTexts["theme.selected"], app: app)
         XCTAssertTrue(app.staticTexts["theme.selected"].label.contains("Violet"))
         let dark = app.segmentedControls["appearance.mode"].buttons["Dark"]
         XCTAssertTrue(dark.exists); dark.tap()
@@ -19,6 +20,7 @@ final class MacPulseUITests: XCTestCase {
         app.terminate(); app.launch()
         navigate("Settings", app: app)
         XCTAssertTrue(app.staticTexts["theme.selected"].waitForExistence(timeout: 10))
+        reveal(app.staticTexts["theme.selected"], app: app)
         XCTAssertTrue(app.staticTexts["theme.selected"].label.contains("Violet"))
         XCTAssertTrue(app.segmentedControls["appearance.mode"].buttons["Dark"].isSelected)
         navigate("Network", app: app)
@@ -37,6 +39,7 @@ final class MacPulseUITests: XCTestCase {
         navigate("Tổng quan", page: "overview", app: app)
         XCTAssertTrue(app.staticTexts["CPU của app"].waitForExistence(timeout: 10))
         navigate("Cài đặt", page: "settings", app: app)
+        reveal(app.staticTexts["theme.selected"], app: app)
         XCTAssertTrue(app.staticTexts["theme.selected"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["theme.selected"].label.hasPrefix("Bảng màu đang dùng:"))
         let screenshot = XCTAttachment(screenshot: app.screenshot())
@@ -45,6 +48,12 @@ final class MacPulseUITests: XCTestCase {
         XCTAssertTrue(app.scrollViews["screen.network"].waitForExistence(timeout: 5))
         navigate("Dọn dẹp", page: "cleanup", app: app)
         XCTAssertTrue(app.buttons["files.choose"].waitForExistence(timeout: 5))
+    }
+    @MainActor private func reveal(_ element: XCUIElement, app: XCUIApplication) {
+        for _ in 0..<4 {
+            if element.exists { return }
+            app.swipeUp()
+        }
     }
     @MainActor private func navigate(_ title: String, page: String? = nil, app: XCUIApplication) {
         if app.tabBars.buttons[title].exists { app.tabBars.buttons[title].tap() }

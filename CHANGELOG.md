@@ -6,6 +6,7 @@
 - Share palettes, localization, formatting, and rate logic across Apple platforms; compile macOS-only IOKit/process inspection only on macOS.
 - Measure MacPulse process CPU and memory footprint, device physical RAM, advisory app allocation headroom, volume capacity, battery level/state, Low Power Mode, thermal state, and physical-interface traffic on iOS. Pause sampling in the background and rebaseline on resume.
 - Add scoped folder selection, file previews, manual candidate selection, provider-local Recovery, restore without overwrite, and separately confirmed permanent deletion. Revalidate metadata and paths, block sensitive formats, and preserve recovery files after ambiguous provider failures.
+- Bound recovery metadata reads and reject oversized, non-regular, linked, or symlinked format markers.
 - Add iOS privacy declarations, an opaque app icon, Xcode project/shared scheme, build/test scripts, Simulator tests, and bilingual setup/platform-limit documentation.
 - Add process CPU and disposable recovery-fixture regression tests, including symlinks, changed files, corrupted metadata, collisions, cancellation, and foreign recovery contents.
 
