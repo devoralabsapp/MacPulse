@@ -2,6 +2,14 @@
 
 Local verification on 25 October 2026:
 
+## Version 1.4.0 update
+
+- 52 tests pass with no failures or skips locally. Existing monitoring, battery, formatting, localization, and cleanup checks remain green.
+- New checks cover System default versus explicit appearance overrides and contrast across four palettes in light/dark modes: body/secondary text and button/navigation labels at least 4.5:1, chart lines at least 3:1, and cleanup risk text/badges at least 4.5:1. Risk colors are independent of the selected accent palette.
+- Offscreen `NSHostingView` renders of the production SwiftUI views with deterministic sample data were visually reviewed: Overview at 1220 × 840 and 1080 × 730, English/Vietnamese, all four palettes, appearance previews, cleanup tables with a selected row, Network, and Battery. This checks layout and colors; it does not test user interaction or capture a running app. Native tab/header rendering depends on the hosting window.
+- The Universal 1.4.0 bundle includes arm64 and x86_64 slices. Ad hoc signature verification, bundled translations, Info.plist, and ZIP integrity checks pass.
+- Interactive theme selection/persistence, live macOS automatic appearance changes, native Settings tabs, menu bar controls, folder selection, and the full Trash/restore flow still need manual verification. No user files were cleaned.
+
 ## Version 1.3.0 update
 
 - 48 tests pass with no failures or skips locally. Live `NET_RT_IFLIST2` sampling successfully read physical-interface counters and observed upload/download traffic without generating test requests.
@@ -43,7 +51,7 @@ Tests cover battery percentage-vs-mAh parsing, raw/legacy/missing capacity data,
 
 ## Limits of this verification
 
-- Automated UI inspection was unavailable because permission to control the app was not granted. Screens, folder selection, settings, menu bar behavior, and the complete Trash/restore workflow have not been visually verified.
+- Earlier direct UI automation was unavailable because permission to control the app was not granted. Version 1.4.0 adds offscreen render checks of the app’s own view code with sample data. These do not verify interactive settings, menu bar behavior, folder selection, or the complete Trash/restore workflow.
 - Tests ran on the `x86_64` host. The `arm64` slice was cross-compiled, not run natively on Apple Silicon during this verification.
 - No user files were cleaned. The test suite uses isolated temporary fixtures and does not exercise a real Trash operation.
 - The app is ad hoc signed, not Apple-notarized. Build and unit test success do not establish production readiness.

@@ -11,7 +11,7 @@
 
 MacPulse is a native macOS utility for monitoring CPU, memory, storage, battery, and network activity, with a file cleanup workflow that lets you review each candidate before moving it to Trash. Built with SwiftUI, AppKit, and IOKit, it runs locally without accounts, analytics, or third-party dependencies. The app supports English and Vietnamese, selectable in Settings.
 
-**Early development:** core tests and Universal builds have been verified locally. Visual UI checks and the full Trash workflow still need manual verification. Builds are ad hoc signed and are not notarized by Apple. See [verification notes](VERIFICATION.md) for the exact scope of validation.
+**Early development:** core tests, Universal builds, and offscreen view renders have been checked locally. Interactive controls and the full Trash workflow still need manual verification. Builds are ad hoc signed and are not notarized by Apple. See [verification notes](VERIFICATION.md) for the exact scope of validation.
 
 ## Why MacPulse?
 
@@ -30,6 +30,7 @@ It does not treat an old modification date as proof that a file is unused. It sh
 | Network | Dedicated live upload/download view, 60-sample chart, per-interface rates/status, observed session totals, byte/bit units, and optional menu bar speeds |
 | File cleanup | Large files ≥100 MB, files unmodified for ≥180 days, and optional user cache/log files ≥30 days old |
 | Menu bar | A live CPU readout and a compact resource summary |
+| Appearance | Ocean, Forest, Violet, and Graphite palettes; System default, Light, and Dark modes; saved preferences |
 
 Cleanup results support search, category/risk filters, per-file reasons, multiple selection, and **Reveal in Finder**. Nothing is selected automatically. A confirmation sheet lists the selected files and their assessment before any Trash operation.
 
@@ -55,15 +56,21 @@ The build script generates `dist/MacPulse.app` and `dist/MacPulse.zip`, includin
 
 Open `Package.swift` in Xcode to work on the source. Use the packaged `.app` when testing folder permissions. Closing the main window keeps menu bar monitoring available; choose **Thoát MacPulse** in the menu bar panel to quit.
 
+## Appearance
+
+Use the **palette icon** at the top right of the main window to choose **Ocean, Forest, Violet, or Graphite** and **System default, Light, or Dark**. Open **Settings (⌘,) → Appearance** for visual palette previews. System default follows macOS appearance, including its automatic changes.
+
+The choice is saved and shared by app windows, Settings, the menu bar popup, and app-owned sheets. Switching themes preserves monitoring history, scan results, and file selection. Safety labels retain their own green/amber/red meanings across palettes. The macOS status item and system-owned dialogs use native system styling.
+
 ## Language
 
-Open the sidebar gear or press **⌘,**, then choose **Language / Ngôn ngữ → English, Tiếng Việt, or System default**. The choice is saved and updates app screens, the custom menu bar panel, and app messages immediately. Existing scan results can change language without rescanning or losing selection. macOS-owned dialogs and standard system menus follow macOS language preferences.
+Open the sidebar gear or press **⌘,**, then choose **General / Cài đặt chung → Language / Ngôn ngữ → English, Tiếng Việt, or System default**. The choice is saved and updates app screens, the custom menu bar panel, and app messages immediately. Existing scan results can change language without rescanning or losing selection. macOS-owned dialogs and standard system menus follow macOS language preferences.
 
 ## Monitor upload and download
 
 Open **Network / Mạng** in the sidebar, or use the arrow on the Overview network card. The page shows current upload/download speed, a chart of the last 60 samples, the peak within that chart, observed session traffic, and each physical interface's rates and active/inactive state. Interface activity does not establish Internet reachability.
 
-Choose **KB/s · MB/s** or **Kbps · Mbps** on the page or in Settings. Network units are decimal: **1 MB/s = 8 Mbps**. The same choice applies to Overview and the menu bar panel. Menu bar speeds are enabled by default and can be hidden in Settings without stopping collection.
+Choose **KB/s · MB/s** or **Kbps · Mbps** on the page or in **Settings → General**. Network units are decimal: **1 MB/s = 8 Mbps**. The same choice applies to Overview and the menu bar panel. Menu bar speeds are enabled by default and can be hidden in Settings without stopping collection.
 
 Rates use 64-bit kernel interface counters and actual monotonic elapsed time, not a fixed assumed timer interval. The first sample, new/reconnected interfaces, reset counters, and gaps establish a baseline rather than creating false speed spikes. Missing samples remain gaps in the chart. Valid idle samples show zero; unavailable samples show `—`.
 

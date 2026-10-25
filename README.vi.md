@@ -2,7 +2,7 @@
 
 [English](README.md) · [Giấy phép MIT](LICENSE) · [Hướng dẫn đóng góp](CONTRIBUTING.md)
 
-**Trạng thái:** dự án mới, đang phát triển. Có kiểm thử tự động và build Universal; giao diện và toàn bộ luồng chuyển vào Thùng rác vẫn cần kiểm tra thủ công. Xem [kết quả xác minh](VERIFICATION.md).
+**Trạng thái:** dự án mới, đang phát triển. Đã chạy kiểm thử tự động, build Universal và kiểm tra bản render giao diện từ dữ liệu mẫu; thao tác tương tác và toàn bộ luồng chuyển vào Thùng rác vẫn cần kiểm tra thủ công. Xem [kết quả xác minh](VERIFICATION.md).
 
 App macOS native bằng SwiftUI, giao diện tiếng Việt và tiếng Anh, theo dõi tài nguyên trực tiếp và giúp xem lại những file có thể dọn. Yêu cầu macOS 14 trở lên. Không có dịch vụ mạng, tài khoản hoặc thư viện bên thứ ba.
 
@@ -10,7 +10,13 @@ App macOS native bằng SwiftUI, giao diện tiếng Việt và tiếng Anh, the
 
 Sau khi build, mở `dist/MacPulse.app`. Có thể kéo app vào Applications nếu muốn cài đặt. Đóng cửa sổ vẫn theo dõi bằng biểu tượng trên thanh menu; chọn **Thoát MacPulse** để dừng hoàn toàn.
 
-Đổi ngôn ngữ bằng biểu tượng bánh răng hoặc **⌘, → Ngôn ngữ / Language → English / Tiếng Việt / Theo hệ thống**. Lựa chọn được lưu và áp dụng ngay cho nội dung app, thanh menu riêng và thông báo, kể cả kết quả quét đang có. Hộp thoại và menu tiêu chuẩn do macOS quản lý vẫn theo thiết lập ngôn ngữ của macOS.
+Đổi ngôn ngữ bằng biểu tượng bánh răng hoặc **⌘, → Cài đặt chung / General → Ngôn ngữ / Language → English / Tiếng Việt / Theo hệ thống**. Lựa chọn được lưu và áp dụng ngay cho nội dung app, thanh menu riêng và thông báo, kể cả kết quả quét đang có. Hộp thoại và menu tiêu chuẩn do macOS quản lý vẫn theo thiết lập ngôn ngữ của macOS.
+
+## Đổi theme
+
+Bấm **biểu tượng bảng màu** ở góc trên bên phải để chọn **Ocean, Forest, Violet hoặc Graphite**, kết hợp với chế độ **Theo hệ thống / Sáng / Tối**. Vào **Cài đặt (⌘,) → Giao diện** để xem trước từng bảng màu. Chế độ Theo hệ thống cập nhật theo giao diện macOS, kể cả khi hệ thống tự chuyển sáng/tối.
+
+Lựa chọn được lưu và dùng chung cho cửa sổ app, Cài đặt, bảng trên thanh menu và hộp xác nhận của app. Đổi theme giữ nguyên lịch sử theo dõi, kết quả quét và file đã chọn. Màu đánh giá an toàn vẫn có ý nghĩa xanh/vàng/đỏ riêng. Biểu tượng trên thanh menu và hộp thoại do macOS quản lý dùng kiểu hiển thị của hệ thống.
 
 ## Tính năng
 
@@ -22,13 +28,14 @@ Sau khi build, mở `dist/MacPulse.app`. Có thể kéo app vào Applications n�
 - Dọn dẹp: thư mục tùy chọn, file từ 100 MB, file chưa chỉnh sửa từ 180 ngày; có thể quét thêm cache/log người dùng từ 30 ngày.
 - Tìm theo tên/đường dẫn, lọc loại, hiện trong Finder, chọn nhiều file và xem danh sách xác nhận trước khi chuyển vào Thùng rác.
 - Đánh giá từng file: **ít rủi ro / cần xem lại / không khuyến nghị**, ghi rõ lý do; có bộ lọc và nút chọn chỉ các mục ít rủi ro đang hiển thị.
+- Giao diện thống nhất, 4 bảng màu và 3 chế độ sáng/tối, có bản xem trước và lưu lựa chọn.
 - Cài đặt chu kỳ lấy mẫu 1/2/5 giây và hiển thị trên thanh menu.
 
 ## Theo dõi upload/download
 
 Chọn **Mạng** ở thanh bên hoặc nút mũi tên trong thẻ mạng của Tổng quan. App hiển thị tốc độ tức thời, biểu đồ 60 mẫu gần nhất, đỉnh trong biểu đồ, dung lượng quan sát được trong phiên và tốc độ/trạng thái từng giao diện vật lý. “Đang hoạt động” là trạng thái giao diện, không phải xác nhận có Internet.
 
-Đổi đơn vị **KB/s · MB/s** hoặc **Kbps · Mbps** ngay trên trang Mạng hoặc trong **⌘, → Đơn vị tốc độ mạng**. **1 MB/s = 8 Mbps**. Lựa chọn áp dụng cho trang Mạng, Tổng quan và thanh menu. Có thể tắt tốc độ trên thanh menu trong Cài đặt.
+Đổi đơn vị **KB/s · MB/s** hoặc **Kbps · Mbps** ngay trên trang Mạng hoặc trong **⌘, → Cài đặt chung → Đơn vị tốc độ mạng**. **1 MB/s = 8 Mbps**. Lựa chọn áp dụng cho trang Mạng, Tổng quan và thanh menu. Có thể tắt tốc độ trên thanh menu trong Cài đặt.
 
 App dùng bộ đếm 64-bit và thời gian thực giữa hai mẫu; không gửi yêu cầu speed test và không thu thập nội dung gói tin, SSID hay địa chỉ IP. Lưu lượng gồm Internet, mạng nội bộ và tác vụ nền trên các giao diện vật lý được hỗ trợ; không cộng thêm bộ đếm của VPN/bridge/loopback. Mẫu đầu, giao diện mới/kết nối lại, bộ đếm bị đặt lại hoặc khoảng mất số liệu sẽ lấy mốc mới, không suy ra tốc độ đột biến. Tổng phiên chỉ cộng các khoảng hợp lệ, đặt lại khi thoát app và không dùng làm số liệu tính cước.
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.0 — 2026-10-25
+
+- Redesign the sidebar, page headers, metric cards, panels, and file selection highlights with consistent spacing, typography, and semantic colors.
+- Add Ocean, Forest, Violet, and Graphite palettes with System default, Light, and Dark appearance modes. Remove the forced light appearance.
+- Add a quick appearance menu in the main window and visual palette previews in Settings; organize preferences into Appearance and General tabs.
+- Persist appearance preferences across scenes without resetting resource history, scan results, or selected files. Theme app-owned confirmation sheets and the menu bar popup.
+- Preserve semantic cleanup risk colors across palettes, improve disabled button styling, and localize appearance controls in English and Vietnamese.
+- Add contrast checks for text, buttons, chart lines, selected navigation, and risk badges across all eight palette/mode combinations, plus system-mode resolution and localization checks.
+
 ## 1.3.0 — 2026-10-25
 
 - Add a Network page with live upload/download rates, a 60-sample chart, per-interface activity/rates, chart peaks, and observed session totals.

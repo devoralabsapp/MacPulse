@@ -1,17 +1,6 @@
 import SwiftUI
 import MacPulseCore
 
-enum Palette {
-    static let background = Color(hex: 0xF5F7FA)
-    static let ink = Color(hex: 0x202B3C)
-    static let secondary = Color(hex: 0x7C8799)
-    static let border = Color(hex: 0xE8ECF2)
-    static let blue = Color(hex: 0x5185F5)
-    static let purple = Color(hex: 0xA07AE8)
-    static let mint = Color(hex: 0x37B99B)
-    static let orange = Color(hex: 0xEBA35D)
-}
-
 extension Color {
     init(hex: UInt32) {
         self.init(.sRGB, red: Double((hex >> 16) & 255) / 255,
@@ -21,28 +10,32 @@ extension Color {
 
 struct Panel<Content: View>: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     @ViewBuilder var content: Content
     var body: some View {
         content.padding(22).frame(maxWidth: .infinity, alignment: .leading)
-            .background(.white, in: RoundedRectangle(cornerRadius: 18))
-            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Palette.border, lineWidth: 1))
+            .background(theme.surface, in: RoundedRectangle(cornerRadius: 16))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(theme.border.opacity(0.7), lineWidth: 1))
+            .shadow(color: theme.text.opacity(0.025), radius: 10, x: 0, y: 3)
     }
 }
 
 struct SectionTitle: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     let title: String
     var subtitle: String? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(l.text(title)).font(.system(size: 15, weight: .semibold)).foregroundStyle(Palette.ink)
-            if let subtitle { Text(l.text(subtitle)).font(.system(size: 11)).foregroundStyle(Palette.secondary) }
+            Text(l.text(title)).font(.system(size: 16, weight: .semibold)).foregroundStyle(theme.text)
+            if let subtitle { Text(l.text(subtitle)).font(.system(size: 12)).foregroundStyle(theme.secondaryText) }
         }
     }
 }
 
 struct MetricCard: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     let title: String
     let icon: String
     let value: String
@@ -53,16 +46,18 @@ struct MetricCard: View {
         Panel {
             VStack(alignment: .leading, spacing: 17) {
                 HStack {
+                    Text(l.text(title)).font(.system(size: 12, weight: .medium)).foregroundStyle(theme.secondaryText)
+                    Spacer(minLength: 4)
                     Image(systemName: icon).font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(color).frame(width: 34, height: 34)
-                        .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 10))
-                    Spacer()
-                    Text(l.text(title).uppercased()).font(.system(size: 10, weight: .semibold)).tracking(1).foregroundStyle(Palette.secondary)
+                        .foregroundStyle(color).frame(width: 32, height: 32)
+                        .background(color.opacity(0.09), in: RoundedRectangle(cornerRadius: 9))
                 }
-                Text(value).font(.system(size: 30, weight: .semibold, design: .rounded)).foregroundStyle(Palette.ink).monospacedDigit().lineLimit(1).minimumScaleFactor(0.65)
-                VStack(alignment: .leading, spacing: 10) {
+                Text(value).font(.system(size: 32, weight: .semibold, design: .rounded))
+                    .foregroundStyle(theme.text).monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
+                VStack(alignment: .leading, spacing: 11) {
                     ProgressTrack(fraction: fraction, color: color)
-                    Text(l.text(caption)).font(.system(size: 11)).foregroundStyle(Palette.secondary).lineLimit(1).minimumScaleFactor(0.8)
+                    Text(l.text(caption)).font(.system(size: 12)).foregroundStyle(theme.secondaryText)
+                        .lineLimit(2).frame(height: 30, alignment: .topLeading)
                 }
             }
         }
@@ -71,6 +66,7 @@ struct MetricCard: View {
 
 struct ProgressTrack: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     let fraction: Double
     let color: Color
     var body: some View {
@@ -79,23 +75,25 @@ struct ProgressTrack: View {
                 .overlay(alignment: .leading) {
                     Capsule().fill(color).frame(width: geometry.size.width * min(1, max(0, fraction)))
                 }
-        }.frame(height: 5)
+        }.frame(height: 6)
     }
 }
 
 struct HistoryChart: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     let primary: [Double]
     var secondary: [Double] = []
-    var color = Palette.blue
+    var color: Color? = nil
+    private var chartColor: Color { color ?? theme.accent }
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 VStack {
                     ForEach([100, 75, 50, 25, 0], id: \.self) { value in
                         HStack(spacing: 10) {
-                            Text("\(value)").font(.system(size: 9, design: .monospaced)).foregroundStyle(Palette.secondary).frame(width: 24, alignment: .trailing)
-                            Rectangle().fill(Palette.border).frame(height: 1)
+                            Text("\(value)").font(.system(size: 9, design: .monospaced)).foregroundStyle(theme.secondaryText).frame(width: 24, alignment: .trailing)
+                            Rectangle().fill(theme.border).frame(height: 1)
                         }
                         if value != 0 { Spacer(minLength: 0) }
                     }
@@ -115,12 +113,12 @@ struct HistoryChart: View {
                         area.addLine(to: CGPoint(x: endX, y: size.height))
                         area.addLine(to: CGPoint(x: 0, y: size.height))
                         area.closeSubpath()
-                        context.fill(area, with: .linearGradient(Gradient(colors: [color.opacity(0.18), color.opacity(0.01)]), startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
-                        if secondary.count >= 2 { context.stroke(line(secondary), with: .color(Palette.purple.opacity(0.85)), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round)) }
-                        context.stroke(line(primary), with: .color(color), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
+                        context.fill(area, with: .linearGradient(Gradient(colors: [chartColor.opacity(0.18), chartColor.opacity(0.01)]), startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
+                        if secondary.count >= 2 { context.stroke(line(secondary), with: .color(theme.chartSecondary.opacity(0.85)), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round)) }
+                        context.stroke(line(primary), with: .color(chartColor), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                     }.padding(.leading, 34).padding(.vertical, 5)
                 } else {
-                    Text(l.text("Đang thu thập mẫu đầu tiên…")).font(.system(size: 12)).foregroundStyle(Palette.secondary).frame(maxWidth: .infinity)
+                    Text(l.text("Đang thu thập mẫu đầu tiên…")).font(.system(size: 12)).foregroundStyle(theme.secondaryText).frame(maxWidth: .infinity)
                 }
             }
         }
@@ -131,33 +129,41 @@ struct HistoryChart: View {
 
 struct DetailRow: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     let title: String
     let value: String
-    var color: Color = Palette.ink
+    var color: Color? = nil
     var body: some View {
         HStack {
-            Text(l.text(title)).foregroundStyle(Palette.secondary)
+            Text(l.text(title)).foregroundStyle(theme.secondaryText)
             Spacer(minLength: 16)
-            Text(l.text(value)).fontWeight(.medium).foregroundStyle(color).monospacedDigit()
+            Text(l.text(value)).fontWeight(.medium).foregroundStyle(color ?? theme.text).monospacedDigit()
         }.font(.system(size: 12)).padding(.vertical, 6)
     }
 }
 
 struct LegendDot: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     let title: String
     let color: Color
     var body: some View {
-        HStack(spacing: 6) { Circle().fill(color).frame(width: 6, height: 6); Text(title).font(.system(size: 10)).foregroundStyle(Palette.secondary) }
+        HStack(spacing: 6) { Circle().fill(color).frame(width: 6, height: 6); Text(title).font(.system(size: 11)).foregroundStyle(theme.secondaryText) }
     }
 }
 
 struct PrimaryButton: ButtonStyle {
-    var color = Palette.blue
+    @Environment(\.appTheme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
+    var secondary = false
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(.white).padding(.horizontal, 17).padding(.vertical, 11)
-            .background(color.opacity(configuration.isPressed ? 0.75 : 1), in: RoundedRectangle(cornerRadius: 9))
+            .foregroundStyle(secondary || !isEnabled ? theme.secondaryText : theme.onButton)
+            .padding(.horizontal, 17).padding(.vertical, 11)
+            .background(secondary || !isEnabled ? theme.surfaceSecondary : theme.button,
+                        in: RoundedRectangle(cornerRadius: 9))
+            .overlay(RoundedRectangle(cornerRadius: 9).stroke(secondary || !isEnabled ? theme.border : .clear, lineWidth: 1))
+            .opacity(configuration.isPressed ? 0.75 : 1)
             .contentShape(RoundedRectangle(cornerRadius: 9))
     }
 }

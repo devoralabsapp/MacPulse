@@ -4,6 +4,7 @@ import MacPulseCore
 
 struct ContentView: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     @EnvironmentObject var monitor: SystemMonitor
     @EnvironmentObject var cleaner: CleanerModel
     @State private var page: AppPage = .overview
@@ -23,117 +24,153 @@ struct ContentView: View {
                         case .battery: BatteryView()
                         case .cleaner: CleanerView()
                         }
-                    }.padding(30).padding(.top, 2)
+                    }.padding(26)
                 }
-                HStack(spacing: 7) {
-                    Image(systemName: "lock.shield").font(.system(size: 10))
-                    Text(l.text("Dữ liệu ở trên máy của bạn"))
-                    Spacer()
-                    Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.3.0")").foregroundStyle(Palette.secondary.opacity(0.8))
-                }.font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.horizontal, 30).padding(.vertical, 13)
-            }.background(Palette.background)
+                footer
+            }.background(theme.background)
         }
-        .foregroundStyle(Palette.ink)
+        .foregroundStyle(theme.text)
         .ignoresSafeArea()
     }
 
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 10) {
+            HStack(spacing: 11) {
                 Image(systemName: "waveform.path.ecg").font(.system(size: 22, weight: .medium))
-                    .foregroundStyle(Color(hex: 0x80B0FF)).frame(width: 39, height: 39)
-                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
-                Text("MacPulse").font(.system(size: 21, weight: .semibold, design: .rounded)).foregroundStyle(.white)
-            }.padding(.bottom, 39)
-            Text(l.text("KHÔNG GIAN CỦA BẠN")).font(.system(size: 9, weight: .semibold)).tracking(1.6).foregroundStyle(Color(hex: 0x707C93)).padding(.leading, 12).padding(.bottom, 14)
-            ForEach(AppPage.allCases) { item in
-                Button {
-                    page = item
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: item.icon).font(.system(size: 14)).frame(width: 20)
-                        Text(l.text(item.title)).font(.system(size: 13, weight: page == item ? .semibold : .regular))
-                        Spacer()
-                        if item == page { Capsule().fill(Color(hex: 0x88AEFF)).frame(width: 3, height: 15) }
-                    }
-                    .foregroundStyle(page == item ? Color.white : Color(hex: 0x9DA9BE))
-                    .padding(.horizontal, 13).padding(.vertical, 13)
-                    .background(page == item ? Color(hex: 0x2A3854) : .clear, in: RoundedRectangle(cornerRadius: 10))
-                    .contentShape(Rectangle())
-                }.buttonStyle(.plain).padding(.bottom, 5)
-            }
-            Spacer()
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 7) {
-                    Circle().fill(Palette.mint).frame(width: 6, height: 6)
-                    Text(l.text("Đang theo dõi")).font(.system(size: 11, weight: .medium)).foregroundStyle(Color(hex: 0xC4CDDC))
+                    .foregroundStyle(theme.onButton).frame(width: 40, height: 40)
+                    .background(theme.button, in: RoundedRectangle(cornerRadius: 12))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("MacPulse").font(.system(size: 20, weight: .bold, design: .rounded))
+                    Text(l.text("Giám sát hệ thống")).font(.system(size: 11)).foregroundStyle(theme.secondaryText)
                 }
-                Text(l.text("Nhẹ nhàng với chiếc Mac.\nRõ ràng với mọi tài nguyên."))
-                    .font(.system(size: 11)).lineSpacing(4).foregroundStyle(Color(hex: 0x77849C))
-            }.padding(14).frame(maxWidth: .infinity, alignment: .leading)
-                .background(.white.opacity(0.035), in: RoundedRectangle(cornerRadius: 12))
-            Divider().overlay(.white.opacity(0.08)).padding(.vertical, 21)
+            }.padding(.horizontal, 8).padding(.bottom, 34)
+            navigationGroup("THEO DÕI", pages: [.overview, .performance, .network, .battery])
+            navigationGroup("DỮ LIỆU", pages: [.storage, .cleaner]).padding(.top, 22)
+            Spacer(minLength: 24)
+            HStack(spacing: 8) {
+                Circle().fill(theme.success).frame(width: 7, height: 7)
+                Text(l.text("Đang theo dõi")).font(.system(size: 11, weight: .medium))
+            }.foregroundStyle(theme.secondaryText).padding(.horizontal, 12).padding(.bottom, 20)
+            Rectangle().fill(theme.border).frame(height: 1).padding(.bottom, 18)
             HStack(spacing: 10) {
-                Image(systemName: "laptopcomputer").font(.system(size: 20)).foregroundStyle(Color(hex: 0xA3B0C7))
+                Image(systemName: "laptopcomputer").font(.system(size: 20)).foregroundStyle(theme.secondaryText)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(l.text("Máy Mac của bạn")).font(.system(size: 11, weight: .medium)).foregroundStyle(Color(hex: 0xDBE1EB))
-                    Text("macOS \(ProcessInfo.processInfo.operatingSystemVersion.majorVersion).\(ProcessInfo.processInfo.operatingSystemVersion.minorVersion)").font(.system(size: 10)).foregroundStyle(Color(hex: 0x77849C))
+                    Text(l.text("Máy Mac của bạn")).font(.system(size: 12, weight: .medium))
+                    Text("macOS \(ProcessInfo.processInfo.operatingSystemVersion.majorVersion).\(ProcessInfo.processInfo.operatingSystemVersion.minorVersion)")
+                        .font(.system(size: 11)).foregroundStyle(theme.secondaryText)
                 }
-                Spacer()
-                SettingsLink { Image(systemName: "gearshape").foregroundStyle(Color(hex: 0x9DA9BE)) }
-                    .buttonStyle(.plain).help(l.text("Cài đặt"))
+                Spacer(minLength: 0)
+                SettingsLink { Image(systemName: "gearshape").frame(width: 28, height: 32).foregroundStyle(theme.secondaryText) }
+                    .buttonStyle(.plain).help(l.text("Cài đặt")).accessibilityLabel(l.text("Cài đặt"))
+            }.padding(.horizontal, 8)
+        }
+        .padding(.horizontal, 16).padding(.top, 58).padding(.bottom, 24)
+        .frame(width: 224).background(theme.sidebar)
+        .overlay(alignment: .trailing) { Rectangle().fill(theme.border.opacity(0.7)).frame(width: 1) }
+    }
+
+    private func navigationGroup(_ title: String, pages: [AppPage]) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(l.text(title)).font(.system(size: 10, weight: .semibold)).tracking(1.2)
+                .foregroundStyle(theme.secondaryText).padding(.horizontal, 12).padding(.bottom, 7)
+            ForEach(pages) { item in
+                SidebarItem(title: l.text(item.title), icon: item.icon, selected: item == page) { page = item }
             }
         }
-        .padding(.horizontal, 18).padding(.top, 62).padding(.bottom, 25)
-        .frame(width: 226).background(Color(hex: 0x1B2538))
     }
 
     private var header: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(l.text(page.title)).font(.system(size: 26, weight: .semibold, design: .rounded))
-                Text(l.text(page.subtitle)).font(.system(size: 12)).foregroundStyle(Palette.secondary)
+        HStack(alignment: .center, spacing: 14) {
+            VStack(alignment: .leading, spacing: 7) {
+                Text(l.text(page.title)).font(.system(size: 27, weight: .bold, design: .rounded))
+                Text(l.text(page.subtitle)).font(.system(size: 12)).foregroundStyle(theme.secondaryText)
             }
+            Spacer(minLength: 12)
+            HStack(spacing: 6) {
+                Circle().fill(theme.success).frame(width: 6, height: 6)
+                Text(l.text("Trực tiếp")).font(.system(size: 11, weight: .medium))
+            }.foregroundStyle(theme.success).padding(.horizontal, 11).padding(.vertical, 8)
+                .background(theme.success.opacity(0.08), in: Capsule())
+            HStack(spacing: 4) {
+                ThemeMenu()
+                Button { monitor.sample() } label: {
+                    Image(systemName: "arrow.clockwise").font(.system(size: 14))
+                        .foregroundStyle(theme.secondaryText).frame(width: 34, height: 34)
+                }.buttonStyle(.plain).help(l.text("Cập nhật ngay (⌘R)")).accessibilityLabel(l.text("Cập nhật ngay"))
+            }
+        }
+        .padding(.horizontal, 28).padding(.top, 42).padding(.bottom, 24)
+        .background(theme.surface)
+        .overlay(alignment: .bottom) { Rectangle().fill(theme.border.opacity(0.7)).frame(height: 1) }
+    }
+
+    private var footer: some View {
+        HStack(spacing: 7) {
+            Image(systemName: "lock.shield").font(.system(size: 11))
+            Text(l.text("Dữ liệu ở trên máy của bạn"))
             Spacer()
-            HStack(spacing: 7) {
-                Circle().fill(Palette.mint).frame(width: 6, height: 6)
-                Text(l.text("Trực tiếp")).font(.system(size: 11, weight: .medium)).foregroundStyle(Palette.mint)
-            }.padding(.horizontal, 12).padding(.vertical, 8).background(Palette.mint.opacity(0.08), in: Capsule())
-            Button { monitor.sample() } label: { Image(systemName: "arrow.clockwise").font(.system(size: 13)).foregroundStyle(Palette.secondary).frame(width: 31, height: 31) }
-                .buttonStyle(.plain).help(l.text("Cập nhật ngay (⌘R)"))
-        }.padding(.horizontal, 30).padding(.top, 43).padding(.bottom, 27)
+            Text("MacPulse \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.4.0")")
+        }.font(.system(size: 11)).foregroundStyle(theme.secondaryText)
+            .padding(.horizontal, 28).padding(.vertical, 13)
+    }
+}
+
+private struct SidebarItem: View {
+    @Environment(\.appTheme) private var theme
+    let title: String
+    let icon: String
+    let selected: Bool
+    var action: () -> Void
+    @State private var hovered = false
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 11) {
+                Image(systemName: icon).font(.system(size: 15, weight: selected ? .semibold : .regular)).frame(width: 21)
+                Text(title).font(.system(size: 13, weight: selected ? .semibold : .medium))
+                Spacer(minLength: 0)
+                if selected { Circle().fill(theme.accent).frame(width: 5, height: 5) }
+            }
+            .foregroundStyle(selected ? theme.accent : theme.secondaryText)
+            .padding(.horizontal, 12).padding(.vertical, 12)
+            .background(selected ? theme.selection : hovered ? theme.surface.opacity(0.7) : .clear,
+                        in: RoundedRectangle(cornerRadius: 10))
+            .contentShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .buttonStyle(.plain).onHover { hovered = $0 }
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }
 
 struct OverviewView: View {
     @Environment(\.localizer) private var l
+    @Environment(\.appTheme) private var theme
     @EnvironmentObject var monitor: SystemMonitor
     @Binding var page: AppPage
     @AppStorage("networkRateUnit") private var rateUnit = NetworkRateUnit.bytes.rawValue
     private var unit: NetworkRateUnit { NetworkRateUnit(rawValue: rateUnit) ?? .bytes }
     var s: SystemSnapshot { monitor.snapshot }
     var body: some View {
-        HStack(spacing: 15) {
-            MetricCard(title: "CPU", icon: "cpu", value: l.percent(s.cpu.usage), caption: l.text("%@ lõi xử lý · toàn hệ thống", l.number(s.cpu.cores)), fraction: (s.cpu.usage ?? 0) / 100, color: Palette.blue)
-            MetricCard(title: "RAM", icon: "memorychip", value: s.memory.total > 0 ? l.memory(s.memory.used) : "—", caption: l.text("trên tổng %@", l.memory(s.memory.total)), fraction: s.memory.fraction, color: Palette.purple)
-            MetricCard(title: l.text("Ổ đĩa"), icon: "internaldrive", value: s.disk.total > 0 ? l.bytes(s.disk.available) : "—", caption: l.text("còn trống · %@ tổng", l.bytes(s.disk.total)), fraction: s.disk.fraction, color: Palette.orange)
-            MetricCard(title: "Pin", icon: "battery.75percent", value: l.percent(s.battery.percent), caption: s.battery.currentMAh.map { l.text("%@ mAh còn lại", l.number($0)) } ?? s.battery.stateLabel, fraction: (s.battery.percent ?? 0) / 100, color: Palette.mint)
+        HStack(spacing: 14) {
+            MetricCard(title: "CPU", icon: "cpu", value: l.percent(s.cpu.usage), caption: l.text("%@ lõi xử lý · toàn hệ thống", l.number(s.cpu.cores)), fraction: (s.cpu.usage ?? 0) / 100, color: theme.accent)
+            MetricCard(title: "RAM", icon: "memorychip", value: s.memory.total > 0 ? l.memory(s.memory.used) : "—", caption: l.text("trên tổng %@", l.memory(s.memory.total)), fraction: s.memory.fraction, color: theme.chartSecondary)
+            MetricCard(title: l.text("Ổ đĩa"), icon: "internaldrive", value: s.disk.total > 0 ? l.bytes(s.disk.available) : "—", caption: l.text("còn trống · %@ tổng", l.bytes(s.disk.total)), fraction: s.disk.fraction, color: theme.warning)
+            MetricCard(title: "Pin", icon: "battery.75percent", value: l.percent(s.battery.percent), caption: s.battery.currentMAh.map { l.text("%@ mAh còn lại", l.number($0)) } ?? s.battery.stateLabel, fraction: (s.battery.percent ?? 0) / 100, color: theme.success)
         }
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top, spacing: 18) {
             Panel {
                 VStack(alignment: .leading, spacing: 22) {
                     HStack {
                         SectionTitle(title: l.text("Nhịp hoạt động"), subtitle: l.text("60 mẫu gần nhất trong phiên này"))
                         Spacer()
-                        LegendDot(title: "CPU", color: Palette.blue)
-                        LegendDot(title: "RAM", color: Palette.purple)
+                        LegendDot(title: "CPU", color: theme.accent)
+                        LegendDot(title: "RAM", color: theme.chartSecondary)
                     }
                     HistoryChart(primary: monitor.cpuHistory, secondary: monitor.memoryHistory)
                     HStack {
                         Text(l.text("Cũ hơn"))
                         Spacer()
                         Text(l.text("Hiện tại: CPU %@ · RAM %@", l.percent(s.cpu.usage), l.percent(s.memory.total > 0 ? s.memory.fraction * 100 : nil)))
-                    }.font(.system(size: 10)).foregroundStyle(Palette.secondary)
+                    }.font(.system(size: 10)).foregroundStyle(theme.secondaryText)
                 }
             }
             Panel {
@@ -141,25 +178,25 @@ struct OverviewView: View {
                     HStack {
                         SectionTitle(title: l.text("Kết nối mạng"), subtitle: l.text("Lưu lượng trên giao diện mạng vật lý"))
                         Spacer()
-                        Button { page = .network } label: { Image(systemName: "arrow.up.right").foregroundStyle(Palette.blue) }
+                        Button { page = .network } label: { Image(systemName: "arrow.up.right").foregroundStyle(theme.accent) }
                             .buttonStyle(.plain).help(l.text("Mở theo dõi mạng")).accessibilityLabel(l.text("Mở theo dõi mạng"))
                     }
-                    networkRow(title: l.text("Tải xuống"), value: l.networkRate(s.network.download, unit: unit), icon: "arrow.down", color: Palette.blue)
+                    networkRow(title: l.text("Tải xuống"), value: l.networkRate(s.network.download, unit: unit), icon: "arrow.down", color: theme.accent)
                     Divider()
-                    networkRow(title: l.text("Tải lên"), value: l.networkRate(s.network.upload, unit: unit), icon: "arrow.up", color: Palette.purple)
+                    networkRow(title: l.text("Tải lên"), value: l.networkRate(s.network.upload, unit: unit), icon: "arrow.up", color: theme.chartSecondary)
                 }
             }.frame(width: 260)
         }
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top, spacing: 18) {
             Panel {
-                VStack(alignment: .leading, spacing: 15) {
+                VStack(alignment: .leading, spacing: 14) {
                     HStack {
-                        SectionTitle(title: l.text("Không gian cho điều mới"), subtitle: l.text("Bắt đầu từ những file bạn không còn cần."))
+                        SectionTitle(title: l.text("Dọn dẹp có kiểm soát"), subtitle: l.text("Bắt đầu từ những file bạn không còn cần."))
                         Spacer()
-                        Image(systemName: "sparkles").font(.system(size: 26)).foregroundStyle(Palette.blue.opacity(0.7))
+                        Image(systemName: "sparkles").font(.system(size: 26)).foregroundStyle(theme.accent.opacity(0.7))
                     }
                     Text(l.text("Xem file lớn từ 100 MB, file chưa sửa trong 180 ngày và cache cũ. Chọn từng mục trước khi dọn."))
-                        .font(.system(size: 12)).lineSpacing(5).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
+                        .font(.system(size: 12)).lineSpacing(5).foregroundStyle(theme.secondaryText).fixedSize(horizontal: false, vertical: true)
                     Button { page = .cleaner } label: { Label(l.text("Khám phá & dọn dẹp"), systemImage: "arrow.right") }.buttonStyle(PrimaryButton())
                 }
             }
@@ -178,7 +215,7 @@ struct OverviewView: View {
         HStack(spacing: 13) {
             Image(systemName: icon).font(.system(size: 15, weight: .medium)).foregroundStyle(color).frame(width: 33, height: 33).background(color.opacity(0.08), in: Circle())
             VStack(alignment: .leading, spacing: 5) {
-                Text(title).font(.system(size: 11)).foregroundStyle(Palette.secondary)
+                Text(title).font(.system(size: 11)).foregroundStyle(theme.secondaryText)
                 Text(value).font(.system(size: 21, weight: .medium, design: .rounded)).monospacedDigit()
             }
         }.padding(.vertical, 3)
